@@ -4,11 +4,11 @@ with open("README.md", "r") as fh:
     long_description = fh.read()
 
 setuptools.setup(
-    name="Schulich-Ignite",  # Replace with your own username
+    name="schulich-ignite",
     version="0.0.1",
     author="Radu Schirliu, Alan Alcocer-Iturriza, Garth Slaney",
     author_email="info@shulichignite.com",
-    description="Spark package for Shulich Ignite",
+    description="Spark library for Shulich Ignite sessions",
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://github.com/Schulich-Ignite/spark",
@@ -19,4 +19,9 @@ setuptools.setup(
         "Operating System :: OS Independent",
     ],
     python_requires='>=3.5',
+    install_requires=[
+        'ipywidgets',
+        'ipycanvas',
+        'ipyevents'
+    ]
 )
