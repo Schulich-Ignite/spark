@@ -1,5 +1,8 @@
-name: Build and deploy
-on: [push]
+name: Build and deploy to PyPI
+on:
+  push:
+    branches:
+      - main
 
 jobs:
   build:
