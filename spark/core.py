@@ -8,6 +8,7 @@ from ipycanvas import Canvas, hold_canvas
 from IPython.display import Code, display
 from math import pi
 import threading, time, random
+import numpy as np
 
 
 DEFAULT_CANVAS_SIZE = (100, 100)
@@ -19,12 +20,12 @@ _sparkplug_last_activity = 0
 
 
 class Core():
-    # All constants that will be injected into global scope in the user"s cell
+    # All constants that will be injected into global scope in the user's cell
     global_constants = {
         "pi": pi
     }
     
-    # All methods/fields from this class that will be exposed as global in user"s scope
+    # All methods/fields from this class that will be exposed as global in user's scope
     global_fields = {
         "canvas", "mouse_x", "mouse_y", "mouse_is_pressed", 
         "width", "height", 
@@ -189,11 +190,31 @@ class Core():
             self.height = args[1]
     
     # Sets fill style
-    # TODO: Only accepts one argument, should also be able to accept: r, g, b 
+    # 1 arg: HTML string value
+    # 3 args: r, g, b are int between 0 and 255
+    # 4 args: r, g, b, a, where r, g, b are ints between 0 and 255, and  a (alpha) is a float between 0 and 1.0
     def fill_style(self, *args):
-        if len(args) == 1:
+        argc = len(args)
+
+        if argc == 1:
             self.canvas.fill_style = args[0]
-    
+        elif argc == 3 or argc == 4:
+            color_args = args[:3]
+            for col in color_args:
+                self.check_type_is_int(col, "fill_style")
+            color_args = np.clip(color_args, 0, 255)
+
+            if argc == 3:
+                self.canvas.fill_style = "rgb({}, {}, {})".format(*color_args)
+            else:
+                # Clip alpha between 0 and 1
+                alpha_arg = args[3]
+                self.check_type_is_float(alpha_arg, "fill_style")
+                alpha_arg = np.clip(alpha_arg, 0, 1.0)
+                self.canvas.fill_style = "rgba({}, {}, {}, {})".format(*color_args, alpha_arg)
+        else:
+            raise TypeError("{} expected {}, {} or {} arguments, got {}".format("fill_style", 1, 3, 4, argc))
+
     # Draws filled rect
     def fill_rect(self, *args):
         if len(args) < 4:
@@ -208,3 +229,38 @@ class Core():
     def clear(self, *args):
         self.canvas.clear()
     
+
+    ### Helper Functions ### 
+
+    # Tests if input is numeric
+    # Note: No support for complex numbers
+    def check_type_is_num(self, n, func_name=None):
+        if not isinstance(n, (int, float)):
+            msg = "Expected {} to be a number".format(n)
+            if func_name:
+                msg = "{} expected {} to be a number".format(func_name, self.quote_if_string(n))    
+            raise TypeError(msg)
+
+    # Tests if input is an int
+    def check_type_is_int(self, n, func_name=None):
+        if type(n) is not int:
+            msg = "Expected {} to be an int".format(n)
+            if func_name:
+                msg = "{} expected {} to be an int".format(func_name, self.quote_if_string(n))    
+            raise TypeError(msg)
+
+    # Tests if input is a float
+    # allow_int: Set to True to allow ints as a float. Defaults to True.
+    def check_type_is_float(self, n, func_name=None, allow_int=True):
+        if type(n) is not float:
+            if not allow_int or type(n) is not int:
+                msg = "Expected {} to be a float".format(n)
+                if func_name:
+                    msg = "{} expected {} to be a float".format(func_name, self.quote_if_string(n))    
+                raise TypeError(msg)
+
+    def quote_if_string(self, val):
+        if type(val) is str:
+            return "'{}'".format(val)
+        else:
+            return val
