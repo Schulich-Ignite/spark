@@ -5,8 +5,8 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="schulich-ignite",
-    version="0.0.2",
-    author="Radu Schirliu, Alan Alcocer-Iturriza, Garth Slaney",
+    version="0.0.3",
+    author="Schulich Ignite",
     author_email="info@shulichignite.com",
     description="Spark library for Shulich Ignite sessions",
     long_description=long_description,
