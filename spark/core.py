@@ -196,30 +196,10 @@ class Core():
     # 3 args: r, g, b are int between 0 and 255
     # 4 args: r, g, b, a, where r, g, b are ints between 0 and 255, and  a (alpha) is a float between 0 and 1.0
     def fill_style(self, *args):
-        argc = len(args)
-
-        if argc == 1:
-            self.canvas.fill_style = args[0]
-        elif argc == 3 or argc == 4:
-            color_args = args[:3]
-            for col in color_args:
-                self.check_type_is_int(col, "fill_style")
-            color_args = np.clip(color_args, 0, 255)
-
-            if argc == 3:
-                self.canvas.fill_style = "rgb({}, {}, {})".format(*color_args)
-            else:
-                # Clip alpha between 0 and 1
-                alpha_arg = args[3]
-                self.check_type_is_float(alpha_arg, "fill_style")
-                alpha_arg = np.clip(alpha_arg, 0, 1.0)
-                self.canvas.fill_style = "rgba({}, {}, {}, {})".format(*color_args, alpha_arg)
-        else:
-            raise TypeError("{} expected {}, {} or {} arguments, got {}".format("fill_style", 1, 3, 4, argc))
+        self.canvas.fill_style = self.parse_color('fill_style', *args)
 
     def stroke_style(self, *args):
-        color = self.parse_color('stroke_style', *args)
-        self.canvas.stroke_style = color
+        self.canvas.stroke_style = self.parse_color('stroke_style', *args)
 
     # Combines fill_rect and stroke_rect into one wrapper function
     def rect(self, *args):
@@ -309,7 +289,7 @@ class Core():
         elif argc == 3 or argc == 4:
             color_args = args[:3]
             for col in color_args:
-                self.check_type_is_int(col, "fill_style")
+                self.check_type_is_int(col, func_name)
             color_args = np.clip(color_args, 0, 255)
 
             if argc == 3:
@@ -317,7 +297,7 @@ class Core():
             else:
                 # Clip alpha between 0 and 1
                 alpha_arg = args[3]
-                self.check_type_is_float(alpha_arg, "fill_style")
+                self.check_type_is_float(alpha_arg, func_name)
                 alpha_arg = np.clip(alpha_arg, 0, 1.0)
                 return "rgba({}, {}, {}, {})".format(*color_args, alpha_arg)
         else:
