@@ -264,3 +264,34 @@ class Core():
             return "'{}'".format(val)
         else:
             return val
+    
+    
+    def background(*args):
+    global width,height
+    argc=len(args)
+    if (argc==3):
+               
+        if((not type (args[0]) is int) or (not type (args[1]) is int) or (not type (args[2]) is int)):
+            raise TypeError("Enter Values between 0 and 255(integers only) for all 3 values")
+        elif(not(args[0] >= 0 and args[0]<=255) or not(args[1] >= 0 and args[1]<=255) or not(args[2] >= 0 and args[2]<=255) ):
+            raise TypeError("Enter Values between 0 and 255(integers only) for all 3 values")
+        clear()
+        fill_style(args[0],args[1],args[2])
+        fill_rect(0,0,width,height)
+    
+    elif (argc==1):
+        if(not type (args[0]) is str):
+            raise TypeError("Enter colour value in Hex i.e #000000 for black and so on")
+        clear()
+        fill_style(args[0])
+        fill_rect(0,0,width,height)
+        
+    elif (argc==4):
+        if((not type (args[0]) is int) or (not type (args[1]) is int) or (not type (args[2]) is int) or (not type (args[3]) is float) ):
+            raise TypeError("Enter Values between 0 and 255(integers only) for all 3 values")
+        elif(not(args[0] >= 0 and args[0]<=255) or not(args[1] >= 0 and args[1]<=255) or not(args[2] >= 0 and args[2]<=255) or           not(args[3]>=0.0 and args[3]<= 1.0)):
+            raise TypeError("Enter Values between 0 and 255(integers only) for all 3 values and a value between 0.0 and 1.0 for opacity(last argument")
+        clear()
+        fill_style(args[0],args[1],args[2],args[3])
+        fill_rect(0,0,width,height)
+     
