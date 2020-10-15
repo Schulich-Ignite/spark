@@ -29,7 +29,9 @@ class Core():
     global_fields = {
         "canvas", "mouse_x", "mouse_y", "mouse_is_pressed", 
         "width", "height", 
-        "size", "fill_style", "fill_rect", "clear"
+        "size", "fill_style", "stroke_style", "clear",
+        "rect", "square", "fill_rect", "stroke_rect",
+        "circle", "fill_circle", "stroke_circle"
     }
     
     # All methods that user will be able to define and override
@@ -215,16 +217,49 @@ class Core():
         else:
             raise TypeError("{} expected {}, {} or {} arguments, got {}".format("fill_style", 1, 3, 4, argc))
 
+    def stroke_style(self, *args):
+        color = self.parse_color('stroke_style', *args)
+        self.canvas.stroke_style = color
+
+    # Combines fill_rect and stroke_rect into one wrapper function
+    def rect(self, *args):
+        self.check_coords('rect', *args)
+        
+        self.canvas.fill_rect(*args)
+        self.canvas.stroke_rect(*args)
+
+    # Similar to self.rect wrapper, except only accepts x, y and size
+    def square(self, *args):
+        self.check_coords('square', *args, width_only=True)
+        rect_args = (*args, args[2]) # Copy the width arg into the height
+        self.rect(*rect_args)
+
     # Draws filled rect
     def fill_rect(self, *args):
-        if len(args) < 4:
-            raise TypeError("{} expected at least {} arguments, got {}".format("rect", 4, len(args)))
-        if len(args) == 4:
-            x, y, w, h = args
-            self.canvas.fill_rect(x, y, w, h)
-        else:
-            raise TypeError("{} expected at most {} arguments, got {}".format("rect", 4, len(args)))
+        self.check_coords('fill_rect', *args)
+        self.canvas.fill_rect(*args)
     
+    # Strokes a rect
+    def stroke_rect(self, *args):
+        self.check_coords('stroke_rect', *args)
+        self.canvas.stroke_rect(*args)
+
+    def circle(self, *args):
+        self.check_coords('circle', *args, width_only=True)
+        arc_args = self.arc_args(*args)
+        self.canvas.fill_arc(*arc_args)
+        self.canvas.stroke_arc(*arc_args)
+
+    def fill_circle(self, *args):
+        self.check_coords('fill_circle', *args, width_only=True)
+        arc_args = self.arc_args(*args)
+        self.canvas.fill_arc(*arc_args)
+
+    def stroke_circle(self, *args):
+        self.check_coords('stroke_circle', *args, width_only=True)
+        arc_args = self.arc_args(*args)
+        self.canvas.stroke_arc(*arc_args)
+
     # Clears canvas
     def clear(self, *args):
         self.canvas.clear()
@@ -264,3 +299,42 @@ class Core():
             return "'{}'".format(val)
         else:
             return val
+    
+    # Parse a string, rgb or rgba input into an HTML color string
+    def parse_color(self, func_name, *args):
+        argc = len(args)
+
+        if argc == 1:
+            return args[0]
+        elif argc == 3 or argc == 4:
+            color_args = args[:3]
+            for col in color_args:
+                self.check_type_is_int(col, "fill_style")
+            color_args = np.clip(color_args, 0, 255)
+
+            if argc == 3:
+                return "rgb({}, {}, {})".format(*color_args)
+            else:
+                # Clip alpha between 0 and 1
+                alpha_arg = args[3]
+                self.check_type_is_float(alpha_arg, "fill_style")
+                alpha_arg = np.clip(alpha_arg, 0, 1.0)
+                return "rgba({}, {}, {}, {})".format(*color_args, alpha_arg)
+        else:
+            raise TypeError("{} expected {}, {} or {} arguments, got {}".format(func_name, 1, 3, 4, argc))
+
+    # Check a set of 4 args are valid coordinates
+    # x, y, w, h
+    def check_coords(self, func_name, *args, width_only=False):
+        argc = len(args)
+        if argc != 4 and not width_only:
+            raise TypeError("{} expected {} arguments for x, y, w, h, got {} arguments".format(func_name, 4, argc))
+        elif argc != 3 and width_only:
+            raise TypeError("{} expected {} arguments for x, y, size, got {} arguments".format(func_name, 3, argc))
+
+        for arg in args:
+            self.check_type_is_float(arg, func_name)
+
+    # Convert a tuple of circle args into arc args 
+    def arc_args(self, *args):
+        return (args[0], args[1], args[2] / 2, 0, 2 * pi)
