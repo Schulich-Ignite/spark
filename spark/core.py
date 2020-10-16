@@ -255,17 +255,20 @@ class Core:
         self.check_coords('clear_rect', *args)
         self.canvas.clear_rect(*args)
 
+    # Draws circle at given coordinates
     def circle(self, *args):
         self.check_coords("circle", *args, width_only=True)
         arc_args = self.arc_args(*args)
         self.canvas.fill_arc(*arc_args)
         self.canvas.stroke_arc(*arc_args)
 
+    # Draws filled circle
     def fill_circle(self, *args):
         self.check_coords("fill_circle", *args, width_only=True)
         arc_args = self.arc_args(*args)
         self.canvas.fill_arc(*arc_args)
 
+    # Draws circle stroke
     def stroke_circle(self, *args):
         self.check_coords("stroke_circle", *args, width_only=True)
         arc_args = self.arc_args(*args)
