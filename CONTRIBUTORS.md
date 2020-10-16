@@ -5,3 +5,5 @@
 - Chris Kwiatkowski
 - Ryan Ittyipe
 - Shamis Ali
+- Richard Lee
+- Kieran Wood
