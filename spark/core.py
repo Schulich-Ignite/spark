@@ -34,11 +34,14 @@ class Core:
 
     # All methods/fields from this class that will be exposed as global in user"s scope
     global_fields = {
-        "canvas", "mouse_x", "mouse_y", "mouse_is_pressed", 
-        "width", "height",
-        "size", "fill_style", "stroke_style", "clear", "background",
-        "rect", "square", "fill_rect", "stroke_rect",
-        "circle", "fill_circle", "stroke_circle"
+        "canvas", "size", "width", "height",
+        "mouse_x", "mouse_y", "mouse_is_pressed",
+        "fill_style", "stroke_style",
+        "clear", "background",
+        "rect", "square", "fill_rect", "stroke_rect", "clear_rect",
+        "fill_text", "stroke_text", "text_align",
+        "draw_line",
+        "circle", "fill_circle", "stroke_circle", "fill_arc", "stroke_arc",
     }
 
     # All methods that user will be able to define and override
@@ -247,41 +250,64 @@ class Core:
         self.check_coords("stroke_rect", *args)
         self.canvas.stroke_rect(*args)
 
+    #Clears a rect
+    def clear_rect(self, *args):
+        self.check_coords('clear_rect', *args)
+        self.canvas.clear_rect(*args)
+
+    # Draws circle at given coordinates
     def circle(self, *args):
         self.check_coords("circle", *args, width_only=True)
         arc_args = self.arc_args(*args)
         self.canvas.fill_arc(*arc_args)
         self.canvas.stroke_arc(*arc_args)
 
+    # Draws filled circle
     def fill_circle(self, *args):
         self.check_coords("fill_circle", *args, width_only=True)
         arc_args = self.arc_args(*args)
         self.canvas.fill_arc(*arc_args)
 
+    # Draws circle stroke
     def stroke_circle(self, *args):
         self.check_coords("stroke_circle", *args, width_only=True)
         arc_args = self.arc_args(*args)
         self.canvas.stroke_arc(*arc_args)
-        if len(args) < 4:
-            raise TypeError("{} expected at least {} arguments, got {}".format("rect", 4, len(args)))
+        
+    def fill_arc(self, *args):
+        self.canvas.fill_arc(*args)
+
+    def stroke_arc(self, *args):
+        self.canvas.stroke_arc(*args)
+    
+    def fill_text(self, *args):
+        self.canvas.font = "{px}px sans-serif".format(px = args[4])
+        self.canvas.fill_text(args[0:3])
+        self.canvas.font = "12px sans-serif"
+
+    def stroke_text(self, *args):
+        self.canvas.font = "{px}px sans-serif".format(px = args[4])
+        self.canvas.stroke_text(args[0:3])
+        self.canvas.font = "12px sans-serif"
+
+    def text_align(self, *args):
+        self.canvas.text_align(*args)
+
+    def draw_line(self, *args):
         if len(args) == 4:
-            x, y, w, h = args
-            self.canvas.fill_rect(x, y, w, h)
+            self.canvas.line_width = args[4]
         else:
-            raise TypeError("{} expected at most {} arguments, got {}".format("rect", 4, len(args)))
+            self.canvas.line_width = 1
+            
+        self.canvas.begin_path()
+        self.canvas.move_to(args[0],args[1])
+        self.canvas.line_to(args[2],args[4])
+        self.canvas.close_path()
 
     # Clears canvas
     def clear(self, *args):
         self.canvas.clear()
 
-    # Draws a line between two points
-    def draw_line(self, x1, y1, x2, y2, thickness=1.0):
-        canvas.line_width = thickness
-        canvas.begin_path()
-        canvas.move_to(x1, y1)
-        canvas.line_to(x2, y2)
-        canvas.close_path()
-        canvas.stroke()
     
     # Draws background on canvas
     def background(self, *args):
