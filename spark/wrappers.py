@@ -8,7 +8,7 @@ global canvas
 
 def size(w, h):
     global canvas
-    canvas = Canvas(width=w, height=h)
+    canvas = canvas(width=w, height=h)
 
 
 def display():
@@ -31,11 +31,13 @@ def clear():
     canvas.clear()
 
 
-def rect(x, y, width, height=None):
+# Shadows name 'width' and 'height' from outer scope. Changed to 'w' and 'h'.
+def rect(x, y, w, h=None):
     global canvas
-    canvas.fill_rect(x, y, width, height)
+    canvas.fill_rect(x, y, w, h)
 
 
-def stroke_rect(x, y, width, height=None):
+# Shadows name 'width' and 'height' from outer scope. Changed to 'w' and 'h'.
+def stroke_rect(x, y, w, h=None):
     global canvas
-    canvas.stroke_rect(x, y, width, height)
+    canvas.stroke_rect(x, y, w, h)
