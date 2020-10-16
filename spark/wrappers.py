@@ -39,3 +39,7 @@ def rect(x, y, width, height=None):
 def stroke_rect(x, y, width, height=None):
     global canvas
     canvas.stroke_rect(x, y, width, height)
+
+def fill_text(text, x, y):
+    global canvas
+    canvas.fill_text(text, x, y)
