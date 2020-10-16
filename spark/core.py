@@ -240,6 +240,11 @@ class Core():
         arc_args = self.arc_args(*args)
         self.canvas.stroke_arc(*arc_args)
 
+    def fill_text(self, *args):
+        self.check_coords('fill_text', *args, width_only=True)
+        arc_args = self.arc_args(*args)
+        self.canvas.fill_text(*arc_args)
+
     # Clears canvas
     def clear(self, *args):
         self.canvas.clear()
