@@ -14,7 +14,7 @@ from IPython.display import Code, display
 from ipycanvas import Canvas, hold_canvas
 from ipywidgets import Button
 
-# from .util import IpyExit
+from .util import IpyExit
 
 
 DEFAULT_CANVAS_SIZE = (100, 100)
@@ -132,9 +132,7 @@ class Core:
 
     def stop(self):
         # Assuming we're using IPython to draw the canvas through the display() function.
-        # For some reason this throws errors when being downloaded thru PyPI, so just disabling it for now
-        # raise IpyExit
-        pass
+        raise IpyExit
 
     # Loop method that handles drawing and setup
     def loop(self):
