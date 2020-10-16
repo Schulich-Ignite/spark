@@ -1,7 +1,7 @@
 - Radu Schirliu
 - Garth Slaney
 - Hesham Elkaliouby
-- Alan Iturriza 
+- Alan Alcocer-Iturriza 
 - Chris Kwiatkowski
 - Ryan Ittyipe
 - Shamis Ali
