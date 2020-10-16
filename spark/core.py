@@ -34,14 +34,14 @@ class Core:
 
     # All methods/fields from this class that will be exposed as global in user"s scope
     global_fields = {
-        "canvas", "mouse_x", "mouse_y", "mouse_is_pressed", 
-        "width", "height",
-        "size", "fill_style", "stroke_style", "clear",
+        "canvas", "size", "width", "height",
+        "mouse_x", "mouse_y", "mouse_is_pressed",
+        "fill_style", "stroke_style",
+        "clear", "background",
         "rect", "square", "fill_rect", "stroke_rect", "clear_rect",
-        "fill_arc", "stroke_arc",
         "fill_text", "stroke_text", "text_align",
         "draw_line",
-        "circle", "fill_circle", "stroke_circle"
+        "circle", "fill_circle", "stroke_circle", "fill_arc", "stroke_arc",
     }
 
     # All methods that user will be able to define and override
@@ -309,8 +309,39 @@ class Core:
         self.canvas.clear()
 
     
+    # Draws background on canvas
+    def background(self, *args):
+        argc = len(args)
+        if (argc == 3):
+            if ((not type(args[0]) is int) or (not type(args[1]) is int) or (not type(args[2]) is int)):
+                raise TypeError("Enter Values between 0 and 255(integers only) for all 3 values")
+            elif (not (args[0] >= 0 and args[0] <= 255) or not (args[1] >= 0 and args[1] <= 255) or not (
+                args[2] >= 0 and args[2] <= 255)):
+                raise TypeError("Enter Values between 0 and 255(integers only) for all 3 values")
+            self.clear()
+            self.fill_style(args[0], args[1], args[2])
+            self.fill_rect(0, 0, self.width, self.height)
 
-    ### Helper Functions ### 
+        elif (argc == 1):
+            if (not type(args[0]) is str):
+                raise TypeError("Enter colour value in Hex i.e #000000 for black and so on")
+            self.clear()
+            self.fill_style(args[0])
+            self.fill_rect(0, 0, self.width, self.height)
+
+        elif (argc == 4):
+            if ((not type(args[0]) is int) or (not type(args[1]) is int) or (not type(args[2]) is int) or (
+            not type(args[3]) is float)):
+                raise TypeError("Enter Values between 0 and 255(integers only) for all 3 values")
+            elif (not (args[0] >= 0 and args[0] <= 255) or not (args[1] >= 0 and args[1] <= 255) or not (
+                args[2] >= 0 and args[2] <= 255) or not (args[3] >= 0.0 and args[3] <= 1.0)):
+                raise TypeError(
+                "Enter Values between 0 and 255(integers only) for all 3 values and a value between 0.0 and 1.0 for opacity(last argument")
+            self.clear()
+            self.fill_style(args[0], args[1], args[2], args[3])
+            self.fill_rect(0, 0, self.width, self.height)
+    
+    ### Helper Functions ###
 
     # Tests if input is numeric
     # Note: No support for complex numbers
