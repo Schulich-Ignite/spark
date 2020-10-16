@@ -28,7 +28,10 @@ class IgniteMagic(Magics):
             globals_dict[field] = getattr(core_obj, field)
 
         # Execute the code inside the cell and inject the globals we defined.
-        exec(cell_code, globals_dict, locals_dict)
+        try:
+            exec(cell_code, globals_dict, locals_dict)
+        except Exception as e:
+            print("Error: " + str(e))
         
         # Look at all methods defined by user, and see if they overwrote anything useful
         methods = {}
