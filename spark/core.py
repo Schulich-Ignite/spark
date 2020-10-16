@@ -243,6 +243,14 @@ class Core():
     # Clears canvas
     def clear(self, *args):
         self.canvas.clear()
+
+    def draw_line(x1, y1, x2, y2, thickness=1.0):
+        canvas.line_width = thickness
+        canvas.begin_path()
+        canvas.move_to(x1,y1)
+        canvas.line_to(x2,y2)
+        canvas.close_path()
+        canvas.stroke()
     
 
     ### Helper Functions ### 
