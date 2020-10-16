@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="schulich-ignite",
-    version="0.0.4",
+    version="0.0.5",
     author="Schulich Ignite",
     author_email="info@shulichignite.com",
     description="Spark library for Shulich Ignite sessions",
@@ -18,7 +18,7 @@ setuptools.setup(
         "License :: OSI Approved :: MIT License",
         "Operating System :: OS Independent",
     ],
-    python_requires='>=3.5',
+    python_requires='>=3.8',
     install_requires=[
         'ipywidgets',
         'ipycanvas',
