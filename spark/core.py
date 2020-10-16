@@ -12,6 +12,7 @@ from math import pi
 import numpy as np
 from IPython.display import Code, display
 from ipycanvas import Canvas, hold_canvas
+from ipywidgets import Button
 
 from .util import IpyExit
 
@@ -22,6 +23,7 @@ NO_ACTIVITY_THRESHOLD = 5 * 60  # 5 minutes
 
 _sparkplug_active_thread_id = None
 _sparkplug_last_activity = 0
+_sparkplug_running = True
 
 
 class Core:
@@ -36,8 +38,7 @@ class Core:
         "width", "height",
         "size", "fill_style", "stroke_style", "clear",
         "rect", "square", "fill_rect", "stroke_rect",
-        "circle", "fill_circle", "stroke_circle",
-        "stop"
+        "circle", "fill_circle", "stroke_circle"
     }
 
     # All methods that user will be able to define and override
@@ -50,6 +51,9 @@ class Core:
         self.error_text = display(Code(""), display_id=True)
         self._globals_dict = globals_dict
         self._methods = {}
+
+        self.stop_button = Button(description="Stop")
+        self.stop_button.on_click(self.on_stop_button_clicked)
 
         self.canvas = Canvas()
         self.width, self.height = DEFAULT_CANVAS_SIZE
@@ -111,7 +115,7 @@ class Core:
 
     # Creates canvas and starts thread
     def start(self, methods):
-        # Expecting type "tuple", got "Canvas" instead
+        display(self.stop_button)
         display(self.canvas)
 
         self._methods = methods
@@ -123,13 +127,13 @@ class Core:
         thread = threading.Thread(target=self.loop)
         thread.start()
 
-    def stop(self, methods):
-        # Assuming we"re using IPython to draw the canvas through the display() function.
+    def stop(self):
+        # Assuming we're using IPython to draw the canvas through the display() function.
         raise IpyExit
 
     # Loop method that handles drawing and setup
     def loop(self):
-        global _sparkplug_active_thread_id
+        global _sparkplug_active_thread_id, _sparkplug_running
 
         # Set active thread to this thread. This will stop any other active thread.
         current_thread_id = threading.current_thread().native_id
@@ -146,7 +150,7 @@ class Core:
                 self.print_error("Error in setup() function: " + str(e))
                 return
 
-        while True:
+        while _sparkplug_running:
             if _sparkplug_active_thread_id != current_thread_id or time.time() - _sparkplug_last_activity > NO_ACTIVITY_THRESHOLD:
                 print("stop", current_thread_id)
                 return
@@ -195,6 +199,12 @@ class Core:
         mouse_moved = self._methods.get("mouse_moved", None)
         if mouse_moved:
             mouse_moved()
+    
+    def on_stop_button_clicked(self, button):
+        global _sparkplug_running
+
+        self.print_error("Stopped")
+        _sparkplug_running = False
 
     ### Global functions ###
 
