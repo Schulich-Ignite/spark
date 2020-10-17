@@ -42,6 +42,7 @@ class Core:
         "fill_text", "stroke_text", "text_align",
         "draw_line",
         "circle", "fill_circle", "stroke_circle", "fill_arc", "stroke_arc",
+        "print"
     }
 
     # All methods that user will be able to define and override
@@ -51,7 +52,7 @@ class Core:
     }
 
     def __init__(self, globals_dict):
-        self.error_text = display(Code(""), display_id=True)
+        self.status_text = display(Code(""), display_id=True)
         self._globals_dict = globals_dict
         self._methods = {}
 
@@ -118,10 +119,19 @@ class Core:
 
     # Creates canvas and starts thread
     def start(self, methods):
-        display(self.stop_button)
-        display(self.canvas)
-
         self._methods = methods
+        draw = self._methods.get("draw", None)
+        
+        if draw:
+            self.print_status("Running...")
+            display(self.stop_button)
+        else:
+            self.print_status("Done drawing")
+
+        display(self.canvas)
+        
+        self.output_text = ""
+        self.output_text_code = display(Code(self.output_text), display_id=True)
 
         self.canvas.on_mouse_down(self.on_mouse_down)
         self.canvas.on_mouse_up(self.on_mouse_up)
@@ -130,9 +140,17 @@ class Core:
         thread = threading.Thread(target=self.loop)
         thread.start()
 
-    def stop(self):
+    def stop(self, message="Stopped"):
+        global _sparkplug_running
+
+        if not _sparkplug_running:
+            return
+
+        _sparkplug_running = False
+        self.print_status(message)
         # Assuming we're using IPython to draw the canvas through the display() function.
-        raise IpyExit
+        # Commenting this out for now, it throws exception since it does not derive BaseException
+        # raise IpyExit
 
     # Loop method that handles drawing and setup
     def loop(self):
@@ -150,12 +168,12 @@ class Core:
             try:
                 setup()
             except Exception as e:
-                self.print_error("Error in setup() function: " + str(e))
+                self.print_status("Error in setup() function: " + str(e))
                 return
 
         while _sparkplug_running:
             if _sparkplug_active_thread_id != current_thread_id or time.time() - _sparkplug_last_activity > NO_ACTIVITY_THRESHOLD:
-                print("stop", current_thread_id)
+                self.stop("Stopped due to inactivity")
                 return
 
             if not draw:
@@ -165,14 +183,19 @@ class Core:
                 try:
                     draw()
                 except Exception as e:
-                    self.print_error("Error in draw() function: " + str(e))
+                    self.print_status("Error in draw() function: " + str(e))
                     return
 
             time.sleep(1 / FRAME_RATE)
 
-    # Prints error to embedded error box
-    def print_error(self, msg):
-        self.error_text.update(Code(msg))
+    # Prints status to embedded error box
+    def print_status(self, msg):
+        self.status_text.update(Code(msg))
+    
+    # Prints output to embedded output box
+    def print(self, msg):
+        self.output_text += msg + "\n"
+        self.output_text_code.update(Code(self.output_text))
 
     # Update mouse_x, mouse_y, and call mouse_down handler
     def on_mouse_down(self, x, y):
@@ -204,10 +227,7 @@ class Core:
             mouse_moved()
     
     def on_stop_button_clicked(self, button):
-        global _sparkplug_running
-
-        self.print_error("Stopped")
-        _sparkplug_running = False
+        self.stop()
 
     ### Global functions ###
 
