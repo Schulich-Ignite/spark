@@ -193,7 +193,7 @@ class Core:
         self.status_text.update(Code(msg))
     
     # Prints output to embedded output box
-    def print_text(self, msg):
+    def print(self, msg):
         self.output_text += msg + "\n"
         self.output_text_code.update(Code(self.output_text))
 
