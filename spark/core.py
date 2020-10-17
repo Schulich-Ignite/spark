@@ -23,7 +23,7 @@ NO_ACTIVITY_THRESHOLD = 5 * 60  # 5 minutes
 
 _sparkplug_active_thread_id = None
 _sparkplug_last_activity = 0
-_sparkplug_running = True
+_sparkplug_running = False
 
 
 class Core:
@@ -60,6 +60,7 @@ class Core:
         self.stop_button.on_click(self.on_stop_button_clicked)
 
         self.canvas = Canvas()
+        self.output_text = ""
         self.width, self.height = DEFAULT_CANVAS_SIZE
         self.mouse_x = 0
         self.mouse_y = 0
@@ -130,7 +131,6 @@ class Core:
 
         display(self.canvas)
         
-        self.output_text = ""
         self.output_text_code = display(Code(self.output_text), display_id=True)
 
         self.canvas.on_mouse_down(self.on_mouse_down)
@@ -195,8 +195,11 @@ class Core:
     
     # Prints output to embedded output box
     def print(self, msg):
+        global _sparkplug_running
         self.output_text += msg + "\n"
-        self.output_text_code.update(Code(self.output_text))
+
+        if _sparkplug_running:
+            self.output_text_code.update(Code(self.output_text))
 
     # Update mouse_x, mouse_y, and call mouse_down handler
     def on_mouse_down(self, x, y):
