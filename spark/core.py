@@ -159,6 +159,7 @@ class Core:
         # Set active thread to this thread. This will stop any other active thread.
         current_thread_id = threading.current_thread().native_id
         _sparkplug_active_thread_id = current_thread_id
+        _sparkplug_running = True
         self.refresh_last_activity()
 
         draw = self._methods.get("draw", None)
