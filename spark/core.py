@@ -118,10 +118,16 @@ class Core:
 
     # Creates canvas and starts thread
     def start(self, methods):
-        display(self.stop_button)
-        display(self.canvas)
-
         self._methods = methods
+        draw = self._methods.get("draw", None)
+        
+        if draw:
+            self.print_error("Running...")
+            display(self.stop_button)
+        else:
+            self.print_error("Done drawing")
+
+        display(self.canvas)
 
         self.canvas.on_mouse_down(self.on_mouse_down)
         self.canvas.on_mouse_up(self.on_mouse_up)
@@ -130,9 +136,17 @@ class Core:
         thread = threading.Thread(target=self.loop)
         thread.start()
 
-    def stop(self):
+    def stop(self, message="Stopped"):
+        global _sparkplug_running
+
+        if not _sparkplug_running:
+            return
+
+        _sparkplug_running = False
+        self.print_error(message)
         # Assuming we're using IPython to draw the canvas through the display() function.
-        raise IpyExit
+        # Commenting this out for now, it throws exception since it does not derive BaseException
+        # raise IpyExit
 
     # Loop method that handles drawing and setup
     def loop(self):
@@ -155,7 +169,7 @@ class Core:
 
         while _sparkplug_running:
             if _sparkplug_active_thread_id != current_thread_id or time.time() - _sparkplug_last_activity > NO_ACTIVITY_THRESHOLD:
-                print("stop", current_thread_id)
+                self.stop("Stopped due to inactivity")
                 return
 
             if not draw:
@@ -204,10 +218,7 @@ class Core:
             mouse_moved()
     
     def on_stop_button_clicked(self, button):
-        global _sparkplug_running
-
-        self.print_error("Stopped")
-        _sparkplug_running = False
+        self.stop()
 
     ### Global functions ###
 
