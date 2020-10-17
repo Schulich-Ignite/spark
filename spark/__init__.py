@@ -11,13 +11,15 @@ def load_ipython_extension(ipython):
 # Defines the "magic" that will be used inside the cells
 @magics_class
 class IgniteMagic(Magics):
-
     @cell_magic
     def ignite(self, line, cell_code):
+        if hasattr(self, "core_obj"):
+            self.core_obj.stop()
+
         globals_dict = {}
         locals_dict = {}
         
-        core_obj = core.Core(globals_dict)
+        self.core_obj = core.Core(globals_dict)
         
         # Copy global constants from Core object
         for key, val in core.Core.global_constants.items():
@@ -25,7 +27,7 @@ class IgniteMagic(Magics):
     
         # Copy global methods from Core object
         for field in core.Core.global_fields:
-            globals_dict[field] = getattr(core_obj, field)
+            globals_dict[field] = getattr(self.core_obj, field)
 
         # Execute the code inside the cell and inject the globals we defined.
         try:
@@ -42,5 +44,5 @@ class IgniteMagic(Magics):
                 globals_dict[key] = val # Copy locals to global to keep them available.
         
         # Run bootstrap code
-        core_obj.start(methods)
+        self.core_obj.start(methods)
         
