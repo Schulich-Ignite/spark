@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="schulich-ignite",
-    version="0.0.9",
+    version="0.0.10",
     author="Schulich Ignite",
     author_email="info@shulichignite.com",
     description="Spark library for Shulich Ignite sessions",
@@ -16,6 +16,7 @@ setuptools.setup(
     classifiers=[
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: MIT License",
+        "Framework :: IPython",
         "Operating System :: OS Independent",
     ],
     python_requires='>=3.8',
