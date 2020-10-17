@@ -42,6 +42,7 @@ class Core:
         "fill_text", "stroke_text", "text_align",
         "draw_line",
         "circle", "fill_circle", "stroke_circle", "fill_arc", "stroke_arc",
+        "print"
     }
 
     # All methods that user will be able to define and override
@@ -51,7 +52,7 @@ class Core:
     }
 
     def __init__(self, globals_dict):
-        self.error_text = display(Code(""), display_id=True)
+        self.status_text = display(Code(""), display_id=True)
         self._globals_dict = globals_dict
         self._methods = {}
 
@@ -122,12 +123,15 @@ class Core:
         draw = self._methods.get("draw", None)
         
         if draw:
-            self.print_error("Running...")
+            self.print_status("Running...")
             display(self.stop_button)
         else:
-            self.print_error("Done drawing")
+            self.print_status("Done drawing")
 
         display(self.canvas)
+        
+        self.output_text = ""
+        self.output_text_code = display(Code(self.output_text), display_id=True)
 
         self.canvas.on_mouse_down(self.on_mouse_down)
         self.canvas.on_mouse_up(self.on_mouse_up)
@@ -143,7 +147,7 @@ class Core:
             return
 
         _sparkplug_running = False
-        self.print_error(message)
+        self.print_status(message)
         # Assuming we're using IPython to draw the canvas through the display() function.
         # Commenting this out for now, it throws exception since it does not derive BaseException
         # raise IpyExit
@@ -164,7 +168,7 @@ class Core:
             try:
                 setup()
             except Exception as e:
-                self.print_error("Error in setup() function: " + str(e))
+                self.print_status("Error in setup() function: " + str(e))
                 return
 
         while _sparkplug_running:
@@ -179,14 +183,19 @@ class Core:
                 try:
                     draw()
                 except Exception as e:
-                    self.print_error("Error in draw() function: " + str(e))
+                    self.print_status("Error in draw() function: " + str(e))
                     return
 
             time.sleep(1 / FRAME_RATE)
 
-    # Prints error to embedded error box
-    def print_error(self, msg):
-        self.error_text.update(Code(msg))
+    # Prints status to embedded error box
+    def print_status(self, msg):
+        self.status_text.update(Code(msg))
+    
+    # Prints output to embedded output box
+    def print_text(self, msg):
+        self.output_text += msg + "\n"
+        self.output_text_code.update(Code(self.output_text))
 
     # Update mouse_x, mouse_y, and call mouse_down handler
     def on_mouse_down(self, x, y):
