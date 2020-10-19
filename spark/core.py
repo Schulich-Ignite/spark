@@ -13,6 +13,7 @@ import numpy as np
 from IPython.display import Code, display
 from ipycanvas import Canvas, hold_canvas
 from ipywidgets import Button
+from ipyevents import Event
 
 from .util import IpyExit
 
@@ -24,7 +25,6 @@ NO_ACTIVITY_THRESHOLD = 5 * 60  # 5 minutes
 _sparkplug_active_thread_id = None
 _sparkplug_last_activity = 0
 _sparkplug_running = False
-
 
 class Core:
     # All constants that will be injected into global scope in the user"s cell
@@ -42,13 +42,15 @@ class Core:
         "fill_text", "stroke_text", "text_align",
         "draw_line",
         "circle", "fill_circle", "stroke_circle", "fill_arc", "stroke_arc",
-        "print"
+        "print",
+        "key", "key_code"
     }
 
     # All methods that user will be able to define and override
     global_methods = {
         "draw", "setup",
-        "mouse_down", "mouse_up", "mouse_moved"
+        "mouse_down", "mouse_up", "mouse_moved",
+        "key_event", "key_pressed", "key_released"
     }
 
     def __init__(self, globals_dict):
@@ -60,11 +62,14 @@ class Core:
         self.stop_button.on_click(self.on_stop_button_clicked)
 
         self.canvas = Canvas()
+        self.kb_mon = Event(source=self.canvas, watched_events=['keydown', 'keyup'])
         self.output_text = ""
         self.width, self.height = DEFAULT_CANVAS_SIZE
         self.mouse_x = 0
         self.mouse_y = 0
         self.mouse_is_pressed = False
+        self.key = ""
+        self.key_code = ""
 
     ### Properties ###
 
@@ -91,6 +96,22 @@ class Core:
     @mouse_is_pressed.setter
     def mouse_is_pressed(self, val):
         self._globals_dict["mouse_is_pressed"] = val
+
+    @property
+    def key(self):
+        return self._globals_dict["key"]
+
+    @key.setter
+    def key(self, val):
+        self._globals_dict["key"] = val
+
+    @property
+    def key_code(self):
+        return self._globals_dict["key_code"]
+
+    @key_code.setter
+    def key_code(self, val):
+        self._globals_dict["key_code"] = val
 
     @property
     def width(self):
@@ -130,12 +151,14 @@ class Core:
             self.print_status("Done drawing")
 
         display(self.canvas)
-        
+
         self.output_text_code = display(Code(self.output_text), display_id=True)
 
         self.canvas.on_mouse_down(self.on_mouse_down)
         self.canvas.on_mouse_up(self.on_mouse_up)
         self.canvas.on_mouse_move(self.on_mouse_move)
+
+        self.kb_mon.on_dom_event(self.handle_kb_event)
 
         thread = threading.Thread(target=self.loop)
         thread.start()
@@ -232,6 +255,21 @@ class Core:
     
     def on_stop_button_clicked(self, button):
         self.stop()
+
+    def handle_kb_event(self, event):
+        key_event = self._methods.get("key_event", None)
+        key_pressed = self._methods.get("key_pressed", None)
+        key_released = self._methods.get("key_released", None)
+        self.key = event['key']
+        self.key_code = event['code']
+        if key_event:
+            key_event()
+        if event['type'] == "keydown":
+            if key_pressed:
+                key_pressed()
+        else:
+            if key_released:
+                key_released()
 
     ### Global functions ###
 
@@ -331,7 +369,6 @@ class Core:
     # Clears canvas
     def clear(self, *args):
         self.canvas.clear()
-
     
     # Draws background on canvas
     def background(self, *args):
