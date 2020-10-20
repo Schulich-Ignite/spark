@@ -65,12 +65,16 @@ class Core:
         self.color_strings = {
             "default": "#888888"
         }
+        match_255 = r"(?:(?:2(?:(?:5[0-5])|(?:[0-4][0-9])))|(?:[01]?[0-9]{1,2}))"
+        match_alpha = r"(?:1(?:\.0*)?)|(?:0(?:\.[0-9]*)?)"
+        match_360 = r"(?:(?:3[0-5][0-9])|(?:[0-2]?[0-9]{1,2}))"
+        match_100 = r"(?:100|[0-9]{1,2})"
         self.regexes = [
             re.compile(r"#[0-9A-Fa-f]{6}"),
-            re.compile(r"rgb\([0-9]{1,3},[0-9]{1,3},[0-9]{1,3}\)"),
-            re.compile(r"rgba\([0-9]{1,3},[0-9]{1,3},[0-9]{1,3},(?:1(?:\.0*)?)|(?:0(?:\.[0-9]*)?)\)"),
-            re.compile(r"hsl\([0-9]{1,3},[0-9]{1,3}%,[0-9]{1,3}%\)"),
-            re.compile(r"hsla\([0-9]{1,3},[0-9]{1,3}%,[0-9]{1,3}%,(?:1(?:\.0*)?)|(?:0(?:\.[0-9]*)?)\)")
+            re.compile(r"rgb\({},{},{}\)".format(match_255, match_255, match_255)),
+            re.compile(r"rgba\({},{},{},{}}\)".format(match_255, match_255, match_255, match_alpha)),
+            re.compile(r"hsl\({},{}%,{}%\)".format(match_360, match_100, match_100)),
+            re.compile(r"hsla\({},{}%,{}%,{}\)".format(match_360, match_100, match_100, match_alpha))
         ]
         self.width, self.height = DEFAULT_CANVAS_SIZE
         self.mouse_x = 0
