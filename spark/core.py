@@ -322,17 +322,7 @@ class Core:
             raise TypeError(f"text_size expected 1 argument, got {len(args)}")
         
         size = args[0]
-        if type(size) == type(str()):
-            if size.endswith('px'):
-                size = size[:-2] # Remove 'px' from end.
-            else:
-                raise TypeError(f"text_size expects a number or a string with a number followed by 'px', got {repr(args[0])}")
-
-        try:
-            size = float(size)
-        except ValueError:
-            raise TypeError(f"text_size expects a number or a string with a number followed by 'px', got {repr(args[0])}")
-
+        self.check_type_is_num("text_size", size)
         self.font_settings['size'] = size
         self.canvas.font = f"{self.font_settings['size']}px {self.font_settings['font']}"
 
