@@ -322,7 +322,7 @@ class Core:
             raise TypeError(f"text_size expected 1 argument, got {len(args)}")
         
         size = args[0]
-        self.check_type_is_num("text_size", size)
+        self.check_type_is_num(size, func_name="text_size")
         self.font_settings['size'] = size
         self.canvas.font = f"{self.font_settings['size']}px {self.font_settings['font']}"
 
@@ -345,7 +345,7 @@ class Core:
         self.canvas.text_align = self.canvas.text_align
 
         for arg in args[1:]:
-            self.check_type_is_num("text_size", arg)
+            self.check_type_is_num(arg, func_name="text")
 
         self.canvas.fill_text(str(args[0]), args[1], args[2])
 
