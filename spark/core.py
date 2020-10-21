@@ -337,7 +337,7 @@ class Core:
 
     def text(self, *args):
         if len(args) != 3:
-            raise TypeError(f"text expected 3 arguments, got {len(args)}")
+            raise TypeError(f"text expected 3 arguments (message, x, y), got {len(args)}")
 
         # Reassigning the properties gets around a bug with the properties not being used.
         self.canvas.font = self.canvas.font
