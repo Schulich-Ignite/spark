@@ -72,7 +72,7 @@ class Core:
         self.regexes = [
             re.compile(r"#[0-9A-Fa-f]{6}"),
             re.compile(r"rgb\({},{},{}\)".format(match_255, match_255, match_255)),
-            re.compile(r"rgba\({},{},{},{}}\)".format(match_255, match_255, match_255, match_alpha)),
+            re.compile(r"rgba\({},{},{},{}\)".format(match_255, match_255, match_255, match_alpha)),
             re.compile(r"hsl\({},{}%,{}%\)".format(match_360, match_100, match_100)),
             re.compile(r"hsla\({},{}%,{}%,{}\)".format(match_360, match_100, match_100, match_alpha))
         ]
