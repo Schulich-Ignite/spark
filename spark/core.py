@@ -7,7 +7,7 @@
 
 import threading
 import time
-from math import pi
+from math import pi, sin, cos, sqrt
 
 import numpy as np
 from IPython.display import Code, display
@@ -42,7 +42,9 @@ class Core:
         "rect", "square", "fill_rect", "stroke_rect", "clear_rect",
         "fill_text", "stroke_text", "text_align",
         "draw_line",
-        "circle", "fill_circle", "stroke_circle", "fill_arc", "stroke_arc",
+        "circle", "fill_circle", "stroke_circle",
+        "arc", "fill_arc", "stroke_arc",
+        "ellipse", "fill_ellipse", "stroke_ellipse",
         "print"
     }
 
@@ -291,20 +293,144 @@ class Core:
     def fill_circle(self, *args):
         self.check_coords("fill_circle", *args, width_only=True)
         arc_args = self.arc_args(*args)
-        self.canvas.fill_arc(*arc_args)
+        self.canvas.fill_arc(*arc_args, )
 
     # Draws circle stroke
     def stroke_circle(self, *args):
         self.check_coords("stroke_circle", *args, width_only=True)
         arc_args = self.arc_args(*args)
         self.canvas.stroke_arc(*arc_args)
-        
+
+    def ellipse(self, *args):
+        self.check_coords("ellipse", *args)
+        self.fill_arc(*args, 0, 2*pi)
+        self.stroke_arc(*args, 0, 2*pi)
+
+    def fill_ellipse(self, *args):
+        self.check_coords("fill_ellipse", *args)
+        self.fill_arc(*args, 0, 2*pi)
+
+    def stroke_ellipse(self, *args):
+        self.check_coords("stroke_ellipse", *args)
+        self.stroke_arc(*args, 0, 2*pi)
+
     def fill_arc(self, *args):
-        self.canvas.fill_arc(*args)
+        argc = len(args)
+        if not (argc == 6 or argc == 7):
+            raise ArgumentNumError("fill_arc", [6,7], argc)
+        self.check_type_is_int(args[0], "fill_arc", "x")
+        self.check_type_is_int(args[1], "fill_arc", "y")
+        self.check_int_is_ranged(args[2], 0, None, "fill_arc", "w")
+        self.check_int_is_ranged(args[3], 0, None, "fill_arc", "h")
+        self.check_type_is_num(args[4], "fill_arc", "start")
+        self.check_type_is_num(args[5], "fill_arc", "stop")
+        x, y, w, h, start, stop = args[:6]
+        if w == 0 or h == 0:
+            return
+        while start < 0:
+            start += 2*pi
+        while start > 2*pi:
+            start -= 2*pi
+        while stop < 0:
+            start += 2*pi
+        while stop > 2*pi:
+            stop -= 2*pi
+        mode="default"
+        if argc == 7:
+            mode = args[6]
+        self.canvas.translate(x,y)
+        d = max(w, h)
+        r = d/2
+        scale_x = w/d
+        scale_y = h/d
+        self.canvas.scale(scale_x, scale_y)
+        if mode == "open" or mode == "chord":
+            self.canvas.fill_arc(0, 0, d/2, start, stop)
+        elif mode == "default" or mode == "pie":
+            self.canvas.begin_path()
+            start_x = r*cos(start)
+            start_y = r*sin(start)
+            self.canvas.move_to(start_x, start_y)
+            self.canvas.arc(0, 0, r, start, stop)
+            # angle_remaining = stop-start
+            # if angle_remaining < 0:
+            #     angle_remaining += 2*pi
+            # curr_a = start
+            # self.canvas.begin_path()
+            # self.canvas.move_to(start_x, start_y)
+            # while angle_remaining > 0:
+            #     if angle_remaining > pi/2:
+            #         angle_used = pi/2
+            #     else:
+            #         angle_used = angle_remaining
+            #     next_a = curr_a+angle_used
+            #     next_x = r*cos(next_a)
+            #     next_y = r*sin(next_a)
+            #     cont_x = r*(sin(next_a)-sin(curr_a))/(sin(next_a-curr_a))
+            #     cont_y = r*(cos(curr_a)-cos(next_a))/(sin(next_a-curr_a))
+            #     self.canvas.arc_to(cont_x, cont_y, next_x, next_y, r)
+            #     angle_remaining -= angle_used
+            #     curr_a = next_a
+            self.canvas.line_to(0,0)
+            self.canvas.close_path()
+            self.canvas.fill()
+        else:
+            raise ArgumentConditionError("fill_arc", "mode", 'One of "default", "open", "chord" or "pie"', mode)
+        self.canvas.scale(1/scale_x, 1/scale_y)
+        self.canvas.translate(-x, -y)
 
     def stroke_arc(self, *args):
-        self.canvas.stroke_arc(*args)
-    
+        argc = len(args)
+        if not (argc == 6 or argc == 7):
+            raise ArgumentNumError("stroke_arc", [6,7], argc)
+        self.check_type_is_int(args[0], "stroke_arc", "x")
+        self.check_type_is_int(args[1], "stroke_arc", "y")
+        self.check_int_is_ranged(args[2], 0, None, "stroke_arc", "w")
+        self.check_int_is_ranged(args[3], 0, None, "stroke_arc", "h")
+        self.check_type_is_num(args[4], "stroke_arc", "start")
+        self.check_type_is_num(args[5], "stroke_arc", "stop")
+        x, y, w, h, start, stop = args[:6]
+        if w == 0 or h == 0:
+            return
+        while start < 0:
+            start += 2*pi
+        while start > 2*pi:
+            start -= 2*pi
+        while stop < 0:
+            start += 2*pi
+        while stop > 2*pi:
+            stop -= 2*pi
+        mode = "default"
+        if argc == 7:
+            mode = args[6]
+        self.canvas.translate(x,y)
+        d = max(w, h)
+        scale_x = w/d
+        scale_y = h/d
+        self.canvas.scale(scale_x, scale_y)
+        self.canvas.begin_path()
+        start_x = d*cos(start)/2
+        start_y = d*sin(start)/2
+        self.canvas.move_to(start_x, start_y)
+        self.canvas.arc(0, 0, d/2, start, stop)
+        if mode == "open" or mode == "default":
+            self.canvas.move_to(start_x, start_y)
+        elif mode == "pie":
+            self.canvas.line_to(0, 0)
+        elif mode == "chord":
+            pass
+        else:
+            raise ArgumentConditionError("stroke_arc", "mode", 'One of "default", "open", "chord" or "pie"', mode)
+        self.canvas.close_path()
+        self.canvas.stroke()
+        self.canvas.scale(1/scale_x, 1/scale_y)
+        self.canvas.translate(-x, -y)
+
+    def arc(self, *args):
+        self.fill_arc(*args)
+        self.stroke_arc(*args)
+
+
     def fill_text(self, *args):
         self.canvas.font = "{px}px sans-serif".format(px = args[4])
         self.canvas.fill_text(args[0:3])
@@ -388,19 +514,19 @@ class Core:
 
     def check_num_is_ranged(self, n, lb, ub, func_name="Function", arg_name=""):
         self.check_type_is_num(n, func_name, arg_name)
-        if lb > n or ub < n:
+        if (lb is not None and lb > n) or (ub is not None and ub < n):
             raise ArgumentConditionError(func_name, arg_name, "Number in range [{}, {}]".format(lb, ub), n)
 
     # Tests if input is an int, and within a specified range
     def check_int_is_ranged(self, n, lb, ub, func_name="Function", arg_name=""):
         self.check_type_is_int(n, func_name, arg_name)
-        if lb > n or ub < n:
+        if (lb is not None and lb > n) or (ub is not None and ub < n):
             raise ArgumentConditionError(func_name, arg_name, "Integer in range [{}, {}]".format(lb, ub), n)
 
     # Tests if input is a float, and within a specified range
     def check_float_is_ranged(self, n, lb, ub, func_name="Function", arg_name=""):
         self.check_type_is_float(n, func_name, arg_name)
-        if lb > n or ub < n:
+        if (lb is not None and lb > n) or (ub is not None and ub < n):
             raise ArgumentConditionError(func_name, arg_name, "Float in range [{}, {}]".format(lb, ub), n)
 
     @staticmethod
@@ -446,4 +572,4 @@ class Core:
 
     # Convert a tuple of circle args into arc args 
     def arc_args(self, *args):
-        return (args[0], args[1], args[2] / 2, 0, 2 * pi)
+        return (args[0], args[1], args[2], args[2], 0, 2 * pi)
