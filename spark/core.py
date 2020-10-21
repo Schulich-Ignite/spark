@@ -344,6 +344,9 @@ class Core:
         self.canvas.text_baseline = self.canvas.text_baseline
         self.canvas.text_align = self.canvas.text_align
 
+        for arg in args[1:]:
+            self.check_type_is_num("text_size", arg)
+
         self.canvas.fill_text(str(args[0]), args[1], args[2])
 
     def draw_line(self, *args):
