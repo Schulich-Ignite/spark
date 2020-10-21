@@ -331,7 +331,7 @@ class Core:
             raise TypeError(f"text_size expected 1 argument, got {len(args)}")
 
         if args[0] not in ['left', 'right', 'center']:
-            raise TypeError(f"text_align expects a string of 'left', 'right', or 'center', got {args[0]}")
+            raise TypeError(f'text_align expects a string of "left", "right", or "center", got {args[0]}')
 
         self.canvas.text_align = args[0]
 
