@@ -196,7 +196,7 @@ class Core:
     # Prints output to embedded output box
     def print(self, msg):
         global _sparkplug_running
-        self.output_text += msg + "\n"
+        self.output_text += str(msg) + "\n"
 
         if _sparkplug_running:
             self.output_text_code.update(Code(self.output_text))
