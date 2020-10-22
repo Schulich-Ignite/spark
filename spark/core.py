@@ -40,7 +40,7 @@ class Core:
         "fill_style", "stroke_style",
         "clear", "background",
         "rect", "square", "fill_rect", "stroke_rect", "clear_rect",
-        "fill_text", "stroke_text", "text_align",
+        "text", "text_size", "text_align",
         "draw_line",
         "circle", "fill_circle", "stroke_circle", "fill_arc", "stroke_arc",
         "print"
@@ -66,6 +66,14 @@ class Core:
         self.mouse_x = 0
         self.mouse_y = 0
         self.mouse_is_pressed = False
+
+        # Settings for drawing text (https://ipycanvas.readthedocs.io/en/latest/drawing_text.html).
+        self.font_settings = {
+            'size': 12.0,
+            'font': 'sans-serif',
+            'baseline': 'top',
+            'align': 'left'
+        }
 
     ### Properties ###
 
@@ -137,6 +145,11 @@ class Core:
         self.canvas.on_mouse_down(self.on_mouse_down)
         self.canvas.on_mouse_up(self.on_mouse_up)
         self.canvas.on_mouse_move(self.on_mouse_move)
+
+        # Initialize text drawing settings for the canvas. ()
+        self.canvas.font = f"{self.font_settings['size']}px {self.font_settings['font']}"
+        self.canvas.text_baseline = 'top'
+        self.canvas.text_align = 'left'
 
         thread = threading.Thread(target=self.loop)
         thread.start()
@@ -304,19 +317,38 @@ class Core:
 
     def stroke_arc(self, *args):
         self.canvas.stroke_arc(*args)
-    
-    def fill_text(self, *args):
-        self.canvas.font = "{px}px sans-serif".format(px = args[4])
-        self.canvas.fill_text(args[0:3])
-        self.canvas.font = "12px sans-serif"
 
-    def stroke_text(self, *args):
-        self.canvas.font = "{px}px sans-serif".format(px = args[4])
-        self.canvas.stroke_text(args[0:3])
-        self.canvas.font = "12px sans-serif"
+    def text_size(self, *args):
+        if len(args) != 1:
+            raise TypeError(f"text_size expected 1 argument, got {len(args)}")
+        
+        size = args[0]
+        self.check_type_is_num(size, func_name="text_size")
+        self.font_settings['size'] = size
+        self.canvas.font = f"{self.font_settings['size']}px {self.font_settings['font']}"
 
     def text_align(self, *args):
-        self.canvas.text_align(*args)
+        if len(args) != 1:
+            raise TypeError(f"text_size expected 1 argument, got {len(args)}")
+
+        if args[0] not in ['left', 'right', 'center']:
+            raise TypeError(f'text_align expects a string of "left", "right", or "center", got {args[0]}')
+
+        self.canvas.text_align = args[0]
+
+    def text(self, *args):
+        if len(args) != 3:
+            raise TypeError(f"text expected 3 arguments (message, x, y), got {len(args)}")
+
+        # Reassigning the properties gets around a bug with the properties not being used.
+        self.canvas.font = self.canvas.font
+        self.canvas.text_baseline = self.canvas.text_baseline
+        self.canvas.text_align = self.canvas.text_align
+
+        for arg in args[1:]:
+            self.check_type_is_num(arg, func_name="text")
+
+        self.canvas.fill_text(str(args[0]), args[1], args[2])
 
     def draw_line(self, *args):
         if len(args) == 4:
