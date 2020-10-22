@@ -336,33 +336,10 @@ class Core:
     
     # Draws background on canvas
     def background(self, *args):
+        fill = self.parse_color("background", *args)
         old_fill = self.canvas.fill_style
-        argc = len(args)
-
-        if argc == 3:
-            self.check_int_is_ranged(args[0], 0, 255, "background", "r")
-            self.check_int_is_ranged(args[1], 0, 255, "background", "g")
-            self.check_int_is_ranged(args[2], 0, 255, "background", "b")
-
-            self.clear()
-            self.fill_style(args[0], args[1], args[2])
-            self.fill_rect(0, 0, self.width, self.height)
-        elif argc == 1:
-            if (not type(args[0]) is str):
-                raise ArgumentTypeError("background", "color", str, type(args[0]), args[0])
-            self.clear()
-            self.fill_style(args[0])
-            self.fill_rect(0, 0, self.width, self.height)
-        elif argc == 4:
-            self.check_int_is_ranged(args[0], 0, 255, "background", "r")
-            self.check_int_is_ranged(args[1], 0, 255, "background", "g")
-            self.check_int_is_ranged(args[2], 0, 255, "background", "b")
-            self.check_num_is_ranged(args[3], 0, 1, "background", "a")
-
-            self.clear()
-            self.fill_style(args[0], args[1], args[2], args[3])
-            self.fill_rect(0, 0, self.width, self.height)
-        
+        self.canvas.fill_style = fill
+        self.canvas.fill_rect(0, 0, self.width, self.height)
         self.canvas.fill_style = old_fill
     
     ### Helper Functions ###
@@ -415,6 +392,10 @@ class Core:
         argc = len(args)
 
         if argc == 1:
+            if type(args[0]) is int:
+                return "rgb({}, {}, {})".format(args[0], args[0], args[0])
+            elif not type(args[0]) is str:
+                raise TypeError("Enter colour value in Hex, e.g. #FF0000 for red")
             return args[0]
         elif argc == 3 or argc == 4:
             color_args = args[:3]
