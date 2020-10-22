@@ -8,6 +8,7 @@
 import threading
 import time
 from math import pi
+import re
 
 import numpy as np
 from IPython.display import Code, display
@@ -15,8 +16,8 @@ from ipycanvas import Canvas, hold_canvas
 from ipywidgets import Button
 
 from .util import IpyExit
+from .util.HTMLColors import HTMLColors
 from .util.Errors import *
-
 
 DEFAULT_CANVAS_SIZE = (100, 100)
 FRAME_RATE = 30
@@ -62,6 +63,20 @@ class Core:
 
         self.canvas = Canvas()
         self.output_text = ""
+        self.color_strings = {
+            "default": "#888888"
+        }
+        match_255 = r"(?:(?:2(?:(?:5[0-5])|(?:[0-4][0-9])))|(?:[01]?[0-9]{1,2}))"
+        match_alpha = r"(?:1(?:\.0*)?)|(?:0(?:\.[0-9]*)?)"
+        match_360 = r"(?:(?:3[0-5][0-9])|(?:[0-2]?[0-9]{1,2}))"
+        match_100 = r"(?:100|[0-9]{1,2})"
+        self.regexes = [
+            re.compile(r"#[0-9A-Fa-f]{6}"),
+            re.compile(r"rgb\({},{},{}\)".format(match_255, match_255, match_255)),
+            re.compile(r"rgba\({},{},{},{}\)".format(match_255, match_255, match_255, match_alpha)),
+            re.compile(r"hsl\({},{}%,{}%\)".format(match_360, match_100, match_100)),
+            re.compile(r"hsla\({},{}%,{}%,{}\)".format(match_360, match_100, match_100, match_alpha))
+        ]
         self.width, self.height = DEFAULT_CANVAS_SIZE
         self.mouse_x = 0
         self.mouse_y = 0
@@ -427,8 +442,10 @@ class Core:
             if type(args[0]) is int:
                 return "rgb({}, {}, {})".format(args[0], args[0], args[0])
             elif not type(args[0]) is str:
-                raise TypeError("Enter colour value in Hex, e.g. #FF0000 for red")
-            return args[0]
+                raise TypeError(
+                    "Enter colour value in a valid format, e.g. #FF0000, rgb(255, 0, 0), or hsl(0, 100%, 50%)"
+                )
+            return self.parse_color_string(func_name, args[0])
         elif argc == 3 or argc == 4:
             color_args = args[:3]
             for col, name in zip(color_args, ["r","g","b"]):
@@ -445,6 +462,24 @@ class Core:
         else:
             raise ArgumentNumError(func_name, [1, 3, 4], argc)
 
+    def parse_color_string(self, func_name, s):
+        rws = re.compile(r'\s')
+        no_ws = rws.sub('', s).lower()
+        # Check allowed color strings
+        if no_ws in HTMLColors:
+            return no_ws
+        elif no_ws in self.color_strings:
+            return self.color_strings[s]
+        # Check other HTML-permissible formats
+        else:
+            for regex in self.regexes:
+                if regex.fullmatch(no_ws) is not None:
+                    return no_ws
+        # Not in any permitted format
+        raise TypeError(
+            "{} expected a string matching an HTML-permissible format or a color name, got {}".format(
+                func_name, s))
+
     # Check a set of 4 args are valid coordinates
     # x, y, w, h
     def check_coords(self, func_name, *args, width_only=False):
@@ -460,3 +495,5 @@ class Core:
     # Convert a tuple of circle args into arc args 
     def arc_args(self, *args):
         return (args[0], args[1], args[2] / 2, 0, 2 * pi)
+
+
