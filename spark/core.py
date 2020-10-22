@@ -15,6 +15,7 @@ from ipycanvas import Canvas, hold_canvas
 from ipywidgets import Button
 
 from .util import IpyExit
+from .util.Errors import *
 
 
 DEFAULT_CANVAS_SIZE = (100, 100)
@@ -196,7 +197,7 @@ class Core:
     # Prints output to embedded output box
     def print(self, msg):
         global _sparkplug_running
-        self.output_text += msg + "\n"
+        self.output_text += str(msg) + "\n"
 
         if _sparkplug_running:
             self.output_text_code.update(Code(self.output_text))
@@ -343,32 +344,41 @@ class Core:
     
     ### Helper Functions ###
 
+    # Tests if input is an allowed type
+    def check_type_allowed(self, n, allowed, func_name="Function", arg_name=""):
+        if not type(n) in allowed:
+            raise ArgumentTypeError(func_name, arg_name, allowed, type(n), n)
+
     # Tests if input is numeric
     # Note: No support for complex numbers
-    def check_type_is_num(self, n, func_name=None):
-        if not isinstance(n, (int, float)):
-            msg = "Expected {} to be a number".format(n)
-            if func_name:
-                msg = "{} expected {} to be a number".format(func_name, self.quote_if_string(n))
-            raise TypeError(msg)
+    def check_type_is_num(self, n, func_name="Function", arg_name=""):
+        self.check_type_allowed(n, [float, int], func_name, arg_name)
 
     # Tests if input is an int
-    def check_type_is_int(self, n, func_name=None):
-        if type(n) is not int:
-            msg = "Expected {} to be an int".format(n)
-            if func_name:
-                msg = "{} expected {} to be an int".format(func_name, self.quote_if_string(n))
-            raise TypeError(msg)
+    def check_type_is_int(self, n, func_name="Function", arg_name=""):
+        self.check_type_allowed(n, [int], func_name, arg_name)
 
     # Tests if input is a float
     # allow_int: Set to True to allow ints as a float. Defaults to True.
-    def check_type_is_float(self, n, func_name=None, allow_int=True):
-        if type(n) is not float:
-            if not allow_int or type(n) is not int:
-                msg = "Expected {} to be a float".format(n)
-                if func_name:
-                    msg = "{} expected {} to be a float".format(func_name, self.quote_if_string(n))
-                raise TypeError(msg)
+    def check_type_is_float(self, n, func_name="Function", arg_name=""):
+        self.check_type_allowed(n, [float], func_name, arg_name)
+
+    def check_num_is_ranged(self, n, lb, ub, func_name="Function", arg_name=""):
+        self.check_type_is_num(n, func_name, arg_name)
+        if lb > n or ub < n:
+            raise ArgumentConditionError(func_name, arg_name, "Number in range [{}, {}]".format(lb, ub), n)
+
+    # Tests if input is an int, and within a specified range
+    def check_int_is_ranged(self, n, lb, ub, func_name="Function", arg_name=""):
+        self.check_type_is_int(n, func_name, arg_name)
+        if lb > n or ub < n:
+            raise ArgumentConditionError(func_name, arg_name, "Integer in range [{}, {}]".format(lb, ub), n)
+
+    # Tests if input is a float, and within a specified range
+    def check_float_is_ranged(self, n, lb, ub, func_name="Function", arg_name=""):
+        self.check_type_is_float(n, func_name, arg_name)
+        if lb > n or ub < n:
+            raise ArgumentConditionError(func_name, arg_name, "Float in range [{}, {}]".format(lb, ub), n)
 
     @staticmethod
     def quote_if_string(val):
@@ -389,32 +399,31 @@ class Core:
             return args[0]
         elif argc == 3 or argc == 4:
             color_args = args[:3]
-            for col in color_args:
-                self.check_type_is_int(col, func_name)
-            color_args = np.clip(color_args, 0, 255)
+            for col, name in zip(color_args, ["r","g","b"]):
+                self.check_int_is_ranged(col, 0, 255, func_name, name)
 
             if argc == 3:
                 return "rgb({}, {}, {})".format(*color_args)
             else:
                 # Clip alpha between 0 and 1
                 alpha_arg = args[3]
-                self.check_type_is_float(alpha_arg, func_name)
+                self.check_float_is_ranged(alpha_arg, 0, 1, func_name, "a")
                 alpha_arg = np.clip(alpha_arg, 0, 1.0)
                 return "rgba({}, {}, {}, {})".format(*color_args, alpha_arg)
         else:
-            raise TypeError("{} expected {}, {} or {} arguments, got {}".format(func_name, 1, 3, 4, argc))
+            raise ArgumentNumError(func_name, [1, 3, 4], argc)
 
     # Check a set of 4 args are valid coordinates
     # x, y, w, h
     def check_coords(self, func_name, *args, width_only=False):
         argc = len(args)
         if argc != 4 and not width_only:
-            raise TypeError("{} expected {} arguments for x, y, w, h, got {} arguments".format(func_name, 4, argc))
+            raise ArgumentNumError("{} (~width_only)".format(func_name), 4, argc)
         elif argc != 3 and width_only:
-            raise TypeError("{} expected {} arguments for x, y, size, got {} arguments".format(func_name, 3, argc))
+            raise ArgumentNumError("{} (width_only)".format(func_name), 3, argc)
 
         for arg in args:
-            self.check_type_is_float(arg, func_name)
+            self.check_type_is_num(arg, func_name)
 
     # Convert a tuple of circle args into arc args 
     def arc_args(self, *args):
