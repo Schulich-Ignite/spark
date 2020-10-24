@@ -14,18 +14,19 @@ class ArgumentTypeError(ArgumentError):
             argname = "type"
         type_str = ""
         if type(allowed_types) == list:
-            if len(allowed_types) == 1:
-                type_str += str(allowed_types[0])
-            elif len(allowed_types) == 2:
-                type_str += "{} or {}".format(*allowed_types)
+            allowed_type_names = [t.__name__ for t in allowed_types]
+            if len(allowed_type_names) == 1:
+                type_str += allowed_type_names[0]
+            elif len(allowed_type_names) == 2:
+                type_str += "{} or {}".format(*allowed_type_names)
             else:
-                type_str = (", ".join("{}"*(len(allowed_types)-1))).format(*allowed_types[:-1])
-                type_str += ", or {}".format(allowed_types[-1])
+                type_str = ", ".join([str(t) for t in allowed_type_names[:-1]])
+                type_str += ", or {}".format(allowed_type_names[-1])
         else:
-            type_str = str(allowed_types)
+            type_str = str(allowed_type_names)
 
         self.message = "{} expected {} {}, got {} of type {}".format(
-            func_name, argname, type_str, arg, actual_type)
+            func_name, argname, type_str, arg, actual_type.__name__)
         super().__init__(self.message)
 
 
@@ -38,7 +39,7 @@ class ArgumentNumError(ArgumentError):
             elif len(allowed_nums) == 2:
                 num_str += "{} or {}".format(*allowed_nums)
             else:
-                num_str = (", ".join("{}"*(len(allowed_nums)-1))).format(*allowed_nums[:-1])
+                num_str = ", ".join([str(n) for n in allowed_nums[:-1]])
                 num_str += ", or {}".format(allowed_nums[-1])
         else:
             num_str = str(allowed_nums)

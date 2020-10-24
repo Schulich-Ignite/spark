@@ -455,7 +455,7 @@ class Core:
 
         if argc == 1:
             if type(args[0]) is int:
-                return "rgb({}, {}, {})".format(args[0], args[0], args[0])
+                return "rgb({}, {}, {})".format(*np.clip([args[0]] * 3))
             elif not type(args[0]) is str:
                 raise TypeError(
                     "Enter colour value in a valid format, e.g. #FF0000, rgb(255, 0, 0), or hsl(0, 100%, 50%)"
@@ -463,15 +463,16 @@ class Core:
             return self.parse_color_string(func_name, args[0])
         elif argc == 3 or argc == 4:
             color_args = args[:3]
-            for col, name in zip(color_args, ["r","g","b"]):
-                self.check_int_is_ranged(col, 0, 255, func_name, name)
+            for color_arg, arg_name in zip(color_args, ["r", "g", "b"]):
+                self.check_type_is_int(color_arg, func_name=func_name, arg_name=arg_name)
+            color_args = np.clip(color_args, 0, 255)
 
             if argc == 3:
                 return "rgb({}, {}, {})".format(*color_args)
             else:
-                # Clip alpha between 0 and 1
                 alpha_arg = args[3]
-                self.check_float_is_ranged(alpha_arg, 0, 1, func_name, "a")
+                self.check_type_is_num(alpha_arg, func_name=func_name, arg_name="a")    
+                # Clip alpha between 0 and 1
                 alpha_arg = np.clip(alpha_arg, 0, 1.0)
                 return "rgba({}, {}, {}, {})".format(*color_args, alpha_arg)
         else:
