@@ -343,7 +343,7 @@ class Core:
     def fill_arc(self, *args):
         self.check_arc_args("fill_arc", *args)
         x, y, r, scale_x, scale_y, start, stop, mode = self.arc_args(*args)
-        
+
         if scale_x == 0 or scale_y == 0:
             return
 
@@ -368,18 +368,19 @@ class Core:
     def stroke_arc(self, *args):
         self.check_arc_args("stroke_arc", *args)
         x, y, r, scale_x, scale_y, start, stop, mode = self.arc_args(*args)
+
         if scale_x == 0 or scale_y == 0:
             return
 
-        start_x = d*cos(start)/2
-        start_y = d*sin(start)/2
+        start_x = r*cos(start)
+        start_y = r*sin(start)
         
         self.canvas.translate(x,y)
         self.canvas.scale(scale_x, scale_y)
 
         self.canvas.begin_path()
         self.canvas.move_to(start_x, start_y)
-        self.canvas.arc(0, 0, d/2, start, stop)
+        self.canvas.arc(0, 0, r, start, stop)
         if mode == "open" or mode == "default":
             self.canvas.move_to(start_x, start_y)
         elif mode == "pie":
@@ -616,11 +617,10 @@ class Core:
 
     # Convert a tuple of circle args into arc args 
     def arc_args(self, *args):
-        self.check_arc_args(args)
         argc = len(args)
         x, y, w, h = args[:4]
         defaults = [0, 2*pi, "default"]
-        start, stop, mode = (args[4:argc] + defaults[argc-4:])
+        start, stop, mode = [*args[4:argc], *defaults[argc-4:]]
         while start < 0:
             start += 2*pi
         while start > 2*pi:

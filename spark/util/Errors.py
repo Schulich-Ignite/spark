@@ -19,7 +19,8 @@ class ArgumentTypeError(ArgumentError):
             elif len(allowed_types) == 2:
                 type_str += "{} or {}".format(*allowed_types)
             else:
-                type_str = (", ".join("{}"*(len(allowed_types)-1))).format(*allowed_types[:-1])
+                type_str = (", ".join(["{}"]*(len(allowed_types)-1))).format(*allowed_types[:-1])
+                # When merging, get rid of this one!
                 type_str += ", or {}".format(allowed_types[-1])
         else:
             type_str = str(allowed_types)
@@ -38,7 +39,8 @@ class ArgumentNumError(ArgumentError):
             elif len(allowed_nums) == 2:
                 num_str += "{} or {}".format(*allowed_nums)
             else:
-                num_str = (", ".join("{}"*(len(allowed_nums)-1))).format(*allowed_nums[:-1])
+                num_str = (", ".join(["{}"]*(len(allowed_nums)-1))).format(*allowed_nums[:-1])
+                # when merging, get rid of this one!
                 num_str += ", or {}".format(allowed_nums[-1])
         else:
             num_str = str(allowed_nums)
