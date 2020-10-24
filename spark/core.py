@@ -455,7 +455,7 @@ class Core:
 
         if argc == 1:
             if type(args[0]) is int:
-                return "rgb({}, {}, {})".format(*np.clip([args[0]] * 3))
+                return "rgb({}, {}, {})".format(*np.clip([args[0]] * 3, 0, 255))
             elif not type(args[0]) is str:
                 raise TypeError(
                     "Enter colour value in a valid format, e.g. #FF0000, rgb(255, 0, 0), or hsl(0, 100%, 50%)"
