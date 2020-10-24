@@ -42,7 +42,7 @@ class Core:
         "clear", "background",
         "rect", "square", "fill_rect", "stroke_rect", "clear_rect",
         "text", "text_size", "text_align",
-        "draw_line",
+        "draw_line", "line", "line_width", "stroke_width",
         "circle", "fill_circle", "stroke_circle", "fill_arc", "stroke_arc",
         "print"
     }
@@ -365,16 +365,31 @@ class Core:
 
         self.canvas.fill_text(str(args[0]), args[1], args[2])
 
-    def draw_line(self, *args):
-        if len(args) == 4:
-            self.canvas.line_width = args[4]
-        else:
-            self.canvas.line_width = 1
-            
+    def draw_line(self, *args):    
+        if len(args) != 4:
+            raise TypeError(f"draw_line expected 4 arguments (x1, y1, x2, y2), got {len(args)}")
+        for arg in args:
+            self.check_type_is_num(arg, func_name="draw_line")
+
         self.canvas.begin_path()
         self.canvas.move_to(args[0],args[1])
-        self.canvas.line_to(args[2],args[4])
+        self.canvas.line_to(args[2],args[3])
         self.canvas.close_path()
+        self.canvas.stroke()
+
+    # An alias to draw_line
+    def line(self, *args):
+        self.draw_line(*args)
+
+    def line_width(self, *args):
+        if len(args) != 1:
+            raise TypeError(f"line_width expected 1 argument, got {len(args)}")
+        self.check_type_is_num(args[0], func_name="line_width")
+        self.canvas.line_width = args[0]
+
+    # An alias to line_width
+    def stroke_width(self, *args):
+        self.line_width(*args)
 
     # Clears canvas
     def clear(self, *args):
