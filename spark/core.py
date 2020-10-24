@@ -430,6 +430,41 @@ class Core:
         self.fill_arc(*args)
         self.stroke_arc(*args)
 
+    def fill_triangle(self, *args):
+        if len(args) != 6:
+            raise ArgumentNumError("fill_triangle", 6, len(args))
+        self.check_type_is_int(args[0], "fill_triangle", "x1")
+        self.check_type_is_int(args[1], "fill_triangle", "y1")
+        self.check_type_is_int(args[2], "fill_triangle", "x2")
+        self.check_type_is_int(args[3], "fill_triangle", "y2")
+        self.check_type_is_int(args[4], "fill_triangle", "x3")
+        self.check_type_is_int(args[5], "fill_triangle", "y3")
+        self.canvas.begin_path()
+        self.canvas.move_to(args[0], args[1])
+        self.canvas.line_to(args[2], args[3])
+        self.canvas.line_to(args[4], args[5])
+        self.canvas.close_path()
+        self.canvas.fill()
+
+    def stroke_triangle(self, *args):
+        if len(args) != 6:
+            raise ArgumentNumError("stroke_triangle", 6, len(args))
+        self.check_type_is_int(args[0], "stroke_triangle", "x1")
+        self.check_type_is_int(args[1], "stroke_triangle", "y1")
+        self.check_type_is_int(args[2], "stroke_triangle", "x2")
+        self.check_type_is_int(args[3], "stroke_triangle", "y2")
+        self.check_type_is_int(args[4], "stroke_triangle", "x3")
+        self.check_type_is_int(args[5], "stroke_triangle", "y3")
+        self.canvas.begin_path()
+        self.canvas.move_to(args[0], args[1])
+        self.canvas.line_to(args[2], args[3])
+        self.canvas.line_to(args[4], args[5])
+        self.canvas.close_path()
+        self.canvas.stroke()
+
+    def triangle(self, *args):
+        self.fill_triangle(*args)
+        self.stroke_triangle(*args)
 
     def fill_text(self, *args):
         self.canvas.font = "{px}px sans-serif".format(px = args[4])
