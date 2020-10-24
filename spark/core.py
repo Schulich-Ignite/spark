@@ -47,6 +47,7 @@ class Core:
         "ellipse", "fill_ellipse", "stroke_ellipse",
         "text", "text_size", "text_align",
         "draw_line", "line", "line_width", "stroke_width",
+        "triangle", "fill_triangle", "stroke_triangle",
         "print"
     }
 
@@ -313,27 +314,23 @@ class Core:
 
     # Draws circle at given coordinates
     def circle(self, *args):
-        self.check_coords("circle", *args, width_only=True)
-        arc_args = self.arc_args(*args)
-        self.canvas.fill_arc(*arc_args)
-        self.canvas.stroke_arc(*arc_args)
+        self.check_coords("circle", *args, width_only = True)
+        self.ellipse(*args, args[2])
 
     # Draws filled circle
     def fill_circle(self, *args):
-        self.check_coords("fill_circle", *args, width_only=True)
-        arc_args = self.arc_args(*args)
-        self.canvas.fill_arc(*arc_args, )
+        self.check_coords("fill_circle", *args, width_only = True)
+        self.fill_ellipse(*args, args[2])
 
     # Draws circle stroke
     def stroke_circle(self, *args):
-        self.check_coords("stroke_circle", *args, width_only=True)
-        arc_args = self.arc_args(*args)
-        self.canvas.stroke_arc(*arc_args)
+        self.check_coords("stroke_circle", *args, width_only = True)
+        self.fill_ellipse(*args, args[2])
 
     def ellipse(self, *args):
         self.check_coords("ellipse", *args)
-        self.fill_arc(*args, 0, 2*pi)
-        self.stroke_arc(*args, 0, 2*pi)
+        self.fill_ellipse(*args)
+        self.stroke_ellipse(*args)
 
     def fill_ellipse(self, *args):
         self.check_coords("fill_ellipse", *args)
@@ -344,35 +341,15 @@ class Core:
         self.stroke_arc(*args, 0, 2*pi)
 
     def fill_arc(self, *args):
-        argc = len(args)
-        if not (argc == 6 or argc == 7):
-            raise ArgumentNumError("fill_arc", [6,7], argc)
-        self.check_type_is_int(args[0], "fill_arc", "x")
-        self.check_type_is_int(args[1], "fill_arc", "y")
-        self.check_int_is_ranged(args[2], 0, None, "fill_arc", "w")
-        self.check_int_is_ranged(args[3], 0, None, "fill_arc", "h")
-        self.check_type_is_num(args[4], "fill_arc", "start")
-        self.check_type_is_num(args[5], "fill_arc", "stop")
-        x, y, w, h, start, stop = args[:6]
-        if w == 0 or h == 0:
+        self.check_arc_args("fill_arc", *args)
+        x, y, r, scale_x, scale_y, start, stop, mode = self.arc_args(*args)
+        
+        if scale_x == 0 or scale_y == 0:
             return
-        while start < 0:
-            start += 2*pi
-        while start > 2*pi:
-            start -= 2*pi
-        while stop < 0:
-            start += 2*pi
-        while stop > 2*pi:
-            stop -= 2*pi
-        mode="default"
-        if argc == 7:
-            mode = args[6]
+
         self.canvas.translate(x,y)
-        d = max(w, h)
-        r = d/2
-        scale_x = w/d
-        scale_y = h/d
         self.canvas.scale(scale_x, scale_y)
+
         if mode == "open" or mode == "chord":
             self.canvas.fill_arc(0, 0, d/2, start, stop)
         elif mode == "default" or mode == "pie":
@@ -381,65 +358,26 @@ class Core:
             start_y = r*sin(start)
             self.canvas.move_to(start_x, start_y)
             self.canvas.arc(0, 0, r, start, stop)
-            # angle_remaining = stop-start
-            # if angle_remaining < 0:
-            #     angle_remaining += 2*pi
-            # curr_a = start
-            # self.canvas.begin_path()
-            # self.canvas.move_to(start_x, start_y)
-            # while angle_remaining > 0:
-            #     if angle_remaining > pi/2:
-            #         angle_used = pi/2
-            #     else:
-            #         angle_used = angle_remaining
-            #     next_a = curr_a+angle_used
-            #     next_x = r*cos(next_a)
-            #     next_y = r*sin(next_a)
-            #     cont_x = r*(sin(next_a)-sin(curr_a))/(sin(next_a-curr_a))
-            #     cont_y = r*(cos(curr_a)-cos(next_a))/(sin(next_a-curr_a))
-            #     self.canvas.arc_to(cont_x, cont_y, next_x, next_y, r)
-            #     angle_remaining -= angle_used
-            #     curr_a = next_a
             self.canvas.line_to(0,0)
             self.canvas.close_path()
             self.canvas.fill()
-        else:
-            raise ArgumentConditionError("fill_arc", "mode", 'One of "default", "open", "chord" or "pie"', mode)
+            
         self.canvas.scale(1/scale_x, 1/scale_y)
         self.canvas.translate(-x, -y)
 
     def stroke_arc(self, *args):
-        argc = len(args)
-        if not (argc == 6 or argc == 7):
-            raise ArgumentNumError("stroke_arc", [6,7], argc)
-        self.check_type_is_int(args[0], "stroke_arc", "x")
-        self.check_type_is_int(args[1], "stroke_arc", "y")
-        self.check_int_is_ranged(args[2], 0, None, "stroke_arc", "w")
-        self.check_int_is_ranged(args[3], 0, None, "stroke_arc", "h")
-        self.check_type_is_num(args[4], "stroke_arc", "start")
-        self.check_type_is_num(args[5], "stroke_arc", "stop")
-        x, y, w, h, start, stop = args[:6]
-        if w == 0 or h == 0:
+        self.check_arc_args("stroke_arc", *args)
+        x, y, r, scale_x, scale_y, start, stop, mode = self.arc_args(*args)
+        if scale_x == 0 or scale_y == 0:
             return
-        while start < 0:
-            start += 2*pi
-        while start > 2*pi:
-            start -= 2*pi
-        while stop < 0:
-            start += 2*pi
-        while stop > 2*pi:
-            stop -= 2*pi
-        mode = "default"
-        if argc == 7:
-            mode = args[6]
-        self.canvas.translate(x,y)
-        d = max(w, h)
-        scale_x = w/d
-        scale_y = h/d
-        self.canvas.scale(scale_x, scale_y)
-        self.canvas.begin_path()
+
         start_x = d*cos(start)/2
         start_y = d*sin(start)/2
+        
+        self.canvas.translate(x,y)
+        self.canvas.scale(scale_x, scale_y)
+
+        self.canvas.begin_path()
         self.canvas.move_to(start_x, start_y)
         self.canvas.arc(0, 0, d/2, start, stop)
         if mode == "open" or mode == "default":
@@ -448,26 +386,20 @@ class Core:
             self.canvas.line_to(0, 0)
         elif mode == "chord":
             pass
-        else:
-            raise ArgumentConditionError("stroke_arc", "mode", 'One of "default", "open", "chord" or "pie"', mode)
         self.canvas.close_path()
         self.canvas.stroke()
+        
         self.canvas.scale(1/scale_x, 1/scale_y)
         self.canvas.translate(-x, -y)
 
     def arc(self, *args):
+        self.check_arc_args("arc", *args)
         self.fill_arc(*args)
         self.stroke_arc(*args)
 
     def fill_triangle(self, *args):
-        if len(args) != 6:
-            raise ArgumentNumError("fill_triangle", 6, len(args))
-        self.check_type_is_int(args[0], "fill_triangle", "x1")
-        self.check_type_is_int(args[1], "fill_triangle", "y1")
-        self.check_type_is_int(args[2], "fill_triangle", "x2")
-        self.check_type_is_int(args[3], "fill_triangle", "y2")
-        self.check_type_is_int(args[4], "fill_triangle", "x3")
-        self.check_type_is_int(args[5], "fill_triangle", "y3")
+        self.check_triangle_args("fill_triangle", *args)
+
         self.canvas.begin_path()
         self.canvas.move_to(args[0], args[1])
         self.canvas.line_to(args[2], args[3])
@@ -476,14 +408,8 @@ class Core:
         self.canvas.fill()
 
     def stroke_triangle(self, *args):
-        if len(args) != 6:
-            raise ArgumentNumError("stroke_triangle", 6, len(args))
-        self.check_type_is_int(args[0], "stroke_triangle", "x1")
-        self.check_type_is_int(args[1], "stroke_triangle", "y1")
-        self.check_type_is_int(args[2], "stroke_triangle", "x2")
-        self.check_type_is_int(args[3], "stroke_triangle", "y2")
-        self.check_type_is_int(args[4], "stroke_triangle", "x3")
-        self.check_type_is_int(args[5], "stroke_triangle", "y3")
+        self.check_triangle_args("stroke_triangle", *args)
+
         self.canvas.begin_path()
         self.canvas.move_to(args[0], args[1])
         self.canvas.line_to(args[2], args[3])
@@ -492,12 +418,13 @@ class Core:
         self.canvas.stroke()
 
     def triangle(self, *args):
+        self.check_triangle_args("triangle", *args)
         self.fill_triangle(*args)
         self.stroke_triangle(*args)
 
     def text_size(self, *args):
         if len(args) != 1:
-            raise TypeError(f"text_size expected 1 argument, got {len(args)}")
+            raise ArgumentNumError("text_size", 1, len(args))
         
         size = args[0]
         self.check_type_is_num(size, func_name="text_size")
@@ -506,16 +433,16 @@ class Core:
 
     def text_align(self, *args):
         if len(args) != 1:
-            raise TypeError(f"text_size expected 1 argument, got {len(args)}")
+            raise ArgumentNumError("text_align", 1, len(args))
 
         if args[0] not in ['left', 'right', 'center']:
-            raise TypeError(f'text_align expects a string of "left", "right", or "center", got {args[0]}')
+            raise ArgumentConditionError("text_align", "mode", 'String matching "left", "right", or "center"', args[0])
 
         self.canvas.text_align = args[0]
 
     def text(self, *args):
         if len(args) != 3:
-            raise TypeError(f"text expected 3 arguments (message, x, y), got {len(args)}")
+            raise ArgumentNumError("text", 3, len(args))
 
         # Reassigning the properties gets around a bug with the properties not being used.
         self.canvas.font = self.canvas.font
@@ -529,9 +456,9 @@ class Core:
 
     def draw_line(self, *args):    
         if len(args) != 4:
-            raise TypeError(f"draw_line expected 4 arguments (x1, y1, x2, y2), got {len(args)}")
-        for arg in args:
-            self.check_type_is_num(arg, func_name="draw_line")
+            raise ArgumentNumError("draw_line", 4, len(args))
+        for argument, argument_name in zip(args, ["x1", "x2", "x3", "x4"]):
+            self.check_type_is_num(arg, "draw_line", argument_name)
 
         self.canvas.begin_path()
         self.canvas.move_to(args[0],args[1])
@@ -545,8 +472,8 @@ class Core:
 
     def line_width(self, *args):
         if len(args) != 1:
-            raise TypeError(f"line_width expected 1 argument, got {len(args)}")
-        self.check_type_is_num(args[0], func_name="line_width")
+            raise ArgumentNumError("line_width", 1, len(args))
+        self.check_type_is_num(args[0], "line_width", "width")
         self.canvas.line_width = args[0]
 
     # An alias to line_width
@@ -556,7 +483,6 @@ class Core:
     # Clears canvas
     def clear(self, *args):
         self.canvas.clear()
-
     
     # Draws background on canvas
     def background(self, *args):
@@ -619,9 +545,7 @@ class Core:
             if type(args[0]) is int:
                 return "rgb({}, {}, {})".format(args[0], args[0], args[0])
             elif not type(args[0]) is str:
-                raise TypeError(
-                    "Enter colour value in a valid format, e.g. #FF0000, rgb(255, 0, 0), or hsl(0, 100%, 50%)"
-                )
+                raise ArgumentTypeError(func_name, "color", [int, str], type(args[0]), args[0])
             return self.parse_color_string(func_name, args[0])
         elif argc == 3 or argc == 4:
             color_args = args[:3]
@@ -653,24 +577,59 @@ class Core:
                 if regex.fullmatch(no_ws) is not None:
                     return no_ws
         # Not in any permitted format
-        raise TypeError(
-            "{} expected a string matching an HTML-permissible format or a color name, got {}".format(
-                func_name, s))
+        raise ArgumentConditionError(func_name, None, "String matching an HTML-permissible format or a color name", s)
 
+    def check_arc_args(self, func_name, *args):
+        argc = len(args)
+        if argc not in [4, 5, 6, 7]:
+            raise ArgumentNumError(func_name, [4,5,6,7], argc)
+        self.check_coords(func_name, *args[:4])
+        defaults = [0, 2*pi, "default"]
+        start, stop, mode = [*args[4:argc], *defaults[argc-4:]]
+        self.check_type_is_num(start, func_name, "start")
+        self.check_type_is_num(stop, func_name, "stop")
+        if mode not in ["default", "open", "chord", "pie"]:
+            raise ArgumentConditionError(func_name, "mode", 'One of "default", "open", "chord", or "pie"', mode)
+
+    def check_triangle_args(self, func_name, *args):
+        argc = len(args)
+        if argc != 6:
+            raise ArgumentNumError(func_name, 6, argc)
+        for argument, arg_name in zip(args,["x1","y1","x2","y2","x3","y3"]):
+            self.check_type_is_num(argument, func_name, arg_name)
+        
     # Check a set of 4 args are valid coordinates
     # x, y, w, h
     def check_coords(self, func_name, *args, width_only=False):
         argc = len(args)
         if argc != 4 and not width_only:
-            raise ArgumentNumError("{} (~width_only)".format(func_name), 4, argc)
+            raise ArgumentNumError(func_name, 4, argc)
         elif argc != 3 and width_only:
-            raise ArgumentNumError("{} (width_only)".format(func_name), 3, argc)
-
-        for arg in args:
-            self.check_type_is_num(arg, func_name)
+            raise ArgumentNumError(func_name, 3, argc)
+        self.check_type_is_num(args[0], func_name, "x")
+        self.check_type_is_num(args[1], func_name, "y")
+        if argc == 3:
+            self.check_num_is_ranged(args[2], 0, None, func_name, "size")
+        else:
+            self.check_num_is_ranged(args[2], 0, None, func_name, "w")
+            self.check_num_is_ranged(args[3], 0, None, func_name, "h")
 
     # Convert a tuple of circle args into arc args 
     def arc_args(self, *args):
-        return (args[0], args[1], args[2], args[2], 0, 2 * pi)
-
+        self.check_arc_args(args)
+        argc = len(args)
+        x, y, w, h = args[:4]
+        defaults = [0, 2*pi, "default"]
+        start, stop, mode = (args[4:argc] + defaults[argc-4:])
+        while start < 0:
+            start += 2*pi
+        while start > 2*pi:
+            start -= 2*pi
+        while stop < 0:
+            stop += 2*pi
+        while stop > 2*pi:
+            stop += 2*pi
+        d = max(w, h)/2
+        
+        return x, y, d/2, w/d, h/d, start, stop, mode
 
