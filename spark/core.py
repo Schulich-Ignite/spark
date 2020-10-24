@@ -8,6 +8,7 @@
 import threading
 import time
 from math import pi
+import re
 
 import numpy as np
 from IPython.display import Code, display
@@ -15,7 +16,8 @@ from ipycanvas import Canvas, hold_canvas
 from ipywidgets import Button
 
 from .util import IpyExit
-
+from .util.HTMLColors import HTMLColors
+from .util.Errors import *
 
 DEFAULT_CANVAS_SIZE = (100, 100)
 FRAME_RATE = 30
@@ -39,8 +41,8 @@ class Core:
         "fill_style", "stroke_style",
         "clear", "background",
         "rect", "square", "fill_rect", "stroke_rect", "clear_rect",
-        "fill_text", "stroke_text", "text_align",
-        "draw_line",
+        "text", "text_size", "text_align",
+        "draw_line", "line", "line_width", "stroke_width",
         "circle", "fill_circle", "stroke_circle", "fill_arc", "stroke_arc",
         "print"
     }
@@ -61,10 +63,32 @@ class Core:
 
         self.canvas = Canvas()
         self.output_text = ""
+        self.color_strings = {
+            "default": "#888888"
+        }
+        match_255 = r"(?:(?:2(?:(?:5[0-5])|(?:[0-4][0-9])))|(?:[01]?[0-9]{1,2}))"
+        match_alpha = r"(?:1(?:\.0*)?)|(?:0(?:\.[0-9]*)?)"
+        match_360 = r"(?:(?:3[0-5][0-9])|(?:[0-2]?[0-9]{1,2}))"
+        match_100 = r"(?:100|[0-9]{1,2})"
+        self.regexes = [
+            re.compile(r"#[0-9A-Fa-f]{6}"),
+            re.compile(r"rgb\({},{},{}\)".format(match_255, match_255, match_255)),
+            re.compile(r"rgba\({},{},{},{}\)".format(match_255, match_255, match_255, match_alpha)),
+            re.compile(r"hsl\({},{}%,{}%\)".format(match_360, match_100, match_100)),
+            re.compile(r"hsla\({},{}%,{}%,{}\)".format(match_360, match_100, match_100, match_alpha))
+        ]
         self.width, self.height = DEFAULT_CANVAS_SIZE
         self.mouse_x = 0
         self.mouse_y = 0
         self.mouse_is_pressed = False
+
+        # Settings for drawing text (https://ipycanvas.readthedocs.io/en/latest/drawing_text.html).
+        self.font_settings = {
+            'size': 12.0,
+            'font': 'sans-serif',
+            'baseline': 'top',
+            'align': 'left'
+        }
 
     ### Properties ###
 
@@ -137,6 +161,11 @@ class Core:
         self.canvas.on_mouse_up(self.on_mouse_up)
         self.canvas.on_mouse_move(self.on_mouse_move)
 
+        # Initialize text drawing settings for the canvas. ()
+        self.canvas.font = f"{self.font_settings['size']}px {self.font_settings['font']}"
+        self.canvas.text_baseline = 'top'
+        self.canvas.text_align = 'left'
+
         thread = threading.Thread(target=self.loop)
         thread.start()
 
@@ -196,7 +225,7 @@ class Core:
     # Prints output to embedded output box
     def print(self, msg):
         global _sparkplug_running
-        self.output_text += msg + "\n"
+        self.output_text += str(msg) + "\n"
 
         if _sparkplug_running:
             self.output_text_code.update(Code(self.output_text))
@@ -303,30 +332,64 @@ class Core:
 
     def stroke_arc(self, *args):
         self.canvas.stroke_arc(*args)
-    
-    def fill_text(self, *args):
-        self.canvas.font = "{px}px sans-serif".format(px = args[4])
-        self.canvas.fill_text(args[0:3])
-        self.canvas.font = "12px sans-serif"
 
-    def stroke_text(self, *args):
-        self.canvas.font = "{px}px sans-serif".format(px = args[4])
-        self.canvas.stroke_text(args[0:3])
-        self.canvas.font = "12px sans-serif"
+    def text_size(self, *args):
+        if len(args) != 1:
+            raise TypeError(f"text_size expected 1 argument, got {len(args)}")
+        
+        size = args[0]
+        self.check_type_is_num(size, func_name="text_size")
+        self.font_settings['size'] = size
+        self.canvas.font = f"{self.font_settings['size']}px {self.font_settings['font']}"
 
     def text_align(self, *args):
-        self.canvas.text_align(*args)
+        if len(args) != 1:
+            raise TypeError(f"text_size expected 1 argument, got {len(args)}")
 
-    def draw_line(self, *args):
-        if len(args) == 4:
-            self.canvas.line_width = args[4]
-        else:
-            self.canvas.line_width = 1
-            
+        if args[0] not in ['left', 'right', 'center']:
+            raise TypeError(f'text_align expects a string of "left", "right", or "center", got {args[0]}')
+
+        self.canvas.text_align = args[0]
+
+    def text(self, *args):
+        if len(args) != 3:
+            raise TypeError(f"text expected 3 arguments (message, x, y), got {len(args)}")
+
+        # Reassigning the properties gets around a bug with the properties not being used.
+        self.canvas.font = self.canvas.font
+        self.canvas.text_baseline = self.canvas.text_baseline
+        self.canvas.text_align = self.canvas.text_align
+
+        for arg in args[1:]:
+            self.check_type_is_num(arg, func_name="text")
+
+        self.canvas.fill_text(str(args[0]), args[1], args[2])
+
+    def draw_line(self, *args):    
+        if len(args) != 4:
+            raise TypeError(f"draw_line expected 4 arguments (x1, y1, x2, y2), got {len(args)}")
+        for arg in args:
+            self.check_type_is_num(arg, func_name="draw_line")
+
         self.canvas.begin_path()
         self.canvas.move_to(args[0],args[1])
-        self.canvas.line_to(args[2],args[4])
+        self.canvas.line_to(args[2],args[3])
         self.canvas.close_path()
+        self.canvas.stroke()
+
+    # An alias to draw_line
+    def line(self, *args):
+        self.draw_line(*args)
+
+    def line_width(self, *args):
+        if len(args) != 1:
+            raise TypeError(f"line_width expected 1 argument, got {len(args)}")
+        self.check_type_is_num(args[0], func_name="line_width")
+        self.canvas.line_width = args[0]
+
+    # An alias to line_width
+    def stroke_width(self, *args):
+        self.line_width(*args)
 
     # Clears canvas
     def clear(self, *args):
@@ -335,66 +398,49 @@ class Core:
     
     # Draws background on canvas
     def background(self, *args):
+        fill = self.parse_color("background", *args)
         old_fill = self.canvas.fill_style
-        argc = len(args)
-
-        if argc == 3:
-            if ((not type(args[0]) is int) or (not type(args[1]) is int) or (not type(args[2]) is int)):
-                raise TypeError("Enter Values between 0 and 255(integers only) for all 3 values")
-            elif (not (args[0] >= 0 and args[0] <= 255) or not (args[1] >= 0 and args[1] <= 255) or not (
-                args[2] >= 0 and args[2] <= 255)):
-                raise TypeError("Enter Values between 0 and 255(integers only) for all 3 values")
-            self.clear()
-            self.fill_style(args[0], args[1], args[2])
-            self.fill_rect(0, 0, self.width, self.height)
-        elif argc == 1:
-            if (not type(args[0]) is str):
-                raise TypeError("Enter colour value in Hex i.e #000000 for black and so on")
-            self.clear()
-            self.fill_style(args[0])
-            self.fill_rect(0, 0, self.width, self.height)
-        elif argc == 4:
-            if ((not type(args[0]) is int) or (not type(args[1]) is int) or (not type(args[2]) is int) or (
-            not type(args[3]) is float)):
-                raise TypeError("Enter Values between 0 and 255(integers only) for all 3 values")
-            elif (not (args[0] >= 0 and args[0] <= 255) or not (args[1] >= 0 and args[1] <= 255) or not (
-                args[2] >= 0 and args[2] <= 255) or not (args[3] >= 0.0 and args[3] <= 1.0)):
-                raise TypeError(
-                "Enter Values between 0 and 255(integers only) for all 3 values and a value between 0.0 and 1.0 for opacity(last argument")
-            self.clear()
-            self.fill_style(args[0], args[1], args[2], args[3])
-            self.fill_rect(0, 0, self.width, self.height)
-        
+        self.canvas.fill_style = fill
+        self.canvas.fill_rect(0, 0, self.width, self.height)
         self.canvas.fill_style = old_fill
     
     ### Helper Functions ###
 
+    # Tests if input is an allowed type
+    def check_type_allowed(self, n, allowed, func_name="Function", arg_name=""):
+        if not type(n) in allowed:
+            raise ArgumentTypeError(func_name, arg_name, allowed, type(n), n)
+
     # Tests if input is numeric
     # Note: No support for complex numbers
-    def check_type_is_num(self, n, func_name=None):
-        if not isinstance(n, (int, float)):
-            msg = "Expected {} to be a number".format(n)
-            if func_name:
-                msg = "{} expected {} to be a number".format(func_name, self.quote_if_string(n))
-            raise TypeError(msg)
+    def check_type_is_num(self, n, func_name="Function", arg_name=""):
+        self.check_type_allowed(n, [float, int], func_name, arg_name)
 
     # Tests if input is an int
-    def check_type_is_int(self, n, func_name=None):
-        if type(n) is not int:
-            msg = "Expected {} to be an int".format(n)
-            if func_name:
-                msg = "{} expected {} to be an int".format(func_name, self.quote_if_string(n))
-            raise TypeError(msg)
+    def check_type_is_int(self, n, func_name="Function", arg_name=""):
+        self.check_type_allowed(n, [int], func_name, arg_name)
 
     # Tests if input is a float
     # allow_int: Set to True to allow ints as a float. Defaults to True.
-    def check_type_is_float(self, n, func_name=None, allow_int=True):
-        if type(n) is not float:
-            if not allow_int or type(n) is not int:
-                msg = "Expected {} to be a float".format(n)
-                if func_name:
-                    msg = "{} expected {} to be a float".format(func_name, self.quote_if_string(n))
-                raise TypeError(msg)
+    def check_type_is_float(self, n, func_name="Function", arg_name=""):
+        self.check_type_allowed(n, [float], func_name, arg_name)
+
+    def check_num_is_ranged(self, n, lb, ub, func_name="Function", arg_name=""):
+        self.check_type_is_num(n, func_name, arg_name)
+        if lb > n or ub < n:
+            raise ArgumentConditionError(func_name, arg_name, "Number in range [{}, {}]".format(lb, ub), n)
+
+    # Tests if input is an int, and within a specified range
+    def check_int_is_ranged(self, n, lb, ub, func_name="Function", arg_name=""):
+        self.check_type_is_int(n, func_name, arg_name)
+        if lb > n or ub < n:
+            raise ArgumentConditionError(func_name, arg_name, "Integer in range [{}, {}]".format(lb, ub), n)
+
+    # Tests if input is a float, and within a specified range
+    def check_float_is_ranged(self, n, lb, ub, func_name="Function", arg_name=""):
+        self.check_type_is_float(n, func_name, arg_name)
+        if lb > n or ub < n:
+            raise ArgumentConditionError(func_name, arg_name, "Float in range [{}, {}]".format(lb, ub), n)
 
     @staticmethod
     def quote_if_string(val):
@@ -408,36 +454,61 @@ class Core:
         argc = len(args)
 
         if argc == 1:
-            return args[0]
+            if type(args[0]) is int:
+                return "rgb({}, {}, {})".format(args[0], args[0], args[0])
+            elif not type(args[0]) is str:
+                raise TypeError(
+                    "Enter colour value in a valid format, e.g. #FF0000, rgb(255, 0, 0), or hsl(0, 100%, 50%)"
+                )
+            return self.parse_color_string(func_name, args[0])
         elif argc == 3 or argc == 4:
             color_args = args[:3]
-            for col in color_args:
-                self.check_type_is_int(col, func_name)
-            color_args = np.clip(color_args, 0, 255)
+            for col, name in zip(color_args, ["r","g","b"]):
+                self.check_int_is_ranged(col, 0, 255, func_name, name)
 
             if argc == 3:
                 return "rgb({}, {}, {})".format(*color_args)
             else:
                 # Clip alpha between 0 and 1
                 alpha_arg = args[3]
-                self.check_type_is_float(alpha_arg, func_name)
+                self.check_float_is_ranged(alpha_arg, 0, 1, func_name, "a")
                 alpha_arg = np.clip(alpha_arg, 0, 1.0)
                 return "rgba({}, {}, {}, {})".format(*color_args, alpha_arg)
         else:
-            raise TypeError("{} expected {}, {} or {} arguments, got {}".format(func_name, 1, 3, 4, argc))
+            raise ArgumentNumError(func_name, [1, 3, 4], argc)
+
+    def parse_color_string(self, func_name, s):
+        rws = re.compile(r'\s')
+        no_ws = rws.sub('', s).lower()
+        # Check allowed color strings
+        if no_ws in HTMLColors:
+            return no_ws
+        elif no_ws in self.color_strings:
+            return self.color_strings[s]
+        # Check other HTML-permissible formats
+        else:
+            for regex in self.regexes:
+                if regex.fullmatch(no_ws) is not None:
+                    return no_ws
+        # Not in any permitted format
+        raise TypeError(
+            "{} expected a string matching an HTML-permissible format or a color name, got {}".format(
+                func_name, s))
 
     # Check a set of 4 args are valid coordinates
     # x, y, w, h
     def check_coords(self, func_name, *args, width_only=False):
         argc = len(args)
         if argc != 4 and not width_only:
-            raise TypeError("{} expected {} arguments for x, y, w, h, got {} arguments".format(func_name, 4, argc))
+            raise ArgumentNumError("{} (~width_only)".format(func_name), 4, argc)
         elif argc != 3 and width_only:
-            raise TypeError("{} expected {} arguments for x, y, size, got {} arguments".format(func_name, 3, argc))
+            raise ArgumentNumError("{} (width_only)".format(func_name), 3, argc)
 
         for arg in args:
-            self.check_type_is_float(arg, func_name)
+            self.check_type_is_num(arg, func_name)
 
     # Convert a tuple of circle args into arc args 
     def arc_args(self, *args):
         return (args[0], args[1], args[2] / 2, 0, 2 * pi)
+
+

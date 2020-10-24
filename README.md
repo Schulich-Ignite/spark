@@ -1,5 +1,5 @@
 # spark
-Jupyter Lab ipython extension used for teaching the [https://schulichignite.com/](Schulich Ignite sessions).
+Jupyter Lab ipython extension used for teaching the [Schulich Ignite sessions](https://schulichignite.com/).
 
 ### Documentation
 Simple documentation for the library is provided in the [documentation.ipynb](https://github.com/Schulich-Ignite/spark/blob/main/documentation.ipynb) file.
@@ -21,7 +21,7 @@ Install NodeJS using one of the methods below:
 
 Next, you must install the required jupyter lab extensions
 ```shell
-jupyter labextension install @jupyter-widgets/jupyterlab-manager ipycanvas
+jupyter labextension install @jupyter-widgets/jupyterlab-manager ipycanvas ipyevents
 ```
 
 Now, either clone the repo and install a development version, or install the up-to-date version from PyPI
