@@ -325,7 +325,7 @@ class Core:
     # Draws circle stroke
     def stroke_circle(self, *args):
         self.check_coords("stroke_circle", *args, width_only = True)
-        self.fill_ellipse(*args, args[2])
+        self.stroke_ellipse(*args, args[2])
 
     def ellipse(self, *args):
         self.check_coords("ellipse", *args)
@@ -633,4 +633,3 @@ class Core:
         d = max(w, h)/2
         
         return x, y, d/2, w/d, h/d, start, stop, mode
-
