@@ -2,7 +2,6 @@
 from IPython.core.magic import (Magics, magics_class, line_magic, cell_magic)
 import importlib
 from . import core
-from .util.decorators import global_field_names
 
 importlib.reload(core)
 
@@ -27,7 +26,7 @@ class IgniteMagic(Magics):
             globals_dict[key] = val
     
         # Copy global methods from Core object
-        for field in global_field_names:
+        for field in core.Core.global_fields:
             globals_dict[field] = getattr(self.core_obj, field)
 
         # Execute the code inside the cell and inject the globals we defined.
@@ -41,6 +40,9 @@ class IgniteMagic(Magics):
         for key, val in locals_dict.items():
             if key in core.Core.global_methods:
                 methods[key] = val      # Track the global methods and pass to the core_obj.
+            elif key in core.Core.global_fields:
+                print('Error in cell: Attempted redefinition of immutable Spark global "{}".'.format(key))
+                return
             else:
                 globals_dict[key] = val # Copy locals to global to keep them available.
         

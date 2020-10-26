@@ -35,11 +35,9 @@ class Core:
         "pi": pi
     }
 
-    # All methods that user will be able to define and override
-    global_methods = {
-        "draw", "setup",
-        "mouse_down", "mouse_up", "mouse_moved"
-    }
+    global_fields = global_immut_names
+
+    global_methods = global_mut_names
 
     def __init__(self, globals_dict):
         self.status_text = display(Code(""), display_id=True)
@@ -81,12 +79,12 @@ class Core:
     ### Properties ###
 
     @property
-    @global_field
+    @global_immut
     def canvas(self):
         return self._globals_dict["canvas"]
 
     @property
-    @global_field
+    @global_immut
     def mouse_x(self):
         return self._globals_dict["mouse_x"]
 
@@ -95,7 +93,7 @@ class Core:
         self._globals_dict["mouse_x"] = val
 
     @property
-    @global_field
+    @global_immut
     def mouse_y(self):
         return self._globals_dict["mouse_y"]
 
@@ -104,7 +102,7 @@ class Core:
         self._globals_dict["mouse_y"] = val
 
     @property
-    @global_field
+    @global_immut
     def mouse_is_pressed(self):
         return self._globals_dict["mouse_is_pressed"]
 
@@ -113,7 +111,7 @@ class Core:
         self._globals_dict["mouse_is_pressed"] = val
 
     @property
-    @global_field
+    @global_immut
     def width(self):
         return self._globals_dict["width"]
 
@@ -123,7 +121,7 @@ class Core:
         self.canvas.width = val
 
     @property
-    @global_field
+    @global_immut
     def height(self):
         return self._globals_dict["height"]
 
@@ -221,7 +219,7 @@ class Core:
         self.status_text.update(Code(msg))
     
     # Prints output to embedded output box
-    @global_field
+    @global_immut
     def print(self, msg):
         global _sparkplug_running
         self.output_text += str(msg) + "\n"
@@ -261,10 +259,32 @@ class Core:
     def on_stop_button_clicked(self, button):
         self.stop()
 
+    ### User overrideable functions ###
+    # The function bodies here do not matter, they are discarded
+    @global_mut
+    def setup(self):
+        pass
+
+    @global_mut
+    def draw(self):
+        pass
+
+    @global_mut
+    def mouse_up(self):
+        pass
+
+    @global_mut
+    def mouse_down(self):
+        pass
+
+    @global_mut
+    def mouse_moved(self):
+        pass
+
     ### Global functions ###
 
     # Sets canvas size
-    @global_field
+    @global_immut
     def size(self, *args):
         if len(args) == 2:
             self.width = args[0]
@@ -274,16 +294,16 @@ class Core:
     # 1 arg: HTML string value
     # 3 args: r, g, b are int between 0 and 255
     # 4 args: r, g, b, a, where r, g, b are ints between 0 and 255, and  a (alpha) is a float between 0 and 1.0
-    @global_field
+    @global_immut
     def fill_style(self, *args):
         self.canvas.fill_style = self.parse_color("fill_style", *args)
 
-    @global_field
+    @global_immut
     def stroke_style(self, *args):
         self.canvas.stroke_style = self.parse_color("stroke_style", *args)
 
     # Combines fill_rect and stroke_rect into one wrapper function
-    @global_field
+    @global_immut
     def rect(self, *args):
         self.check_coords("rect", *args)
         
@@ -291,32 +311,32 @@ class Core:
         self.canvas.stroke_rect(*args)
 
     # Similar to self.rect wrapper, except only accepts x, y and size
-    @global_field
+    @global_immut
     def square(self, *args):
         self.check_coords("square", *args, width_only=True)
         rect_args = (*args, args[2]) # Copy the width arg into the height
         self.rect(*rect_args)
 
     # Draws filled rect
-    @global_field
+    @global_immut
     def fill_rect(self, *args):
         self.check_coords("fill_rect", *args)
         self.canvas.fill_rect(*args)
     
     # Strokes a rect
-    @global_field
+    @global_immut
     def stroke_rect(self, *args):
         self.check_coords("stroke_rect", *args)
         self.canvas.stroke_rect(*args)
 
     #Clears a rect
-    @global_field
+    @global_immut
     def clear_rect(self, *args):
         self.check_coords('clear_rect', *args)
         self.canvas.clear_rect(*args)
 
     # Draws circle at given coordinates
-    @global_field
+    @global_immut
     def circle(self, *args):
         self.check_coords("circle", *args, width_only=True)
         arc_args = self.arc_args(*args)
@@ -324,28 +344,28 @@ class Core:
         self.canvas.stroke_arc(*arc_args)
 
     # Draws filled circle
-    @global_field
+    @global_immut
     def fill_circle(self, *args):
         self.check_coords("fill_circle", *args, width_only=True)
         arc_args = self.arc_args(*args)
         self.canvas.fill_arc(*arc_args)
 
     # Draws circle stroke
-    @global_field
+    @global_immut
     def stroke_circle(self, *args):
         self.check_coords("stroke_circle", *args, width_only=True)
         arc_args = self.arc_args(*args)
         self.canvas.stroke_arc(*arc_args)
 
-    @global_field
+    @global_immut
     def fill_arc(self, *args):
         self.canvas.fill_arc(*args)
 
-    @global_field
+    @global_immut
     def stroke_arc(self, *args):
         self.canvas.stroke_arc(*args)
 
-    @global_field
+    @global_immut
     def text_size(self, *args):
         if len(args) != 1:
             raise TypeError(f"text_size expected 1 argument, got {len(args)}")
@@ -355,7 +375,7 @@ class Core:
         self.font_settings['size'] = size
         self.canvas.font = f"{self.font_settings['size']}px {self.font_settings['font']}"
 
-    @global_field
+    @global_immut
     def text_align(self, *args):
         if len(args) != 1:
             raise TypeError(f"text_size expected 1 argument, got {len(args)}")
@@ -365,7 +385,7 @@ class Core:
 
         self.canvas.text_align = args[0]
 
-    @global_field
+    @global_immut
     def text(self, *args):
         if len(args) != 3:
             raise TypeError(f"text expected 3 arguments (message, x, y), got {len(args)}")
@@ -380,7 +400,7 @@ class Core:
 
         self.canvas.fill_text(str(args[0]), args[1], args[2])
 
-    @global_field
+    @global_immut
     def draw_line(self, *args):    
         if len(args) != 4:
             raise TypeError(f"draw_line expected 4 arguments (x1, y1, x2, y2), got {len(args)}")
@@ -394,11 +414,11 @@ class Core:
         self.canvas.stroke()
 
     # An alias to draw_line
-    @global_field
+    @global_immut
     def line(self, *args):
         self.draw_line(*args)
 
-    @global_field
+    @global_immut
     def line_width(self, *args):
         if len(args) != 1:
             raise TypeError(f"line_width expected 1 argument, got {len(args)}")
@@ -406,18 +426,18 @@ class Core:
         self.canvas.line_width = args[0]
 
     # An alias to line_width
-    @global_field
+    @global_immut
     def stroke_width(self, *args):
         self.line_width(*args)
 
     # Clears canvas
-    @global_field
+    @global_immut
     def clear(self, *args):
         self.canvas.clear()
 
     
     # Draws background on canvas
-    @global_field
+    @global_immut
     def background(self, *args):
         fill = self.parse_color("background", *args)
         old_fill = self.canvas.fill_style
