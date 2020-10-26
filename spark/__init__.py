@@ -2,6 +2,7 @@
 from IPython.core.magic import (Magics, magics_class, line_magic, cell_magic)
 import importlib
 from . import core
+from .util.decorators import global_field_names
 
 importlib.reload(core)
 
@@ -26,7 +27,7 @@ class IgniteMagic(Magics):
             globals_dict[key] = val
     
         # Copy global methods from Core object
-        for field in core.Core.global_fields:
+        for field in global_field_names:
             globals_dict[field] = getattr(self.core_obj, field)
 
         # Execute the code inside the cell and inject the globals we defined.
