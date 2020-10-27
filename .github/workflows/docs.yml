@@ -26,13 +26,6 @@ jobs:
         git config --local user.email "action@github.com"
         git config --local user.name "GitHub Action"
 
-    - name: Build site
+    - name: Build & deploy site
       run: |
         python -m mkdocs gh-deploy
-
-
-    - name: Deploy new files
-      uses: ad-m/github-push-action@master
-      with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
-        branch: gh-pages
