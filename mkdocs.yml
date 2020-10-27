@@ -7,6 +7,7 @@ nav:
     - Shapes & Text: shapes_text.md
     - Input: input.md
     - Color: color.md
+    - Utilities: utilities.md
 
 theme: 
     name: material

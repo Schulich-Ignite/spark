@@ -121,3 +121,5 @@ def draw():
 [Input](input.md) - Any functions related to taking user input, such as mouse position or keyboard input
 
 [Shapes & Text](shapes_text.md) - Any functions related to creating shapes and/or text
+
+[Utilities](utilities.md) - Any other useful functions that do not fit the above categories
