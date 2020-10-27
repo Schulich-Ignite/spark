@@ -15,6 +15,8 @@ from IPython.display import Code, display
 from ipycanvas import Canvas, hold_canvas
 from ipywidgets import Button
 
+import random
+
 from .util import IpyExit
 from .util.HTMLColors import HTMLColors
 from .util.Errors import *
@@ -44,7 +46,7 @@ class Core:
         "text", "text_size", "text_align",
         "draw_line", "line", "line_width", "stroke_width",
         "circle", "fill_circle", "stroke_circle", "fill_arc", "stroke_arc",
-        "print"
+        "print", "random", "randint"
     }
 
     # All methods that user will be able to define and override
@@ -512,4 +514,10 @@ class Core:
     def arc_args(self, *args):
         return (args[0], args[1], args[2] / 2, 0, 2 * pi)
 
+    # Global namespace alias of random.random()
+    def random(self):
+        return random.random()
 
+    # Global namespace alias of random.randint()
+    def randint(self, n):
+        return random.randint(0, n)
