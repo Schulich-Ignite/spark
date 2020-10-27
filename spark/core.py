@@ -14,10 +14,12 @@ import numpy as np
 from IPython.display import Code, display
 from ipycanvas import Canvas, hold_canvas
 from ipywidgets import Button
+from numbers import Number as number
 
 from .util import IpyExit
 from .util.HTMLColors import HTMLColors
 from .util.Errors import *
+from .util.decorators import *
 
 DEFAULT_CANVAS_SIZE = (100, 100)
 FRAME_RATE = 30
@@ -265,6 +267,7 @@ class Core:
     ### Global functions ###
 
     # Sets canvas size
+    @validate_args([number, number])
     def size(self, *args):
         if len(args) == 2:
             self.width = args[0]
@@ -274,13 +277,16 @@ class Core:
     # 1 arg: HTML string value
     # 3 args: r, g, b are int between 0 and 255
     # 4 args: r, g, b, a, where r, g, b are ints between 0 and 255, and  a (alpha) is a float between 0 and 1.0
+    @validate_args([str], [int], [int, int, int], [int, int, int, number])
     def fill_style(self, *args):
         self.canvas.fill_style = self.parse_color("fill_style", *args)
 
+    @validate_args([str], [int], [int, int, int], [int, int, int, number])
     def stroke_style(self, *args):
         self.canvas.stroke_style = self.parse_color("stroke_style", *args)
 
     # Combines fill_rect and stroke_rect into one wrapper function
+    @validate_args([number, number, number, number])
     def rect(self, *args):
         self.check_coords("rect", *args)
         
@@ -288,27 +294,32 @@ class Core:
         self.canvas.stroke_rect(*args)
 
     # Similar to self.rect wrapper, except only accepts x, y and size
+    @validate_args([number, number, number])
     def square(self, *args):
         self.check_coords("square", *args, width_only=True)
         rect_args = (*args, args[2]) # Copy the width arg into the height
         self.rect(*rect_args)
 
     # Draws filled rect
+    @validate_args([number, number, number, number])
     def fill_rect(self, *args):
         self.check_coords("fill_rect", *args)
         self.canvas.fill_rect(*args)
     
     # Strokes a rect
+    @validate_args([number, number, number, number])
     def stroke_rect(self, *args):
         self.check_coords("stroke_rect", *args)
         self.canvas.stroke_rect(*args)
 
     #Clears a rect
+    @validate_args([number, number, number, number])
     def clear_rect(self, *args):
         self.check_coords('clear_rect', *args)
         self.canvas.clear_rect(*args)
 
     # Draws circle at given coordinates
+    @validate_args([number, number, number])
     def circle(self, *args):
         self.check_coords("circle", *args, width_only=True)
         arc_args = self.arc_args(*args)
@@ -316,12 +327,14 @@ class Core:
         self.canvas.stroke_arc(*arc_args)
 
     # Draws filled circle
+    @validate_args([number, number, number])
     def fill_circle(self, *args):
         self.check_coords("fill_circle", *args, width_only=True)
         arc_args = self.arc_args(*args)
         self.canvas.fill_arc(*arc_args)
 
     # Draws circle stroke
+    @validate_args([number, number, number])
     def stroke_circle(self, *args):
         self.check_coords("stroke_circle", *args, width_only=True)
         arc_args = self.arc_args(*args)
