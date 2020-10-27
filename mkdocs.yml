@@ -16,10 +16,6 @@ theme:
         primary: black
         accent: amber
 
-docs_dir: src
-
-site_dir: docs
-
 site_description: Spark is a library designed to help drawing in python easy
 
 site_author: Schulich Ignite
