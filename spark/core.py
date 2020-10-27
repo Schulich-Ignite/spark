@@ -518,7 +518,7 @@ class Core:
     def random(self, *args):
         argc = len(args)
         if argc != 0:
-            raise ArgumentNumError("Random", 0, argc)
+            raise ArgumentNumError("random", 0, argc)
         return random.random()
 
     # Global namespace alias of random.randint()
@@ -526,7 +526,7 @@ class Core:
         argc = len(args)
         
         if argc != 1:
-            raise ArgumentNumError("Randint", 1, argc)
+            raise ArgumentNumError("randint", 1, argc)
 
         self.check_type_is_int(args[0])
         return random.randint(0, args[0])
