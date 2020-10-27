@@ -515,9 +515,18 @@ class Core:
         return (args[0], args[1], args[2] / 2, 0, 2 * pi)
 
     # Global namespace alias of random.random()
-    def random(self):
+    def random(self, *args):
+        argc = len(args)
+        if argc != 0:
+            raise ArgumentNumError("Random", 0, argc)
         return random.random()
 
     # Global namespace alias of random.randint()
-    def randint(self, n):
-        return random.randint(0, n)
+    def randint(self, *args):
+        argc = len(args)
+        
+        if argc != 1:
+            raise ArgumentNumError("Randint", 1, argc)
+
+        self.check_type_is_int(args[0])
+        return random.randint(0, args[0])
