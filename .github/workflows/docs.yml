@@ -2,7 +2,7 @@ name: Build documentation and push to github pages
 on:
   push:
     branches:
-      - master
+      - main
 
 jobs:
   build:
