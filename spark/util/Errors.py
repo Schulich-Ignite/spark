@@ -31,7 +31,10 @@ class ArgumentTypeError(ArgumentError):
 
 class ArgumentTypeListError(ArgumentError):
     def __init__(self, func_name, valid_fmts, actual_fmt, actual_vals=None):
-        s = "Invalid types for {} with {} arguments, expected".format(func_name, len(actual_fmt))
+        arg_plural = "argument"
+        if len(actual_fmt) > 1:
+            arg_plural += "s"
+        s = "Invalid types for {} with {} {}, expected".format(func_name, len(actual_fmt), arg_plural)
         if len(valid_fmts) >= 1:
             if len(valid_fmts) > 1:
                 s += " one of"
