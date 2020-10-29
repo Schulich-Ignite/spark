@@ -10,7 +10,6 @@ import time
 from math import pi
 import re
 
-import numpy as np
 from IPython.display import Code, display
 from ipycanvas import Canvas, hold_canvas
 from ipywidgets import Button
@@ -297,12 +296,12 @@ class Core:
     # 3 args: r, g, b are int between 0 and 255
     # 4 args: r, g, b, a, where r, g, b are ints between 0 and 255, and  a (alpha) is a float between 0 and 1.0
 
-    @validate_args([str], [int], [int, int, int], [int, int, int, Real])
+    @validate_args([str], [Real], [Real, Real, Real], [Real, Real, Real, Real])
     @global_immut
     def fill_style(self, *args):
         self.canvas.fill_style = self.parse_color(func_name="fill_style", *args)
 
-    @validate_args([str], [int], [int, int, int], [int, int, int, Real])
+    @validate_args([str], [Real], [Real, Real, Real], [Real, Real, Real, Real])
     @global_immut
     def stroke_style(self, *args):
         self.canvas.stroke_style = self.parse_color(func_name="stroke_style", *args)
@@ -426,7 +425,7 @@ class Core:
         self.canvas.clear()
 
     # Draws background on canvas
-    @validate_args([str], [int], [int, int, int], [int, int, int, Real])
+    @validate_args([str], [Real], [Real, Real, Real], [Real, Real, Real, Real])
     @global_immut
     def background(self, *args):
         fill = self.parse_color(func_name="background", *args)
@@ -445,26 +444,25 @@ class Core:
             return val
 
     # Parse a string, rgb or rgba input into an HTML color string
-    @validate_args([str], [int], [int, int, int], [int, int, int, Real])
+    @validate_args([str], [Real], [Real, Real, Real], [Real, Real, Real, Real])
     def parse_color(self, *args, func_name="parse_color"):
         argc = len(args)
 
         if argc == 1:
-            if type(args[0]) is int:
-                return "rgb({}, {}, {})".format(*np.clip([args[0]] * 3, 0, 255))
+            if isinstance(args[0], Real):
+                n = int(Core.clip(args[0], 0, 255))
+                return f"rgb({n}, {n}, {n})"
             elif not type(args[0]) is str:
                 raise ArgumentConditionError(func_name, "", "Valid HTML format or color names", args[0])
             return self.parse_color_string(func_name, args[0])
         elif argc == 3 or argc == 4:
-            color_args = args[:3]
-            color_args = np.clip(color_args, 0, 255)
+            color_args = [int(Core.clip(arg, 0, 255)) for arg in args[:3]]
 
             if argc == 3:
                 return "rgb({}, {}, {})".format(*color_args)
             else:
-                alpha_arg = args[3]
                 # Clip alpha between 0 and 1
-                alpha_arg = np.clip(alpha_arg, 0, 1.0)
+                alpha_arg = self.clip(args[3], 0, 1.0)
                 return "rgba({}, {}, {}, {})".format(*color_args, alpha_arg)
         else:
             raise ArgumentNumError(func_name, [1, 3, 4], argc)
@@ -489,3 +487,7 @@ class Core:
     @validate_args([Real, Real, Real])
     def arc_args(self, *args):
         return args[0], args[1], args[2] / 2, 0, 2 * pi
+
+    @staticmethod
+    def clip(n, lb, ub):
+        return max(min(n, ub), lb)
