@@ -1,6 +1,7 @@
 import functools
 from .TypeSignature import FunctionSignature
 
+
 def validate_args(*fmts, has_self=True):
     def decorator_validate_args(func):
         @functools.wraps(func)
@@ -11,8 +12,9 @@ def validate_args(*fmts, has_self=True):
         return wrapper
     return decorator_validate_args
 
+
 global_immut_names = set()
-global_mut_names = set()
+
 
 def global_immut(func):
     global global_immut_names
@@ -20,6 +22,10 @@ def global_immut(func):
         raise RuntimeError("Attempted to define {} as both mutable and immutable.".format(func.__name__))
     global_immut_names.add(func.__name__)
     return func
+
+
+global_mut_names = set()
+
 
 def global_mut(func):
     global global_mut_names
