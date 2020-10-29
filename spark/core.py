@@ -220,12 +220,13 @@ class Core:
         self.status_text.update(Code(msg))
     
     # Prints output to embedded output box
+    # Can't use @validate_args decorator for functions actually accepting variable arguments
     @global_immut
-    def print(self, msg):
+    def print(self, *args, sep=' ', end='\n', flush=True):
         global _sparkplug_running
-        self.output_text += str(msg) + "\n"
+        self.output_text += sep.join([str(arg) for arg in args]) + end
 
-        if _sparkplug_running:
+        if _sparkplug_running and flush:
             self.output_text_code.update(Code(self.output_text))
 
     # Update mouse_x, mouse_y, and call mouse_down handler
