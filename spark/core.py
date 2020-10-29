@@ -300,12 +300,12 @@ class Core:
     @validate_args([str], [int], [int, int, int], [int, int, int, Real])
     @global_immut
     def fill_style(self, *args):
-        self.canvas.fill_style = self.parse_color("fill_style", *args)
+        self.canvas.fill_style = self.parse_color(func_name="fill_style", *args)
 
     @validate_args([str], [int], [int, int, int], [int, int, int, Real])
     @global_immut
     def stroke_style(self, *args):
-        self.canvas.stroke_style = self.parse_color("stroke_style", *args)
+        self.canvas.stroke_style = self.parse_color(func_name="stroke_style", *args)
 
     # Combines fill_rect and stroke_rect into one wrapper function
 
@@ -429,7 +429,7 @@ class Core:
     @validate_args([str], [int], [int, int, int], [int, int, int, Real])
     @global_immut
     def background(self, *args):
-        fill = self.parse_color("background", *args)
+        fill = self.parse_color(func_name="background", *args)
         old_fill = self.canvas.fill_style
         self.canvas.fill_style = fill
         self.canvas.fill_rect(0, 0, self.width, self.height)
@@ -446,7 +446,7 @@ class Core:
 
     # Parse a string, rgb or rgba input into an HTML color string
     @validate_args([str], [int], [int, int, int], [int, int, int, Real])
-    def parse_color(self, func_name, *args):
+    def parse_color(self, *args, func_name="parse_color"):
         argc = len(args)
 
         if argc == 1:
