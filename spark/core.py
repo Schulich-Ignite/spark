@@ -7,13 +7,16 @@
 
 import threading
 import time
-from math import pi
+
+from math import pi, sin, cos, sqrt
 import re
 
 from IPython.display import Code, display
 from ipycanvas import Canvas, hold_canvas
 from ipywidgets import Button
 from numbers import Real
+
+import random
 
 from .util import IpyExit
 from .util.HTMLColors import HTMLColors
@@ -34,7 +37,7 @@ class Core:
     global_constants = {
         "pi": pi
     }
-
+    
     global_fields = global_immut_names
 
     global_methods = global_mut_names
@@ -220,12 +223,13 @@ class Core:
         self.status_text.update(Code(msg))
 
     # Prints output to embedded output box
+    # Can't use @validate_args decorator for functions actually accepting variable arguments
     @global_immut
-    def print(self, msg):
+    def print(self, *args, sep=' ', end='\n', flush=True):
         global _sparkplug_running
-        self.output_text += str(msg) + "\n"
+        self.output_text += sep.join([str(arg) for arg in args]) + end
 
-        if _sparkplug_running:
+        if _sparkplug_running and flush:
             self.output_text_code.update(Code(self.output_text))
 
     # Update mouse_x, mouse_y, and call mouse_down handler
@@ -342,31 +346,133 @@ class Core:
     @validate_args([Real, Real, Real])
     @global_immut
     def circle(self, *args):
-        arc_args = self.arc_args(*args)
-        self.canvas.fill_arc(*arc_args)
-        self.canvas.stroke_arc(*arc_args)
+        self.ellipse(*args, args[2])
 
     # Draws filled circle
     @validate_args([Real, Real, Real])
     @global_immut
     def fill_circle(self, *args):
-        arc_args = self.arc_args(*args)
-        self.canvas.fill_arc(*arc_args)
+        self.fill_ellipse(*args, args[2])
 
     # Draws circle stroke
     @validate_args([Real, Real, Real])
     @global_immut
     def stroke_circle(self, *args):
-        arc_args = self.arc_args(*args)
-        self.canvas.stroke_arc(*arc_args)
+        self.stroke_ellipse(*args, args[2])
 
+    @validate_args([Real, Real, Real, Real])
+    @global_immut
+    def ellipse(self, *args):
+        self.fill_ellipse(*args)
+        self.stroke_ellipse(*args)
+
+    @validate_args([Real, Real, Real, Real])
+    @global_immut
+    def fill_ellipse(self, *args):
+        self.fill_arc(*args, 0, 2*pi)
+
+    @validate_args([Real, Real, Real, Real])
+    @global_immut
+    def stroke_ellipse(self, *args):
+        self.stroke_arc(*args, 0, 2*pi)
+
+    @validate_args([Real, Real, Real, Real],
+                   [Real, Real, Real, Real, Real],
+                   [Real, Real, Real, Real, Real, Real],
+                   [Real, Real, Real, Real, Real, Real, str])
     @global_immut
     def fill_arc(self, *args):
-        self.canvas.fill_arc(*args)
+        x, y, r, scale_x, scale_y, start, stop, mode = self.arc_args(*args)
 
+        if scale_x == 0 or scale_y == 0:
+            return
+
+        self.canvas.translate(x,y)
+        self.canvas.scale(scale_x, scale_y)
+
+        if mode == "open" or mode == "chord":
+            self.canvas.fill_arc(0, 0, r, start, stop)
+        elif mode == "default" or mode == "pie":
+            self.canvas.begin_path()
+            start_x = r*cos(start)
+            start_y = r*sin(start)
+            self.canvas.move_to(start_x, start_y)
+            self.canvas.arc(0, 0, r, start, stop)
+            self.canvas.line_to(0,0)
+            self.canvas.close_path()
+            self.canvas.fill()
+            
+        self.canvas.scale(1/scale_x, 1/scale_y)
+        self.canvas.translate(-x, -y)
+
+    @validate_args([Real, Real, Real, Real],
+                   [Real, Real, Real, Real, Real],
+                   [Real, Real, Real, Real, Real, Real],
+                   [Real, Real, Real, Real, Real, Real, str])
     @global_immut
     def stroke_arc(self, *args):
-        self.canvas.stroke_arc(*args)
+        x, y, r, scale_x, scale_y, start, stop, mode = self.arc_args(*args)
+
+        if scale_x == 0 or scale_y == 0:
+            return
+
+        start_x = r*cos(start)
+        start_y = r*sin(start)
+        
+        self.canvas.translate(x,y)
+        self.canvas.scale(scale_x, scale_y)
+
+        self.canvas.begin_path()
+        self.canvas.move_to(start_x, start_y)
+        self.canvas.arc(0, 0, r, start, stop)
+        if mode == "open" or mode == "default":
+            self.canvas.move_to(start_x, start_y)
+        elif mode == "pie":
+            self.canvas.line_to(0, 0)
+        elif mode == "chord":
+            pass
+        self.canvas.close_path()
+        self.canvas.stroke()
+        
+        self.canvas.scale(1/scale_x, 1/scale_y)
+        self.canvas.translate(-x, -y)
+
+    @validate_args([Real, Real, Real, Real],
+                   [Real, Real, Real, Real, Real],
+                   [Real, Real, Real, Real, Real, Real],
+                   [Real, Real, Real, Real, Real, Real, str])
+    @global_immut
+    def arc(self, *args):
+        self.fill_arc(*args)
+        self.stroke_arc(*args)
+
+    @validate_args([number, number, number, number, number, number])
+    @global_immut
+    def fill_triangle(self, *args):
+
+        self.canvas.begin_path()
+        self.canvas.move_to(args[0], args[1])
+        self.canvas.line_to(args[2], args[3])
+        self.canvas.line_to(args[4], args[5])
+        self.canvas.close_path()
+        self.canvas.fill()
+
+    @validate_args([Real, Real, Real, Real, Real, Real])
+    @global_immut
+    def stroke_triangle(self, *args):
+
+        self.canvas.begin_path()
+        self.canvas.move_to(args[0], args[1])
+        self.canvas.line_to(args[2], args[3])
+        self.canvas.line_to(args[4], args[5])
+        self.canvas.close_path()
+        self.canvas.stroke()
+
+    @validate_args([Real, Real, Real, Real, Real, Real])
+    @global_immut
+    def triangle(self, *args):
+        self.fill_triangle(*args)
+        self.stroke_triangle(*args)
 
     @validate_args([int])
     @global_immut
@@ -423,7 +529,7 @@ class Core:
     @global_immut
     def clear(self, *args):
         self.canvas.clear()
-
+        
     # Draws background on canvas
     @validate_args([str], [Real], [Real, Real, Real], [Real, Real, Real, Real])
     @global_immut
@@ -452,9 +558,9 @@ class Core:
             if isinstance(args[0], Real):
                 n = int(Core.clip(args[0], 0, 255))
                 return f"rgb({n}, {n}, {n})"
-            elif not type(args[0]) is str:
-                raise ArgumentConditionError(func_name, "", "Valid HTML format or color names", args[0])
-            return self.parse_color_string(func_name, args[0])
+            elif isinstance(args[0], str):
+                return self.parse_color_string(func_name, args[0])
+            raise ArgumentConditionError(func_name, "", "Valid HTML format or color names", args[0])
         elif argc == 3 or argc == 4:
             color_args = [int(Core.clip(arg, 0, 255)) for arg in args[:3]]
 
@@ -486,8 +592,43 @@ class Core:
     # Convert a tuple of circle args into arc args
     @validate_args([Real, Real, Real])
     def arc_args(self, *args):
-        return args[0], args[1], args[2] / 2, 0, 2 * pi
+        argc = len(args)
+        x, y, w, h = args[:4]
+        defaults = [0, 2*pi, "default"]
+        start, stop, mode = [*args[4:argc], *defaults[argc-4:]]
+        while start < 0:
+            start += 2*pi
+        while start > 2*pi:
+            start -= 2*pi
+        while stop < 0:
+            stop += 2*pi
+        while stop > 2*pi:
+            stop += 2*pi
+        d = max(w, h)/2
+        
+        return x, y, d/2, w/d, h/d, start, stop, mode
 
+    @validate_args([])
+    @global_immut
+    # Global namespace alias of random.random()
+    def random(self, *args):
+        argc = len(args)
+        if argc != 0:
+            raise ArgumentNumError("random", 0, argc)
+        return random.random()
+
+    @validate_args([int])
+    @global_immut
+    # Global namespace alias of random.randint()
+    def randint(self, *args):
+        argc = len(args)
+        
+        if argc != 1:
+            raise ArgumentNumError("randint", 1, argc)
+
+        self.check_type_is_int(args[0])
+        return random.randint(0, args[0])
+    
     @staticmethod
     def clip(n, lb, ub):
         return max(min(n, ub), lb)
