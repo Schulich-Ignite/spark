@@ -40,6 +40,9 @@ class IgniteMagic(Magics):
         for key, val in locals_dict.items():
             if key in core.Core.global_methods:
                 methods[key] = val      # Track the global methods and pass to the core_obj.
+            elif key in core.Core.global_fields:
+                print('Error in cell: Attempted redefinition of immutable Spark global "{}".'.format(key))
+                return
             else:
                 globals_dict[key] = val # Copy locals to global to keep them available.
         
