@@ -17,6 +17,8 @@ from ipycanvas import Canvas, hold_canvas
 from ipywidgets import Button
 from numbers import Number as number
 
+import random
+
 from .util import IpyExit
 from .util.HTMLColors import HTMLColors
 from .util.Errors import *
@@ -36,7 +38,7 @@ class Core:
     global_constants = {
         "pi": pi
     }
-
+    
     global_fields = global_immut_names
 
     global_methods = global_mut_names
@@ -692,3 +694,24 @@ class Core:
         d = max(w, h)/2
         
         return x, y, d/2, w/d, h/d, start, stop, mode
+
+    @validate_args([])
+    @global_immut
+    # Global namespace alias of random.random()
+    def random(self, *args):
+        argc = len(args)
+        if argc != 0:
+            raise ArgumentNumError("random", 0, argc)
+        return random.random()
+
+    @validate_args([int])
+    @global_immut
+    # Global namespace alias of random.randint()
+    def randint(self, *args):
+        argc = len(args)
+        
+        if argc != 1:
+            raise ArgumentNumError("randint", 1, argc)
+
+        self.check_type_is_int(args[0])
+        return random.randint(0, args[0])
