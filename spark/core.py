@@ -362,19 +362,29 @@ class Core:
     def stroke_circle(self, *args):
         self.stroke_ellipse(*args, args[2])
 
+    @validate_args([number, number, number, number])
     @global_immut
     def ellipse(self, *args):
         self.fill_ellipse(*args)
         self.stroke_ellipse(*args)
 
+    @validate_args([number, number, number, number])
     @global_immut
     def fill_ellipse(self, *args):
         self.fill_arc(*args, 0, 2*pi)
 
+    @validate_args([number, number, number, number],
+                   [number, number, number, number, number],
+                   [number, number, number, number, number, number],
+                   [number, number, number, number, number, number, str])
     @global_immut
     def stroke_ellipse(self, *args):
         self.stroke_arc(*args, 0, 2*pi)
 
+    @validate_args([number, number, number, number],
+                   [number, number, number, number, number],
+                   [number, number, number, number, number, number],
+                   [number, number, number, number, number, number, str])
     @global_immut
     def fill_arc(self, *args):
         x, y, r, scale_x, scale_y, start, stop, mode = self.arc_args(*args)
@@ -400,6 +410,10 @@ class Core:
         self.canvas.scale(1/scale_x, 1/scale_y)
         self.canvas.translate(-x, -y)
 
+    @validate_args([number, number, number, number],
+                   [number, number, number, number, number],
+                   [number, number, number, number, number, number],
+                   [number, number, number, number, number, number, str])
     @global_immut
     def stroke_arc(self, *args):
         x, y, r, scale_x, scale_y, start, stop, mode = self.arc_args(*args)
@@ -428,12 +442,18 @@ class Core:
         self.canvas.scale(1/scale_x, 1/scale_y)
         self.canvas.translate(-x, -y)
 
+    @validate_args([number, number, number, number],
+                   [number, number, number, number, number],
+                   [number, number, number, number, number, number],
+                   [number, number, number, number, number, number, str])
+    @global_immut
     def arc(self, *args):
         self.fill_arc(*args)
         self.stroke_arc(*args)
 
+    @validate_args([number, number, number, number, number, number])
+    @global_immut
     def fill_triangle(self, *args):
-        self.check_triangle_args("fill_triangle", *args)
 
         self.canvas.begin_path()
         self.canvas.move_to(args[0], args[1])
@@ -442,8 +462,9 @@ class Core:
         self.canvas.close_path()
         self.canvas.fill()
 
+    @validate_args([number, number, number, number, number, number])
+    @global_immut
     def stroke_triangle(self, *args):
-        self.check_triangle_args("stroke_triangle", *args)
 
         self.canvas.begin_path()
         self.canvas.move_to(args[0], args[1])
@@ -452,6 +473,8 @@ class Core:
         self.canvas.close_path()
         self.canvas.stroke()
 
+    @validate_args([number, number, number, number, number, number])
+    @global_immut
     def triangle(self, *args):
         self.check_triangle_args("triangle", *args)
         self.fill_triangle(*args)
