@@ -315,7 +315,6 @@ class Core:
     @validate_args([number, number, number, number])
     @global_immut
     def rect(self, *args):
-        self.check_coords("rect", *args)
         
         self.canvas.fill_rect(*args)
         self.canvas.stroke_rect(*args)
@@ -324,7 +323,6 @@ class Core:
     @validate_args([number, number, number])
     @global_immut
     def square(self, *args):
-        self.check_coords("square", *args, width_only=True)
         rect_args = (*args, args[2]) # Copy the width arg into the height
         self.rect(*rect_args)
 
@@ -332,67 +330,53 @@ class Core:
     @validate_args([number, number, number, number])
     @global_immut
     def fill_rect(self, *args):
-        self.check_coords("fill_rect", *args)
         self.canvas.fill_rect(*args)
     
     # Strokes a rect
     @validate_args([number, number, number, number])
     @global_immut
     def stroke_rect(self, *args):
-        self.check_coords("stroke_rect", *args)
         self.canvas.stroke_rect(*args)
 
     #Clears a rect
     @validate_args([number, number, number, number])
     @global_immut
     def clear_rect(self, *args):
-        self.check_coords('clear_rect', *args)
         self.canvas.clear_rect(*args)
 
     # Draws circle at given coordinates
     @validate_args([number, number, number])
     @global_immut
     def circle(self, *args):
-        self.check_coords("circle", *args, width_only = True)
         self.ellipse(*args, args[2])
 
     # Draws filled circle
     @validate_args([number, number, number])
     @global_immut
     def fill_circle(self, *args):
-        self.check_coords("fill_circle", *args, width_only = True)
         self.fill_ellipse(*args, args[2])
 
     # Draws circle stroke
     @validate_args([number, number, number])
     @global_immut
     def stroke_circle(self, *args):
-        self.check_coords("stroke_circle", *args, width_only = True)
         self.stroke_ellipse(*args, args[2])
 
     @global_immut
     def ellipse(self, *args):
-        self.check_coords("ellipse", *args)
         self.fill_ellipse(*args)
         self.stroke_ellipse(*args)
 
     @global_immut
     def fill_ellipse(self, *args):
-        self.check_coords("fill_ellipse", *args)
         self.fill_arc(*args, 0, 2*pi)
 
     @global_immut
     def stroke_ellipse(self, *args):
-        self.check_coords("stroke_ellipse", *args)
         self.stroke_arc(*args, 0, 2*pi)
-
-        self.check_coords("stroke_circle", *args, width_only=True)
-        arc_args = self.arc_args(*args)
-        self.canvas.stroke_arc(*arc_args)
 
     @global_immut
     def fill_arc(self, *args):
-        self.check_arc_args("fill_arc", *args)
         x, y, r, scale_x, scale_y, start, stop, mode = self.arc_args(*args)
 
         if scale_x == 0 or scale_y == 0:
@@ -402,7 +386,7 @@ class Core:
         self.canvas.scale(scale_x, scale_y)
 
         if mode == "open" or mode == "chord":
-            self.canvas.fill_arc(0, 0, d/2, start, stop)
+            self.canvas.fill_arc(0, 0, r, start, stop)
         elif mode == "default" or mode == "pie":
             self.canvas.begin_path()
             start_x = r*cos(start)
@@ -418,7 +402,6 @@ class Core:
 
     @global_immut
     def stroke_arc(self, *args):
-        self.check_arc_args("stroke_arc", *args)
         x, y, r, scale_x, scale_y, start, stop, mode = self.arc_args(*args)
 
         if scale_x == 0 or scale_y == 0:
@@ -446,7 +429,6 @@ class Core:
         self.canvas.translate(-x, -y)
 
     def arc(self, *args):
-        self.check_arc_args("arc", *args)
         self.fill_arc(*args)
         self.stroke_arc(*args)
 
@@ -515,7 +497,7 @@ class Core:
         if len(args) != 4:
             raise ArgumentNumError("draw_line", 4, len(args))
         for argument, argument_name in zip(args, ["x1", "x2", "x3", "x4"]):
-            self.check_type_is_num(arg, "draw_line", argument_name)
+            self.check_type_is_num(argument, "draw_line", argument_name)
 
         self.canvas.begin_path()
         self.canvas.move_to(args[0],args[1])
