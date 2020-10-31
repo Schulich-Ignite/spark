@@ -29,6 +29,27 @@ class ArgumentTypeError(ArgumentError):
             func_name, argname, type_str, arg, actual_type.__name__)
         super().__init__(self.message)
 
+class ArgumentTypeListError(ArgumentError):
+    def __init__(self, func_name, valid_fmts, actual_fmt, actual_vals=None):
+        arg_plural = "argument"
+        if len(actual_fmt) > 1:
+            arg_plural += "s"
+        s = "Invalid types for {} with {} {}, expected".format(func_name, len(actual_fmt), arg_plural)
+        if len(valid_fmts) >= 1:
+            if len(valid_fmts) > 1:
+                s += " one of"
+            s += " \n"
+            s += "".join(["\t{}({})\n".format(func_name, ", ".join([t.__name__ for t in fmt])) for fmt in valid_fmts])
+        else:
+            s += "{}()\n".format(func_name)
+        s += "received {}(".format(func_name)
+        if actual_vals is not None and len(actual_vals) == len(actual_fmt):
+            s += ", ".join(["{}: {}".format(arg, t.__name__) for arg, t in zip(actual_vals, actual_fmt)])
+        else:
+            s += ", ".join([t.__name__ for t in actual_fmt])
+        s += ")"
+        self.message = s
+        super().__init__(self.message)
 
 class ArgumentNumError(ArgumentError):
     def __init__(self, func_name, allowed_nums, actual_num):

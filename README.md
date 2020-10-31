@@ -2,7 +2,20 @@
 Jupyter Lab ipython extension used for teaching the [Schulich Ignite sessions](https://schulichignite.com/).
 
 ### Documentation
-Simple documentation for the library is provided in the [documentation.ipynb](https://github.com/Schulich-Ignite/spark/blob/main/documentation.ipynb) file.
+The documentation is built using mkdocs. To build locally you will need to pip install:
+
+- mkdocs
+- mkdocs-material
+
+#### Files
+
+All the files are built in pure markdown and can be found in ```/src```, the site configuration (including nav links) can be found in ```mkdocs.yml```.
+
+#### Building
+
+To build a local copy run ```mkdocs --serve``` and you will have a local copy available at [https://localhost/8000](http://localhost:8000/)
+
+A release will build every time new code is pushed to the gh-pages branch, but can also be manually triggered via github actions pipelines
 
 ### Testing locally
 Install NodeJS using one of the methods below:
