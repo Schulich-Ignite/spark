@@ -1,4 +1,3 @@
-
 class ArgumentError(Exception):
 
     def __init__(self, message=""):
@@ -22,12 +21,15 @@ class ArgumentTypeError(ArgumentError):
             else:
                 type_str = ", ".join([str(t) for t in allowed_type_names[:-1]])
                 type_str += ", or {}".format(allowed_type_names[-1])
+        elif type(allowed_types) == type:
+            type_str = allowed_types.__name__
         else:
-            type_str = str(allowed_type_names)
+            type_str = str(allowed_types)
 
         self.message = "{} expected {} {}, got {} of type {}".format(
             func_name, argname, type_str, arg, actual_type.__name__)
         super().__init__(self.message)
+
 
 class ArgumentTypeListError(ArgumentError):
     def __init__(self, func_name, valid_fmts, actual_fmt, actual_vals=None):
@@ -50,6 +52,7 @@ class ArgumentTypeListError(ArgumentError):
         s += ")"
         self.message = s
         super().__init__(self.message)
+
 
 class ArgumentNumError(ArgumentError):
     def __init__(self, func_name, allowed_nums, actual_num):
@@ -85,5 +88,5 @@ class ArgumentConditionError(ArgumentError):
             actual_value
         )
         super().__init__(self.message)
-    pass
 
+    pass
