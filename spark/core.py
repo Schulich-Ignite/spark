@@ -446,7 +446,7 @@ class Core:
         self.fill_arc(*args)
         self.stroke_arc(*args)
 
-    @validate_args([number, number, number, number, number, number])
+    @validate_args([Real, Real, Real, Real, Real, Real])
     @global_immut
     def fill_triangle(self, *args):
 
