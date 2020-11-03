@@ -1,0 +1,17 @@
+name: Run tests and linting checks
+on:
+  pull_request:
+    types: [assigned, opened, synchronize, reopened]
+
+jobs:
+  build:
+    name: Deploy docs
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout master
+        uses: actions/checkout@v2
+
+      - name: Flake8 Checks
+        uses: tayfun/flake8-your-pr@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.PERSONAL_TOKEN }}
