@@ -74,12 +74,12 @@ def helper_arc_args(self, *args):
 
 
 @validate_args([])
-@global_immut
+@ignite_global
 def helper_random(self, *args):
     return random.random()
 
 
 @validate_args([int])
-@global_immut
+@ignite_global
 def helper_randint(self, *args):
     return random.randint(0, args[0])

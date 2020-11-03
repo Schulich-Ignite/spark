@@ -16,7 +16,7 @@ from ipycanvas import Canvas, hold_canvas
 from ipywidgets import Button
 
 from .util import IpyExit
-from .util.decorators import extern, global_immut_names, global_mut_names, global_immut, global_mut
+from .util.decorators import extern, _ignite_globals, ignite_global
 
 DEFAULT_CANVAS_SIZE = (100, 100)
 FRAME_RATE = 30
@@ -32,10 +32,8 @@ class Core:
     global_constants = {
         "pi": pi
     }
-    
-    global_fields = global_immut_names
 
-    global_methods = global_mut_names
+    ignite_globals = _ignite_globals
 
     def __init__(self, globals_dict):
         self.status_text = display(Code(""), display_id=True)
@@ -77,12 +75,12 @@ class Core:
     ### Properties ###
 
     @property
-    @global_immut
+    @ignite_global
     def canvas(self):
         return self._globals_dict["canvas"]
 
     @property
-    @global_immut
+    @ignite_global
     def mouse_x(self):
         return self._globals_dict["mouse_x"]
 
@@ -91,7 +89,7 @@ class Core:
         self._globals_dict["mouse_x"] = val
 
     @property
-    @global_immut
+    @ignite_global
     def mouse_y(self):
         return self._globals_dict["mouse_y"]
 
@@ -100,7 +98,7 @@ class Core:
         self._globals_dict["mouse_y"] = val
 
     @property
-    @global_immut
+    @ignite_global
     def mouse_is_pressed(self):
         return self._globals_dict["mouse_is_pressed"]
 
@@ -109,7 +107,7 @@ class Core:
         self._globals_dict["mouse_is_pressed"] = val
 
     @property
-    @global_immut
+    @ignite_global
     def width(self):
         return self._globals_dict["width"]
 
@@ -119,7 +117,7 @@ class Core:
         self.canvas.width = val
 
     @property
-    @global_immut
+    @ignite_global
     def height(self):
         return self._globals_dict["height"]
 
@@ -219,7 +217,7 @@ class Core:
 
     # Prints output to embedded output box
     # Can't use @validate_args decorator for functions actually accepting variable arguments
-    @global_immut
+    @ignite_global
     def print(self, *args, sep=' ', end='\n', flush=True):
         global _sparkplug_running
         self.output_text += sep.join([str(arg) for arg in args]) + end
@@ -260,20 +258,21 @@ class Core:
         self.stop()
 
     ### User overrideable functions ###
+
     # The function bodies here do not matter, they are discarded
-    @global_mut
+    @ignite_global(mutable=True)
     def setup(self): pass
 
-    @global_mut
+    @ignite_global(mutable=True)
     def draw(self): pass
 
-    @global_mut
+    @ignite_global(mutable=True)
     def mouse_up(self): pass
 
-    @global_mut
+    @ignite_global(mutable=True)
     def mouse_down(self): pass
 
-    @global_mut
+    @ignite_global(mutable=True)
     def mouse_moved(self): pass
 
     ### Global functions ###
@@ -392,7 +391,8 @@ class Core:
 
     ### Helper Functions ###
 
-    # Parse a string, rgb or rgba input into an HTML color string
+    # From util.helper_functions.misc_functions
+
     @extern
     def parse_color(self, *args, func_name="parse_color"): pass
 

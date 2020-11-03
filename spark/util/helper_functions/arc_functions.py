@@ -1,5 +1,5 @@
 from math import sin, cos
-from ..decorators import *
+from ..decorators import validate_args, ignite_global
 from numbers import Real
 
 
@@ -7,7 +7,7 @@ from numbers import Real
                [Real, Real, Real, Real, Real],
                [Real, Real, Real, Real, Real, Real],
                [Real, Real, Real, Real, Real, Real, str])
-@global_immut
+@ignite_global
 def helper_fill_arc(self, *args):
     x, y, r, scale_x, scale_y, start, stop, mode = self.arc_args(*args)
 
@@ -37,7 +37,7 @@ def helper_fill_arc(self, *args):
                [Real, Real, Real, Real, Real],
                [Real, Real, Real, Real, Real, Real],
                [Real, Real, Real, Real, Real, Real, str])
-@global_immut
+@ignite_global
 def helper_stroke_arc(self, *args):
     x, y, r, scale_x, scale_y, start, stop, mode = self.arc_args(*args)
 
@@ -70,7 +70,7 @@ def helper_stroke_arc(self, *args):
                [Real, Real, Real, Real, Real],
                [Real, Real, Real, Real, Real, Real],
                [Real, Real, Real, Real, Real, Real, str])
-@global_immut
+@ignite_global
 def helper_arc(self, *args):
     self.fill_arc(*args)
     self.stroke_arc(*args)

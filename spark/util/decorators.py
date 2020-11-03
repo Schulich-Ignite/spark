@@ -12,34 +12,37 @@ def validate_args(*fmts, has_self=True):
             sig = FunctionSignature(fname, fmts, has_self)
             sig.check_inputs(*args)
             return func(*args, **kwargs)
+
         return wrapper
+
     return decorator_validate_args
 
 
-global_immut_names = set()
+_ignite_globals = {}
 
 
-def global_immut(func):
-    global global_immut_names
-    if func.__name__.startswith("helper_"):
-        fname = func.__name__[7:]
+def ignite_global(_func=None, *, mutable=False):
+    def decorator(func):
+        global _ignite_globals
+        # If this was a helper function, the global will be accessed without the "helper_" prefix
+        if func.__name__.startswith("helper_"):
+            fname = func.__name__[7:]
+        else:
+            fname = func.__name__
+
+        # This is the first declaration of this global
+        if fname not in _ignite_globals or mutable == _ignite_globals[fname]:
+            _ignite_globals[fname] = mutable
+            if mutable:
+                return None
+            return func
+        # This is a redefinition of this global, and the definitions have different mutabilities
+        else:
+            raise RuntimeError(f"Attempted to define global {fname} as both mutable and immutable.")
+    if _func is None:
+        return decorator
     else:
-        fname = func.__name__
-    if fname in global_mut_names:
-        raise RuntimeError("Attempted to define {} as both mutable and immutable.".format(fname))
-    global_immut_names.add(fname)
-    return func
+        return decorator(_func)
 
-
-global_mut_names = set()
-
-
-def global_mut(func):
-    global global_mut_names
-    if func.__name__ in global_immut_names:
-        raise RuntimeError("Attempted to define {} as both mutable and immutable.".format(func.__name__))
-    global_mut_names.add(func.__name__)
-    return None
 
 from .core_methods import extern
-

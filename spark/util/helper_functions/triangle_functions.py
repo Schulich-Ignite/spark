@@ -3,14 +3,14 @@ from numbers import Real
 
 
 @validate_args([Real, Real, Real, Real, Real, Real])
-@global_immut
+@ignite_global
 def helper_triangle(self, *args):
     self.fill_triangle(*args)
     self.stroke_triangle(*args)
 
 
 @validate_args([Real, Real, Real, Real, Real, Real])
-@global_immut
+@ignite_global
 def helper_stroke_triangle(self, *args):
     self.canvas.begin_path()
     self.canvas.move_to(args[0], args[1])
@@ -21,7 +21,7 @@ def helper_stroke_triangle(self, *args):
 
 
 @validate_args([Real, Real, Real, Real, Real, Real])
-@global_immut
+@ignite_global
 def helper_fill_triangle(self, *args):
     self.canvas.begin_path()
     self.canvas.move_to(args[0], args[1])

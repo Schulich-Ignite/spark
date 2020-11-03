@@ -3,7 +3,7 @@ from numbers import Real
 
 
 @validate_args([Real, Real, Real, Real])
-@global_immut
+@ignite_global
 def helper_draw_line(self, *args):
     self.canvas.begin_path()
     self.canvas.move_to(args[0], args[1])
@@ -13,18 +13,18 @@ def helper_draw_line(self, *args):
 
 
 @validate_args([Real, Real, Real, Real])
-@global_immut
+@ignite_global
 def helper_line(self, *args):
     self.draw_line(*args)
 
 
 @validate_args([Real])
-@global_immut
+@ignite_global
 def helper_line_width(self, *args):
     self.canvas.line_width = args[0]
 
 
 @validate_args([Real])
-@global_immut
+@ignite_global
 def helper_stroke_width(self, *args):
     self.line_width(*args)

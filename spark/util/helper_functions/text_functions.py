@@ -4,14 +4,14 @@ from numbers import Real
 
 
 @validate_args([int])
-@global_immut
+@ignite_global
 def helper_text_size(self, *args):
     self.font_settings['size'] = args[0]
     self.canvas.font = f"{self.font_settings['size']}px {self.font_settings['font']}"
 
 
 @validate_args([str])
-@global_immut
+@ignite_global
 def helper_text_align(self, *args):
     if args[0] not in ['left', 'right', 'center']:
         raise ArgumentConditionError("text_align", None, '"left", "right", or "center"', args[0])
@@ -20,7 +20,7 @@ def helper_text_align(self, *args):
 
 
 @validate_args([object, Real, Real])
-@global_immut
+@ignite_global
 def helper_text(self, *args):
     # Reassigning the properties gets around a bug with the properties not being used.
     self.canvas.font = self.canvas.font
