@@ -7,16 +7,17 @@
 
 import threading
 import time
-from math import pi
 
-import numpy as np
+from math import pi
+import re
+
 from IPython.display import Code, display
 from ipycanvas import Canvas, hold_canvas
 from ipywidgets import Button
 from ipyevents import Event
 
 from .util import IpyExit
-
+from .util.decorators import extern, _ignite_globals, ignite_global
 
 DEFAULT_CANVAS_SIZE = (100, 100)
 FRAME_RATE = 30
@@ -32,26 +33,8 @@ class Core:
         "pi": pi
     }
 
-    # All methods/fields from this class that will be exposed as global in user"s scope
-    global_fields = {
-        "canvas", "size", "width", "height",
-        "mouse_x", "mouse_y", "mouse_is_pressed",
-        "fill_style", "stroke_style",
-        "clear", "background",
-        "rect", "square", "fill_rect", "stroke_rect", "clear_rect",
-        "fill_text", "stroke_text", "text_align",
-        "draw_line",
-        "circle", "fill_circle", "stroke_circle", "fill_arc", "stroke_arc",
-        "print",
-        "key", "key_code"
-    }
 
-    # All methods that user will be able to define and override
-    global_methods = {
-        "draw", "setup",
-        "mouse_down", "mouse_up", "mouse_moved",
-        "key_event", "key_pressed", "key_released"
-    }
+    ignite_globals = _ignite_globals
 
     def __init__(self, globals_dict):
         self.status_text = display(Code(""), display_id=True)
@@ -60,10 +43,23 @@ class Core:
 
         self.stop_button = Button(description="Stop")
         self.stop_button.on_click(self.on_stop_button_clicked)
-
-        self.canvas = Canvas()
+        self._globals_dict["canvas"] = Canvas()
         self.kb_mon = Event(source=self.canvas, watched_events=['keydown', 'keyup'])
         self.output_text = ""
+        self.color_strings = {
+            "default": "#888888"
+        }
+        match_255 = r"(?:(?:2(?:(?:5[0-5])|(?:[0-4][0-9])))|(?:[01]?[0-9]{1,2}))"
+        match_alpha = r"(?:(?:1(?:\.0*)?)|(?:0(?:\.[0-9]*)?))"
+        match_360 = r"(?:(?:3[0-5][0-9])|(?:[0-2]?[0-9]{1,2}))"
+        match_100 = r"(?:100|[0-9]{1,2})"
+        self.regexes = [
+            re.compile(r"#[0-9A-Fa-f]{6}"),
+            re.compile(r"rgb\({},{},{}\)".format(match_255, match_255, match_255)),
+            re.compile(r"rgba\({},{},{},{}\)".format(match_255, match_255, match_255, match_alpha)),
+            re.compile(r"hsl\({},{}%,{}%\)".format(match_360, match_100, match_100)),
+            re.compile(r"hsla\({},{}%,{}%,{}\)".format(match_360, match_100, match_100, match_alpha))
+        ]
         self.width, self.height = DEFAULT_CANVAS_SIZE
         self.mouse_x = 0
         self.mouse_y = 0
@@ -71,9 +67,23 @@ class Core:
         self.key = ""
         self.key_code = ""
 
+        # Settings for drawing text (https://ipycanvas.readthedocs.io/en/latest/drawing_text.html).
+        self.font_settings = {
+            'size': 12.0,
+            'font': 'sans-serif',
+            'baseline': 'top',
+            'align': 'left'
+        }
+
     ### Properties ###
 
     @property
+    @ignite_global
+    def canvas(self):
+        return self._globals_dict["canvas"]
+
+    @property
+    @ignite_global
     def mouse_x(self):
         return self._globals_dict["mouse_x"]
 
@@ -82,6 +92,7 @@ class Core:
         self._globals_dict["mouse_x"] = val
 
     @property
+    @ignite_global
     def mouse_y(self):
         return self._globals_dict["mouse_y"]
 
@@ -90,6 +101,7 @@ class Core:
         self._globals_dict["mouse_y"] = val
 
     @property
+    @ignite_global
     def mouse_is_pressed(self):
         return self._globals_dict["mouse_is_pressed"]
 
@@ -98,6 +110,7 @@ class Core:
         self._globals_dict["mouse_is_pressed"] = val
 
     @property
+    @ignite_global
     def key(self):
         return self._globals_dict["key"]
 
@@ -106,6 +119,7 @@ class Core:
         self._globals_dict["key"] = val
 
     @property
+    @ignite_global
     def key_code(self):
         return self._globals_dict["key_code"]
 
@@ -114,6 +128,7 @@ class Core:
         self._globals_dict["key_code"] = val
 
     @property
+    @ignite_global
     def width(self):
         return self._globals_dict["width"]
 
@@ -123,6 +138,7 @@ class Core:
         self.canvas.width = val
 
     @property
+    @ignite_global
     def height(self):
         return self._globals_dict["height"]
 
@@ -143,7 +159,7 @@ class Core:
     def start(self, methods):
         self._methods = methods
         draw = self._methods.get("draw", None)
-        
+
         if draw:
             self.print_status("Running...")
             display(self.stop_button)
@@ -159,6 +175,11 @@ class Core:
         self.canvas.on_mouse_move(self.on_mouse_move)
 
         self.kb_mon.on_dom_event(self.handle_kb_event)
+
+        # Initialize text drawing settings for the canvas. ()
+        self.canvas.font = f"{self.font_settings['size']}px {self.font_settings['font']}"
+        self.canvas.text_baseline = 'top'
+        self.canvas.text_align = 'left'
 
         thread = threading.Thread(target=self.loop)
         thread.start()
@@ -196,7 +217,8 @@ class Core:
                 return
 
         while _sparkplug_running:
-            if _sparkplug_active_thread_id != current_thread_id or time.time() - _sparkplug_last_activity > NO_ACTIVITY_THRESHOLD:
+            if _sparkplug_active_thread_id != current_thread_id \
+                    or time.time() - _sparkplug_last_activity > NO_ACTIVITY_THRESHOLD:
                 self.stop("Stopped due to inactivity")
                 return
 
@@ -215,13 +237,15 @@ class Core:
     # Prints status to embedded error box
     def print_status(self, msg):
         self.status_text.update(Code(msg))
-    
-    # Prints output to embedded output box
-    def print(self, msg):
-        global _sparkplug_running
-        self.output_text += msg + "\n"
 
-        if _sparkplug_running:
+    # Prints output to embedded output box
+    # Can't use @validate_args decorator for functions actually accepting variable arguments
+    @ignite_global
+    def print(self, *args, sep=' ', end='\n', flush=True):
+        global _sparkplug_running
+        self.output_text += sep.join([str(arg) for arg in args]) + end
+
+        if _sparkplug_running and flush:
             self.output_text_code.update(Code(self.output_text))
 
     # Update mouse_x, mouse_y, and call mouse_down handler
@@ -252,18 +276,15 @@ class Core:
         mouse_moved = self._methods.get("mouse_moved", None)
         if mouse_moved:
             mouse_moved()
-    
+
     def on_stop_button_clicked(self, button):
         self.stop()
 
     def handle_kb_event(self, event):
-        key_event = self._methods.get("key_event", None)
         key_pressed = self._methods.get("key_pressed", None)
         key_released = self._methods.get("key_released", None)
         self.key = event['key']
         self.key_code = event['code']
-        if key_event:
-            key_event()
         if event['type'] == "keydown":
             if key_pressed:
                 key_pressed()
@@ -271,210 +292,159 @@ class Core:
             if key_released:
                 key_released()
 
+    ### User overrideable functions ###
+
+    # The function bodies here do not matter, they are discarded
+    @ignite_global(mutable=True)
+    def setup(self): pass
+
+    @ignite_global(mutable=True)
+    def draw(self): pass
+
+    @ignite_global(mutable=True)
+    def mouse_up(self): pass
+
+    @ignite_global(mutable=True)
+    def mouse_down(self): pass
+
+    @ignite_global(mutable=True)
+    def mouse_moved(self): pass
+
+    @ignite_global(mutable=True)
+    def key_pressed(self): pass
+
+    @ignite_global(mutable=True)
+    def key_released(self): pass
+
     ### Global functions ###
 
-    # Sets canvas size
-    def size(self, *args):
-        if len(args) == 2:
-            self.width = args[0]
-            self.height = args[1]
+    # From .util.helper_functions.canvas_functions
 
-    # Sets fill style
-    # 1 arg: HTML string value
-    # 3 args: r, g, b are int between 0 and 255
-    # 4 args: r, g, b, a, where r, g, b are ints between 0 and 255, and  a (alpha) is a float between 0 and 1.0
-    def fill_style(self, *args):
-        self.canvas.fill_style = self.parse_color("fill_style", *args)
+    @extern
+    def size(self, *args): pass
 
-    def stroke_style(self, *args):
-        self.canvas.stroke_style = self.parse_color("stroke_style", *args)
+    @extern
+    def fill_style(self): pass
 
-    # Combines fill_rect and stroke_rect into one wrapper function
-    def rect(self, *args):
-        self.check_coords("rect", *args)
-        
-        self.canvas.fill_rect(*args)
-        self.canvas.stroke_rect(*args)
+    @extern
+    def stroke_style(self, *args): pass
 
-    # Similar to self.rect wrapper, except only accepts x, y and size
-    def square(self, *args):
-        self.check_coords("square", *args, width_only=True)
-        rect_args = (*args, args[2]) # Copy the width arg into the height
-        self.rect(*rect_args)
+    @extern
+    def clear(self, *args): pass
 
-    # Draws filled rect
-    def fill_rect(self, *args):
-        self.check_coords("fill_rect", *args)
-        self.canvas.fill_rect(*args)
-    
-    # Strokes a rect
-    def stroke_rect(self, *args):
-        self.check_coords("stroke_rect", *args)
-        self.canvas.stroke_rect(*args)
+    @extern
+    def background(self, *args): pass
 
-    #Clears a rect
-    def clear_rect(self, *args):
-        self.check_coords('clear_rect', *args)
-        self.canvas.clear_rect(*args)
+    # From util.helper_functions.rect_functions
 
-    # Draws circle at given coordinates
-    def circle(self, *args):
-        self.check_coords("circle", *args, width_only=True)
-        arc_args = self.arc_args(*args)
-        self.canvas.fill_arc(*arc_args)
-        self.canvas.stroke_arc(*arc_args)
+    @extern
+    def rect(self, *args): pass
 
-    # Draws filled circle
-    def fill_circle(self, *args):
-        self.check_coords("fill_circle", *args, width_only=True)
-        arc_args = self.arc_args(*args)
-        self.canvas.fill_arc(*arc_args)
+    @extern
+    def fill_rect(self, *args): pass
 
-    # Draws circle stroke
-    def stroke_circle(self, *args):
-        self.check_coords("stroke_circle", *args, width_only=True)
-        arc_args = self.arc_args(*args)
-        self.canvas.stroke_arc(*arc_args)
-        
-    def fill_arc(self, *args):
-        self.canvas.fill_arc(*args)
+    @extern
+    def stroke_rect(self, *args): pass
 
-    def stroke_arc(self, *args):
-        self.canvas.stroke_arc(*args)
-    
-    def fill_text(self, *args):
-        self.canvas.font = "{px}px sans-serif".format(px = args[4])
-        self.canvas.fill_text(args[0:3])
-        self.canvas.font = "12px sans-serif"
+    @extern
+    def clear_rect(self, *args): pass
 
-    def stroke_text(self, *args):
-        self.canvas.font = "{px}px sans-serif".format(px = args[4])
-        self.canvas.stroke_text(args[0:3])
-        self.canvas.font = "12px sans-serif"
+    # From util.helper_functions.square_functions
 
-    def text_align(self, *args):
-        self.canvas.text_align(*args)
+    @extern
+    def square(self, *args): pass
 
-    def draw_line(self, *args):
-        if len(args) == 4:
-            self.canvas.line_width = args[4]
-        else:
-            self.canvas.line_width = 1
-            
-        self.canvas.begin_path()
-        self.canvas.move_to(args[0],args[1])
-        self.canvas.line_to(args[2],args[4])
-        self.canvas.close_path()
+    @extern
+    def stroke_square(self, *args): pass
 
-    # Clears canvas
-    def clear(self, *args):
-        self.canvas.clear()
-    
-    # Draws background on canvas
-    def background(self, *args):
-        old_fill = self.canvas.fill_style
-        argc = len(args)
+    @extern
+    def fill_square(self, *args): pass
 
-        if argc == 3:
-            if ((not type(args[0]) is int) or (not type(args[1]) is int) or (not type(args[2]) is int)):
-                raise TypeError("Enter Values between 0 and 255(integers only) for all 3 values")
-            elif (not (args[0] >= 0 and args[0] <= 255) or not (args[1] >= 0 and args[1] <= 255) or not (
-                args[2] >= 0 and args[2] <= 255)):
-                raise TypeError("Enter Values between 0 and 255(integers only) for all 3 values")
-            self.clear()
-            self.fill_style(args[0], args[1], args[2])
-            self.fill_rect(0, 0, self.width, self.height)
-        elif argc == 1:
-            if (not type(args[0]) is str):
-                raise TypeError("Enter colour value in Hex i.e #000000 for black and so on")
-            self.clear()
-            self.fill_style(args[0])
-            self.fill_rect(0, 0, self.width, self.height)
-        elif argc == 4:
-            if ((not type(args[0]) is int) or (not type(args[1]) is int) or (not type(args[2]) is int) or (
-            not type(args[3]) is float)):
-                raise TypeError("Enter Values between 0 and 255(integers only) for all 3 values")
-            elif (not (args[0] >= 0 and args[0] <= 255) or not (args[1] >= 0 and args[1] <= 255) or not (
-                args[2] >= 0 and args[2] <= 255) or not (args[3] >= 0.0 and args[3] <= 1.0)):
-                raise TypeError(
-                "Enter Values between 0 and 255(integers only) for all 3 values and a value between 0.0 and 1.0 for opacity(last argument")
-            self.clear()
-            self.fill_style(args[0], args[1], args[2], args[3])
-            self.fill_rect(0, 0, self.width, self.height)
-        
-        self.canvas.fill_style = old_fill
-    
+    # From util.helper_functions.circle_functions
+
+    @extern
+    def circle(self, *args): pass
+
+    @extern
+    def fill_circle(self, *args): pass
+
+    @extern
+    def stroke_circle(self, *args): pass
+
+    # From util.helper_functions.ellipse_functions
+
+    @extern
+    def ellipse(self, *args): pass
+
+    @extern
+    def fill_ellipse(self, *args): pass
+
+    @extern
+    def stroke_ellipse(self, *args): pass
+
+    # From util.helper_functions.arc_functions
+
+    @extern
+    def arc(self, *args): pass
+
+    @extern
+    def fill_arc(self, *args): pass
+
+    @extern
+    def stroke_arc(self, *args): pass
+
+    # From util.helper_functions.triangle_functions
+
+    @extern
+    def triangle(self, *args): pass
+
+    @extern
+    def fill_triangle(self, *args): pass
+
+    @extern
+    def stroke_triangle(self, *args): pass
+
+    # From util.helper_functions.text_functions
+
+    @extern
+    def text_size(self, *args): pass
+
+    @extern
+    def text_align(self, *args): pass
+
+    @extern
+    def text(self, *args): pass
+
+    # From util.helper_functions.line_functions
+
+    @extern
+    def draw_line(self, *args): pass
+
+    @extern
+    def line(self, *args): pass
+
+    @extern
+    def line_width(self, *args): pass
+
+    # An alias to line_width
+    @extern
+    def stroke_width(self, *args): pass
+
     ### Helper Functions ###
 
-    # Tests if input is numeric
-    # Note: No support for complex numbers
-    def check_type_is_num(self, n, func_name=None):
-        if not isinstance(n, (int, float)):
-            msg = "Expected {} to be a number".format(n)
-            if func_name:
-                msg = "{} expected {} to be a number".format(func_name, self.quote_if_string(n))
-            raise TypeError(msg)
+    # From util.helper_functions.misc_functions
 
-    # Tests if input is an int
-    def check_type_is_int(self, n, func_name=None):
-        if type(n) is not int:
-            msg = "Expected {} to be an int".format(n)
-            if func_name:
-                msg = "{} expected {} to be an int".format(func_name, self.quote_if_string(n))
-            raise TypeError(msg)
+    @extern
+    def parse_color(self, *args, func_name="parse_color"): pass
 
-    # Tests if input is a float
-    # allow_int: Set to True to allow ints as a float. Defaults to True.
-    def check_type_is_float(self, n, func_name=None, allow_int=True):
-        if type(n) is not float:
-            if not allow_int or type(n) is not int:
-                msg = "Expected {} to be a float".format(n)
-                if func_name:
-                    msg = "{} expected {} to be a float".format(func_name, self.quote_if_string(n))
-                raise TypeError(msg)
+    @extern
+    def parse_color_string(self, func_name, s): pass
 
-    @staticmethod
-    def quote_if_string(val):
-        if type(val) is str:
-            return "\"{}\"".format(val)
-        else:
-            return val
-    
-    # Parse a string, rgb or rgba input into an HTML color string
-    def parse_color(self, func_name, *args):
-        argc = len(args)
+    @extern
+    def arc_args(self, *args): pass
 
-        if argc == 1:
-            return args[0]
-        elif argc == 3 or argc == 4:
-            color_args = args[:3]
-            for col in color_args:
-                self.check_type_is_int(col, func_name)
-            color_args = np.clip(color_args, 0, 255)
+    @extern
+    def random(self, *args): pass
 
-            if argc == 3:
-                return "rgb({}, {}, {})".format(*color_args)
-            else:
-                # Clip alpha between 0 and 1
-                alpha_arg = args[3]
-                self.check_type_is_float(alpha_arg, func_name)
-                alpha_arg = np.clip(alpha_arg, 0, 1.0)
-                return "rgba({}, {}, {}, {})".format(*color_args, alpha_arg)
-        else:
-            raise TypeError("{} expected {}, {} or {} arguments, got {}".format(func_name, 1, 3, 4, argc))
-
-    # Check a set of 4 args are valid coordinates
-    # x, y, w, h
-    def check_coords(self, func_name, *args, width_only=False):
-        argc = len(args)
-        if argc != 4 and not width_only:
-            raise TypeError("{} expected {} arguments for x, y, w, h, got {} arguments".format(func_name, 4, argc))
-        elif argc != 3 and width_only:
-            raise TypeError("{} expected {} arguments for x, y, size, got {} arguments".format(func_name, 3, argc))
-
-        for arg in args:
-            self.check_type_is_float(arg, func_name)
-
-    # Convert a tuple of circle args into arc args 
-    def arc_args(self, *args):
-        return (args[0], args[1], args[2] / 2, 0, 2 * pi)
+    @extern
+    def randint(self, *args): pass
