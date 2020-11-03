@@ -1,7 +1,9 @@
 import setuptools
 
+#TODO REMOVE
 with open("README.md", "r") as fh:
-    long_description = fh.read()
+    long_description = fh.read()# YEEETMY DUDDE
+
 
 setuptools.setup(
     name="schulich-ignite",
