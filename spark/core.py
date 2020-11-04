@@ -27,12 +27,12 @@ _sparkplug_active_thread_id = None
 _sparkplug_last_activity = 0
 _sparkplug_running = False
 
+
 class Core:
     # All constants that will be injected into global scope in the user"s cell
     global_constants = {
         "pi": pi
     }
-
 
     ignite_globals = _ignite_globals
 
@@ -44,7 +44,8 @@ class Core:
         self.stop_button = Button(description="Stop")
         self.stop_button.on_click(self.on_stop_button_clicked)
         self._globals_dict["canvas"] = Canvas()
-        self.kb_mon = Event(source=self.canvas, watched_events=['keydown', 'keyup'])
+        self.kb_mon = Event(source=self.canvas, watched_events=['keydown', 'keyup'], wait=1000 // FRAME_RATE,
+                            prevent_default_actions=True)
         self.output_text = ""
         self.color_strings = {
             "default": "#888888"
@@ -65,7 +66,7 @@ class Core:
         self.mouse_y = 0
         self.mouse_is_pressed = False
         self.key = ""
-        self.key_code = ""
+        self._keys_held = {}
 
         # Settings for drawing text (https://ipycanvas.readthedocs.io/en/latest/drawing_text.html).
         self.font_settings = {
@@ -79,7 +80,7 @@ class Core:
 
     @property
     @ignite_global
-    def canvas(self):
+    def canvas(self) -> Canvas:
         return self._globals_dict["canvas"]
 
     @property
@@ -120,15 +121,6 @@ class Core:
 
     @property
     @ignite_global
-    def key_code(self):
-        return self._globals_dict["key_code"]
-
-    @key_code.setter
-    def key_code(self, val):
-        self._globals_dict["key_code"] = val
-
-    @property
-    @ignite_global
     def width(self):
         return self._globals_dict["width"]
 
@@ -163,8 +155,6 @@ class Core:
         if draw:
             self.print_status("Running...")
             display(self.stop_button)
-        else:
-            self.print_status("Done drawing")
 
         display(self.canvas)
 
@@ -192,6 +182,9 @@ class Core:
 
         _sparkplug_running = False
         self.print_status(message)
+        self.kb_mon.reset_callbacks()
+        self.kb_mon.close()
+
         # Assuming we're using IPython to draw the canvas through the display() function.
         # Commenting this out for now, it throws exception since it does not derive BaseException
         # raise IpyExit
@@ -213,7 +206,7 @@ class Core:
             try:
                 setup()
             except Exception as e:
-                self.print_status("Error in setup() function: " + str(e))
+                self.stop("Error in setup() function: " + str(e))
                 return
 
         while _sparkplug_running:
@@ -223,13 +216,14 @@ class Core:
                 return
 
             if not draw:
+                self.stop("Done drawing.")
                 return
 
             with hold_canvas(self.canvas):
                 try:
                     draw()
                 except Exception as e:
-                    self.print_status("Error in draw() function: " + str(e))
+                    self.stop("Error in draw() function: " + str(e))
                     return
 
             time.sleep(1 / FRAME_RATE)
@@ -280,17 +274,8 @@ class Core:
     def on_stop_button_clicked(self, button):
         self.stop()
 
-    def handle_kb_event(self, event):
-        key_pressed = self._methods.get("key_pressed", None)
-        key_released = self._methods.get("key_released", None)
-        self.key = event['key']
-        self.key_code = event['code']
-        if event['type'] == "keydown":
-            if key_pressed:
-                key_pressed()
-        else:
-            if key_released:
-                key_released()
+    @extern
+    def handle_kb_event(self, event): pass
 
     ### User overrideable functions ###
 
@@ -317,6 +302,12 @@ class Core:
     def key_released(self): pass
 
     ### Global functions ###
+
+    # From .util.helper_functions.keyboard_functions
+
+    @extern
+    def keys_held(self, *args):
+        pass
 
     # From .util.helper_functions.canvas_functions
 

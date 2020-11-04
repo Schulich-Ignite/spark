@@ -9,6 +9,8 @@ from .helper_functions.square_functions import *
 from .helper_functions.text_functions import *
 from .helper_functions.triangle_functions import *
 
+from .helper_functions.keyboard_functions import *
+
 
 def extern(func):
     return globals()[f"helper_{func.__name__}"]
