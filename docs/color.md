@@ -4,7 +4,12 @@ All of the examples below assume you have the boilerplate from [the notebook set
 
 ## Creating a background
 
-There are two ways to use background, with a single string, or 3 integers.
+There are two ways to use background:
+
+| Method                       | Description                       | Syntax                |
+| ---------------------------- | ----------------------------------|-----------------------|
+|[String](#string-background)  | Give the name i.e. "green"        | background("Green")   |
+|[3 ints](#integer-background) | Give the r,g,b vaule i.e. 0,255,0 | background(0, 255, 0) |
 
 ### String background
 ```python
@@ -20,7 +25,7 @@ Example(s):
 *Creating a green background*
 
 
-```python
+```python hl_lines="7"
 %%ignite
 
 def setup():
@@ -50,7 +55,7 @@ Example(s):
 *Creating a green background*
 
 
-```python
+```python hl_lines="7"
 %%ignite
 
 def setup():
@@ -69,8 +74,15 @@ Results in:
 
 To clear the screen, there are two options:
 
-- clear()
-- [background()](#creating-a-background)
+| Method                                | Description                                                                             |
+| --------------------------------------| ----------------------------------------------------------------------------------------|
+|[clear()](#clear)                      | Clear the screen to default background color (light or dark depending on user settings) |
+|[background()](#creating-a-background) | Clear the screen with a specific color                                                  |
+
+#### Notes
+
+- For both make sure to put it at the top or bottom of your draw() function if you are using one
+- For the r, g, b values they go from 0-255. So for all green you would use 0, 255, 0
 
 #### clear()
 
@@ -85,7 +97,7 @@ Example(s):
 *Drawing a green background and a circle, then clearing the screen and drawing just a rectangle*
 
 
-```python
+```python hl_lines="11"
 %%ignite
 
 def setup():
@@ -109,7 +121,17 @@ Results in:
 
 ### Changing the color of shapes
 
-There are two available options to change the color of shapes you draw. Keep in mind you need to select the color **then** draw the shape.
+There are two available options to change the color of shapes you draw:
+
+| Method                    | Description                       | Syntax                |
+| ------------------------- | ----------------------------------|-----------------------|
+|[String](#string-version)  | Give the name i.e. "green"        | fill_style("Green")   |
+|[3 ints](#integer-version) | Give the r,g,b vaule i.e. 0,255,0 | fill_style(0, 255, 0) |
+
+#### Notes
+
+- Keep in mind you need to select the color **then** draw the shape. Like dipping a paintbrush before drawing.
+- For the r, g, b values they go from 0-255. So for all green you would use 0, 255, 0
 
 
 #### String version
@@ -125,8 +147,8 @@ Example(s):
 
 *Drawing a red, a green, and a blue circle at different points on the canvas*
 
-```python
-%%ignite
+```python hl_lines="7 11 15"
+%%ignite 
 
 def setup():
     size(200, 200)
@@ -163,7 +185,7 @@ Example(s):
 
 *Drawing a red, a green, and a blue circle at different points on the canvas*
 
-```python
+```python hl_lines="7 11 15"
 %%ignite
 
 def setup():

@@ -14,7 +14,7 @@ random()
 
 *Printing a random value between 0-1*
 
-```python
+```python hl_lines="5"
 %%ignite
 
 def setup():
@@ -44,7 +44,7 @@ randint(n)
 
 *Printing a random value between 0-10*
 
-```python
+```python hl_lines="5"
 %%ignite
 
 def setup():

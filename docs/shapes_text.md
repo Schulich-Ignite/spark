@@ -21,7 +21,7 @@ fill_rect(x, y, w, l)
 
 *Creating a rectangle at (100, 100) with a width of 75, and length of 50*
 
-```python
+```python hl_lines="7"
 %%ignite
 
 def setup():
@@ -47,14 +47,14 @@ fill_circle(x, y, r)
 
 - x: (int or float) The value of the x position of the rectangle
 - y: (int or float) The value of the y position of the rectangle
-- r: (int or float) The radius of the circle
+- d: (int or float) The diameter of the circle
 
 Example(s):
 
-*Creating a circle at (100, 100) with a radius of 75*
+*Creating a circle at (100, 100) with a diameter of 75*
 
 
-```python
+```python hl_lines="7"
 %%ignite
 
 def setup():
@@ -88,7 +88,7 @@ Example(s):
 *Creating some text at (100, 100)*
 
 
-```python
+```python hl_lines="7"
 %%ignite
 
 def setup():
@@ -120,7 +120,7 @@ Example(s):
 *Creating some text at (100, 100), that is 16pt font*
 
 
-```python
+```python hl_lines="7"
 %%ignite
 
 def setup():

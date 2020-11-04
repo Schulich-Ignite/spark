@@ -17,6 +17,14 @@ theme:
         primary: black
         accent: amber
 
+markdown_extensions:
+    - pymdownx.keys
+    - pymdownx.superfences
+    - pymdownx.highlight:
+        linenums: true
+        linenums_style: pymdownx.inline
+    
+
 site_description: Spark is a library designed to help drawing in python easy
 
 site_author: Schulich Ignite
