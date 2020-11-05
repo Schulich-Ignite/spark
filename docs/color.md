@@ -2,7 +2,7 @@
 
 All of the examples below assume you have the boilerplate from [the notebook setup](../#boilerplate) in your code
 
-## Creating a background
+### Creating a background
 
 There are two ways to use background:
 
@@ -11,7 +11,7 @@ There are two ways to use background:
 |[String](#string-background)  | Give the name i.e. "green"        | background("Green")   |
 |[3 ints](#integer-background) | Give the r,g,b vaule i.e. 0,255,0 | background(0, 255, 0) |
 
-### String background
+#### String background
 ```python
 background(color)
 ```
@@ -39,7 +39,7 @@ Results in:
 
 ![background(message) example](img/background(color).png)
 
-### Integer background
+#### Integer background
 ```python
 background(r, g, b)
 ```
