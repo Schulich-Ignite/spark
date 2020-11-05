@@ -301,6 +301,9 @@ class Core:
     @ignite_global(mutable=True)
     def key_released(self): pass
 
+    @ignite_global(mutable=True)
+    def key_repeated(self): pass
+
     ### Global functions ###
 
     # From .util.helper_functions.keyboard_functions
