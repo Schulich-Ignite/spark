@@ -13,7 +13,7 @@ To create a rectangle there are 3 options:
 | [stroke_rect(x, y, w, l)](#stroke_rect) | Draw the rectangle of an ellipse (it's stroke)        |
 
 <figure>
-  <img src="/img/rect_comparison.png"/>
+  <img src="https://schulichignite.com/spark/img/rect_comparison.png"/>
   <figcaption>Comparison of 3 functions, note the red color was added for visibility, by default fill is black</figcaption>
 </figure>
 
@@ -118,7 +118,7 @@ To create a circle there are 3 options:
 | [stroke_circle(x, y, d)](#stroke_circle) | Draw the circle of an ellipse (it's stroke)        |
 
 <figure>
-  <img src="/img/circle_comparison.png"/>
+  <img src="https://schulichignite.com/spark/img/circle_comparison.png"/>
   <figcaption>Comparison of 3 functions, note the red color was added for visibility, by default fill is black</figcaption>
 </figure>
 
@@ -224,7 +224,7 @@ To create an ellipse there are 3 options:
 | [stroke_ellipse(x, y, l, w)](#stroke_ellipse) | Draw the outline of an ellipse (it's stroke)         |
 
 <figure>
-  <img src="/img/ellipse_comparison.png"/>
+  <img src="https://schulichignite.com/spark/img/ellipse_comparison.png"/>
   <figcaption>Comparison of 3 functions, note the red color was added for visibility, by default fill is black</figcaption>
 </figure>
 
@@ -332,7 +332,7 @@ To create a triangle there are 3 options:
 | [stroke_triangle(x1, y1, x2, y2, x3, y3)](#stroke_triangle) | Draw the outline of a trianlge (it's stroke)         |
 
 <figure>
-  <img src="/img/triangle_comparison.png"/>
+  <img src="https://schulichignite.com/spark/img/triangle_comparison.png"/>
   <figcaption>Comparison of 3 functions, note the red color was added for visibility, by default fill is black</figcaption>
 </figure>
 
