@@ -6,7 +6,7 @@ All of the examples below assume you have the boilerplate from [the notebook set
 
 To create a rectangle there are 3 options:
 
-| Function                                | Description                                            |
+| Function                                | Description                                           |
 |-----------------------------------------|-------------------------------------------------------|
 | [rect(x, y, w, l)](#rect)               | Draw a rectangle filled with color, and with a stroke |
 | [fill_rect(x, y, w, l)](#fill_rect)     | Draw an rectangle filled with a color                 |

@@ -20,10 +20,11 @@ theme:
 markdown_extensions:
     - pymdownx.keys
     - pymdownx.superfences
+    - pymdownx.inlinehilite
+    - attr_list
     - pymdownx.highlight:
         linenums: true
         linenums_style: pymdownx.inline
-    - attr_list
     
 
 site_description: Spark is a library designed to help drawing in python easy
