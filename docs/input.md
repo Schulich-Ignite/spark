@@ -122,7 +122,7 @@ Spark features multiple ways to check for user key presses:
 
 #### key
 
-A string that is the last key pressed
+A string that is the last key event (a key being pressed, released, or held down). So for example if you press, hold or release ++shift++ then `#!python key == "Shift"`.
 
 ##### Notes
 - This variable **does not clear**, meaning if a key is pressed it will remain the value until a **new key** is pressed
