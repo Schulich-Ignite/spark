@@ -162,6 +162,7 @@ def draw():
 ```
 
 Results in:
+
 ![key example](img/key.png){: loading=lazy }
 
 #### keys_held()
