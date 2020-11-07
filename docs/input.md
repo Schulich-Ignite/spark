@@ -265,7 +265,7 @@ def key_repeated():
     # Your code goes here
 ```
 
-This is a user definable function that activates when **any** key is held.
+This is a user definable function that activates when **any** key is held. Note this function **continuously activates** for as long as the key is held.
 
 Example(s):
 
