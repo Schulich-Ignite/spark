@@ -132,18 +132,18 @@ A string that is the last key event (a key being pressed, released, or held down
 
 ##### Special Keys
 
-| Key           | Value                          |
-|---------------|--------------------------------|
-| ++up++        | `#!python key == "ArrowUp"`    |
-| ++down++      | `#!python key == "ArrowDown"`  |
-| ++left++      | `#!python key == "ArrowLeft"`  |
-| ++right++     | `#!python key == "ArrowRight"` |
-| ++tab++       | `#!python key == "Tab"`        |
-| ++ctrl++      | `#!python key == "Control"`    |
-| ++alt++       | `#!python key == "Alt"`        |
-| ++esc++       | `#!python key == "Escape"`     |
-| ++win++       | `#!python key == "Meta"`       |
-| ++backspace++ | `#!python key == "Backspace"` |
+| Key                    | Value                          |
+|------------------------|--------------------------------|
+| ++up++                 | `#!python key == "ArrowUp"`    |
+| ++down++               | `#!python key == "ArrowDown"`  |
+| ++left++               | `#!python key == "ArrowLeft"`  |
+| ++right++              | `#!python key == "ArrowRight"` |
+| ++tab++                | `#!python key == "Tab"`        |
+| ++ctrl++               | `#!python key == "Control"`    |
+| ++alt++ or ++option++  | `#!python key == "Alt"`        |
+| ++esc++                | `#!python key == "Escape"`     |
+| ++win++ or ++command++ | `#!python key == "Meta"`       |
+| ++backspace++          | `#!python key == "Backspace"` |
 
 **Example(s):**
 
