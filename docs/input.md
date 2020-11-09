@@ -15,7 +15,7 @@ To get the current mouse position you can use the following variables:
 
 *Drawing a circle at the mouse position constantly (remember it will draw over itself over and over again and leave a trail):*
 
-```python
+```python hl_lines="7"
 %%ignite
 
 def setup():
@@ -27,7 +27,7 @@ def draw():
 
 Results in:
 
-![Mouse position example example](img/mouse_position.png)
+![Mouse position example example](img/mouse_position.png){: loading=lazy }
 
 
 ### Mouse pressed
@@ -41,7 +41,7 @@ To find out if the mouse has been pressed you can use the variable:
 
 *Rectangle will be red if the mouse has been pressed, otherwise it will be blue*
 
-```python
+```python hl_lines="7"
 %%ignite
 
 def setup():
@@ -58,7 +58,7 @@ def draw():
 
 Results in:
 
-![Mouse pressed example](img/mouse_pressed.png)
+![Mouse pressed example](img/mouse_pressed.png){: loading=lazy }
 
 ### Getting text from user
 
@@ -79,7 +79,7 @@ Keep in mind, whatever the user types in will **always** be a string. See the se
 
 *Ask the user for their name, then display it to the screen:*
 
-```python
+```python hl_lines="5"
 %%ignite
 
 def setup(): # Only drawn once, so just using setup()
@@ -90,20 +90,200 @@ def setup(): # Only drawn once, so just using setup()
 
 which results in:
 
-![Write Name](img/write_name.png)
+![Write Name](img/write_name.png){: loading=lazy }
 
 
-*Ask the user for a radius. We need to convert the string to an integer, we can do this using int(). Draw a circle of that radius at (100, 100):*
+*Ask the user for a diameter. We need to convert the string to an integer, we can do this using int(). Draw a circle of that diameter at (100, 100):*
 
-```python
+```python hl_lines="5"
 %%ignite
 
 def setup(): # Only drawn once, so just using setup()
     size(200, 200)
-    radius = int(input("What radius should the circle be?: ")) # cast the string to an integer
-    fill_circle(100, 100 radius)
+    diameter = int(input("What diameter should the circle be?: ")) # cast the string to an integer
+    fill_circle(100, 100 diameter)
 ```
 
 which results in:
 
-![Ask circle radius](img/circle_radius.png)
+![Ask circle diameter](img/circle_radius.png){: loading=lazy }
+
+### Check for key presses
+
+Spark features multiple ways to check for user key presses:
+
+| Name                            | Type                  | Description                                                  |
+|---------------------------------|-----------------------|--------------------------------------------------------------|
+| [key](#key)                     | Variable              | A string of what key was last pressed                        |
+| [keys_held()](#keys_held)       | Function              | A function that returns True if the provided key is held     |
+| [key_pressed()](#key_pressed)   | User defined function | A definable function that activates when any key is pressed  | 
+| [key_released()](#key_released) | User defined function | A definable function that activates when any key is released |
+| [key_repeated()](#key_repeated) | User defined function | A definable function that activates when any key is held     |
+
+#### key
+
+A string that is the last key event (a key being pressed, released, or held down). So for example if you press, hold or release ++shift++ then `#!python key == "Shift"`.
+
+##### Notes
+- This variable **does not clear**, meaning if a key is pressed it will remain the value until a **new key** is pressed
+- This variable will be the uppercase letter if ++shift++ + a letter is pressed i.e. ++shift++ + ++a++ would be `#!python key == "A"`
+- This variable will be a symbol if ++shift++ + a number is pressed i.e. ++shift++ + ++3++ would be `#!python key == "$"`
+
+
+##### Special Keys
+
+| Key                    | Value                          |
+|------------------------|--------------------------------|
+| ++up++                 | `#!python key == "ArrowUp"`    |
+| ++down++               | `#!python key == "ArrowDown"`  |
+| ++left++               | `#!python key == "ArrowLeft"`  |
+| ++right++              | `#!python key == "ArrowRight"` |
+| ++tab++                | `#!python key == "Tab"`        |
+| ++ctrl++               | `#!python key == "Control"`    |
+| ++alt++ or ++option++  | `#!python key == "Alt"`        |
+| ++esc++                | `#!python key == "Escape"`     |
+| ++win++ or ++command++ | `#!python key == "Meta"`       |
+| ++backspace++          | `#!python key == "Backspace"` |
+
+**Example(s):**
+
+*Print out each key as they are pressed (I pressed **just** the ++a++ key in this example)*
+
+
+```python hl_lines="8"
+%%ignite
+def setup():
+    size(500,500)
+
+def draw():
+    background(255)
+    text_size(32)
+    text(key, 250, 200)
+```
+
+Results in:
+
+![key example](img/key.png){: loading=lazy }
+
+#### keys_held()
+
+```python
+keys_held(key)
+```
+
+**Parameters**
+
+- key: (str) The key you want to check for
+
+**Returns**
+
+bool; Returns True if the provided key is held, else False.
+
+
+
+*Print `#!python "b key held"` if the ++b++ key is held*
+
+```python hl_lines="7"
+%%ignite
+
+def setup():
+    size(200, 200)
+
+def draw():
+    if keys_held("b"):
+        print("b key held")
+```
+
+Results in:
+
+![keys_held() example](img/keys_held.png){: loading=lazy }
+
+#### key_pressed()
+
+```python
+def key_pressed():
+    # Your code goes here
+```
+
+This is a user definable function that activates when **any** key is held.
+
+Example(s):
+
+*Print a key if it's pressed*
+
+```python hl_lines="9 10"
+%%ignite
+
+def setup():
+    size(200, 200)
+
+def draw():
+    ... # Does nothing
+
+def key_pressed():
+    print(key)
+```
+
+Results in:
+
+![key_pressed() example](img/key_pressed.png){: loading=lazy }
+
+#### key_released()
+
+```python
+def key_released():
+    # Your code goes here
+```
+
+This is a user definable function that activates when **any** key is released.
+
+Example(s):
+
+*Print a key if it's pressed*
+
+```python hl_lines="9 10"
+%%ignite
+
+def setup():
+    size(200, 200)
+
+def draw():
+    ... # Does nothing
+
+def key_released():
+    print(key)
+```
+
+Results in:
+
+![key_released() example](img/key_released.png){: loading=lazy }
+
+#### key_repeated()
+
+```python
+def key_repeated():
+    # Your code goes here
+```
+
+This is a user definable function that activates when **any** key is held. Note this function **continuously activates** for as long as the key is held.
+
+Example(s):
+
+*Print a key if it's held*
+
+```python hl_lines="9 10"
+%%ignite
+
+def setup():
+    size(200, 200)
+
+def draw():
+    ... # Does nothing
+
+def key_repeated():
+    print(key)
+```
+
+Results in:
+
+![key_repeated() example](img/key_repeated.png){: loading=lazy }

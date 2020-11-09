@@ -114,6 +114,27 @@ def draw():
     # loops everything in here forever and draws stuff
 ```
 
+## Saving notebooks
+
+There are two options to save. You can save a notebook with a new name, or save an existing notebook:
+
+### Save a notebook with a name
+
+To save your notebook with a new name go to *file --> save as or use ++ctrl++ or ++cmd++ + ++shift+s++:
+![save as](img/save_as.png)
+
+A few things to keep in mind when saving file:
+
+1. You **CANNOT** have **ANY** spaces, use _ to seperate if need be i.e. ```my_test_notebook.ipynb```
+2. Make sure you have ```.ipynb``` at the end, if you don't the file won't load
+
+![filename](img/filename.png)
+
+### Save an existing notebook
+
+To save your notebook with the same name go to *file --> save* or use ++ctrl++ or ++cmd++ + ++s++:
+![save](img/save.png)
+
 ## Other documentation
 
 [Colors](color.md) - Any functions related to coloring shapes, text, or background
