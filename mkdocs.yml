@@ -1,6 +1,6 @@
 site_name: Spark
 
-site_url: https://schulichignite.com/spark
+site_url: https://spark.schulichignite.com
 
 nav:
     - Getting Started: index.md
