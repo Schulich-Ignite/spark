@@ -53,7 +53,7 @@ def helper_parse_color(self, *args, func_name="parse_color"):
 @validate_args([str], [Real], [Real, Real, Real], [Real, Real, Real, Real])
 @ignite_global
 def helper_color(self, *args):
-    self.parse_color(*args)
+    return self.parse_color(*args)
 
 @validate_args([Real, Real, Real, Real],
                [Real, Real, Real, Real, Real],
