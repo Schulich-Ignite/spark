@@ -627,6 +627,7 @@ class Core:
             raise ArgumentNumError(func_name, [1, 3, 4], argc)
     
     # An alias to parse_color
+    @global_immut
     def color(self, *args):
         self.parse_color(*args)
 
