@@ -477,6 +477,10 @@ class Core:
                 return "rgba({}, {}, {}, {})".format(*color_args, alpha_arg)
         else:
             raise ArgumentNumError(func_name, [1, 3, 4], argc)
+    
+    # An alias to parse_color
+    def color(self, *args):
+        self.parse_color(*args)
 
     def parse_color_string(self, func_name, s):
         rws = re.compile(r'\s')
@@ -511,5 +515,4 @@ class Core:
     # Convert a tuple of circle args into arc args 
     def arc_args(self, *args):
         return (args[0], args[1], args[2] / 2, 0, 2 * pi)
-
-
+        
