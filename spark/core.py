@@ -7,17 +7,22 @@
 
 import threading
 import time
-from math import pi
+
+from math import pi, sin, cos, sqrt
 import re
 
 import numpy as np
 from IPython.display import Code, display
 from ipycanvas import Canvas, hold_canvas
 from ipywidgets import Button
+from numbers import Number as number
+
+import random
 
 from .util import IpyExit
 from .util.HTMLColors import HTMLColors
 from .util.Errors import *
+from .util.decorators import *
 
 DEFAULT_CANVAS_SIZE = (100, 100)
 FRAME_RATE = 30
@@ -33,25 +38,10 @@ class Core:
     global_constants = {
         "pi": pi
     }
+    
+    global_fields = global_immut_names
 
-    # All methods/fields from this class that will be exposed as global in user"s scope
-    global_fields = {
-        "canvas", "size", "width", "height",
-        "mouse_x", "mouse_y", "mouse_is_pressed",
-        "fill_style", "stroke_style",
-        "clear", "background",
-        "rect", "square", "fill_rect", "stroke_rect", "clear_rect",
-        "text", "text_size", "text_align",
-        "draw_line", "line", "line_width", "stroke_width",
-        "circle", "fill_circle", "stroke_circle", "fill_arc", "stroke_arc",
-        "print"
-    }
-
-    # All methods that user will be able to define and override
-    global_methods = {
-        "draw", "setup",
-        "mouse_down", "mouse_up", "mouse_moved"
-    }
+    global_methods = global_mut_names
 
     def __init__(self, globals_dict):
         self.status_text = display(Code(""), display_id=True)
@@ -61,7 +51,7 @@ class Core:
         self.stop_button = Button(description="Stop")
         self.stop_button.on_click(self.on_stop_button_clicked)
 
-        self.canvas = Canvas()
+        self._globals_dict["canvas"] = Canvas()
         self.output_text = ""
         self.color_strings = {
             "default": "#888888"
@@ -93,6 +83,12 @@ class Core:
     ### Properties ###
 
     @property
+    @global_immut
+    def canvas(self):
+        return self._globals_dict["canvas"]
+
+    @property
+    @global_immut
     def mouse_x(self):
         return self._globals_dict["mouse_x"]
 
@@ -101,6 +97,7 @@ class Core:
         self._globals_dict["mouse_x"] = val
 
     @property
+    @global_immut
     def mouse_y(self):
         return self._globals_dict["mouse_y"]
 
@@ -109,6 +106,7 @@ class Core:
         self._globals_dict["mouse_y"] = val
 
     @property
+    @global_immut
     def mouse_is_pressed(self):
         return self._globals_dict["mouse_is_pressed"]
 
@@ -117,6 +115,7 @@ class Core:
         self._globals_dict["mouse_is_pressed"] = val
 
     @property
+    @global_immut
     def width(self):
         return self._globals_dict["width"]
 
@@ -126,6 +125,7 @@ class Core:
         self.canvas.width = val
 
     @property
+    @global_immut
     def height(self):
         return self._globals_dict["height"]
 
@@ -223,6 +223,7 @@ class Core:
         self.status_text.update(Code(msg))
     
     # Prints output to embedded output box
+    @global_immut
     def print(self, msg):
         global _sparkplug_running
         self.output_text += str(msg) + "\n"
@@ -262,9 +263,33 @@ class Core:
     def on_stop_button_clicked(self, button):
         self.stop()
 
+    ### User overrideable functions ###
+    # The function bodies here do not matter, they are discarded
+    @global_mut
+    def setup(self):
+        pass
+
+    @global_mut
+    def draw(self):
+        pass
+
+    @global_mut
+    def mouse_up(self):
+        pass
+
+    @global_mut
+    def mouse_down(self):
+        pass
+
+    @global_mut
+    def mouse_moved(self):
+        pass
+
     ### Global functions ###
 
     # Sets canvas size
+    @validate_args([number, number])
+    @global_immut
     def size(self, *args):
         if len(args) == 2:
             self.width = args[0]
@@ -274,13 +299,21 @@ class Core:
     # 1 arg: HTML string value
     # 3 args: r, g, b are int between 0 and 255
     # 4 args: r, g, b, a, where r, g, b are ints between 0 and 255, and  a (alpha) is a float between 0 and 1.0
+
+    @validate_args([str], [int], [int, int, int], [int, int, int, number])
+    @global_immut
     def fill_style(self, *args):
         self.canvas.fill_style = self.parse_color("fill_style", *args)
 
+    @validate_args([str], [int], [int, int, int], [int, int, int, number])
+    @global_immut
     def stroke_style(self, *args):
         self.canvas.stroke_style = self.parse_color("stroke_style", *args)
 
     # Combines fill_rect and stroke_rect into one wrapper function
+
+    @validate_args([number, number, number, number])
+    @global_immut
     def rect(self, *args):
         self.check_coords("rect", *args)
         
@@ -288,72 +321,184 @@ class Core:
         self.canvas.stroke_rect(*args)
 
     # Similar to self.rect wrapper, except only accepts x, y and size
+    @validate_args([number, number, number])
+    @global_immut
     def square(self, *args):
         self.check_coords("square", *args, width_only=True)
         rect_args = (*args, args[2]) # Copy the width arg into the height
         self.rect(*rect_args)
 
     # Draws filled rect
+    @validate_args([number, number, number, number])
+    @global_immut
     def fill_rect(self, *args):
         self.check_coords("fill_rect", *args)
         self.canvas.fill_rect(*args)
     
     # Strokes a rect
+    @validate_args([number, number, number, number])
+    @global_immut
     def stroke_rect(self, *args):
         self.check_coords("stroke_rect", *args)
         self.canvas.stroke_rect(*args)
 
     #Clears a rect
+    @validate_args([number, number, number, number])
+    @global_immut
     def clear_rect(self, *args):
         self.check_coords('clear_rect', *args)
         self.canvas.clear_rect(*args)
 
     # Draws circle at given coordinates
+    @validate_args([number, number, number])
+    @global_immut
     def circle(self, *args):
-        self.check_coords("circle", *args, width_only=True)
-        arc_args = self.arc_args(*args)
-        self.canvas.fill_arc(*arc_args)
-        self.canvas.stroke_arc(*arc_args)
+        self.check_coords("circle", *args, width_only = True)
+        self.ellipse(*args, args[2])
 
     # Draws filled circle
+    @validate_args([number, number, number])
+    @global_immut
     def fill_circle(self, *args):
-        self.check_coords("fill_circle", *args, width_only=True)
-        arc_args = self.arc_args(*args)
-        self.canvas.fill_arc(*arc_args)
+        self.check_coords("fill_circle", *args, width_only = True)
+        self.fill_ellipse(*args, args[2])
 
     # Draws circle stroke
+    @validate_args([number, number, number])
+    @global_immut
     def stroke_circle(self, *args):
+        self.check_coords("stroke_circle", *args, width_only = True)
+        self.stroke_ellipse(*args, args[2])
+
+    @global_immut
+    def ellipse(self, *args):
+        self.check_coords("ellipse", *args)
+        self.fill_ellipse(*args)
+        self.stroke_ellipse(*args)
+
+    @global_immut
+    def fill_ellipse(self, *args):
+        self.check_coords("fill_ellipse", *args)
+        self.fill_arc(*args, 0, 2*pi)
+
+    @global_immut
+    def stroke_ellipse(self, *args):
+        self.check_coords("stroke_ellipse", *args)
+        self.stroke_arc(*args, 0, 2*pi)
+
         self.check_coords("stroke_circle", *args, width_only=True)
         arc_args = self.arc_args(*args)
         self.canvas.stroke_arc(*arc_args)
-        
+
+    @global_immut
     def fill_arc(self, *args):
-        self.canvas.fill_arc(*args)
+        self.check_arc_args("fill_arc", *args)
+        x, y, r, scale_x, scale_y, start, stop, mode = self.arc_args(*args)
 
+        if scale_x == 0 or scale_y == 0:
+            return
+
+        self.canvas.translate(x,y)
+        self.canvas.scale(scale_x, scale_y)
+
+        if mode == "open" or mode == "chord":
+            self.canvas.fill_arc(0, 0, d/2, start, stop)
+        elif mode == "default" or mode == "pie":
+            self.canvas.begin_path()
+            start_x = r*cos(start)
+            start_y = r*sin(start)
+            self.canvas.move_to(start_x, start_y)
+            self.canvas.arc(0, 0, r, start, stop)
+            self.canvas.line_to(0,0)
+            self.canvas.close_path()
+            self.canvas.fill()
+            
+        self.canvas.scale(1/scale_x, 1/scale_y)
+        self.canvas.translate(-x, -y)
+
+    @global_immut
     def stroke_arc(self, *args):
-        self.canvas.stroke_arc(*args)
+        self.check_arc_args("stroke_arc", *args)
+        x, y, r, scale_x, scale_y, start, stop, mode = self.arc_args(*args)
 
+        if scale_x == 0 or scale_y == 0:
+            return
+
+        start_x = r*cos(start)
+        start_y = r*sin(start)
+        
+        self.canvas.translate(x,y)
+        self.canvas.scale(scale_x, scale_y)
+
+        self.canvas.begin_path()
+        self.canvas.move_to(start_x, start_y)
+        self.canvas.arc(0, 0, r, start, stop)
+        if mode == "open" or mode == "default":
+            self.canvas.move_to(start_x, start_y)
+        elif mode == "pie":
+            self.canvas.line_to(0, 0)
+        elif mode == "chord":
+            pass
+        self.canvas.close_path()
+        self.canvas.stroke()
+        
+        self.canvas.scale(1/scale_x, 1/scale_y)
+        self.canvas.translate(-x, -y)
+
+    def arc(self, *args):
+        self.check_arc_args("arc", *args)
+        self.fill_arc(*args)
+        self.stroke_arc(*args)
+
+    def fill_triangle(self, *args):
+        self.check_triangle_args("fill_triangle", *args)
+
+        self.canvas.begin_path()
+        self.canvas.move_to(args[0], args[1])
+        self.canvas.line_to(args[2], args[3])
+        self.canvas.line_to(args[4], args[5])
+        self.canvas.close_path()
+        self.canvas.fill()
+
+    def stroke_triangle(self, *args):
+        self.check_triangle_args("stroke_triangle", *args)
+
+        self.canvas.begin_path()
+        self.canvas.move_to(args[0], args[1])
+        self.canvas.line_to(args[2], args[3])
+        self.canvas.line_to(args[4], args[5])
+        self.canvas.close_path()
+        self.canvas.stroke()
+
+    def triangle(self, *args):
+        self.check_triangle_args("triangle", *args)
+        self.fill_triangle(*args)
+        self.stroke_triangle(*args)
+
+    @global_immut
     def text_size(self, *args):
         if len(args) != 1:
-            raise TypeError(f"text_size expected 1 argument, got {len(args)}")
+            raise ArgumentNumError("text_size", 1, len(args))
         
         size = args[0]
         self.check_type_is_num(size, func_name="text_size")
         self.font_settings['size'] = size
         self.canvas.font = f"{self.font_settings['size']}px {self.font_settings['font']}"
 
+    @global_immut
     def text_align(self, *args):
         if len(args) != 1:
-            raise TypeError(f"text_size expected 1 argument, got {len(args)}")
+            raise ArgumentNumError("text_align", 1, len(args))
 
         if args[0] not in ['left', 'right', 'center']:
-            raise TypeError(f'text_align expects a string of "left", "right", or "center", got {args[0]}')
+            raise ArgumentConditionError("text_align", "mode", 'String matching "left", "right", or "center"', args[0])
 
         self.canvas.text_align = args[0]
 
+    @global_immut
     def text(self, *args):
         if len(args) != 3:
-            raise TypeError(f"text expected 3 arguments (message, x, y), got {len(args)}")
+            raise ArgumentNumError("text", 3, len(args))
 
         # Reassigning the properties gets around a bug with the properties not being used.
         self.canvas.font = self.canvas.font
@@ -365,11 +510,12 @@ class Core:
 
         self.canvas.fill_text(str(args[0]), args[1], args[2])
 
+    @global_immut
     def draw_line(self, *args):    
         if len(args) != 4:
-            raise TypeError(f"draw_line expected 4 arguments (x1, y1, x2, y2), got {len(args)}")
-        for arg in args:
-            self.check_type_is_num(arg, func_name="draw_line")
+            raise ArgumentNumError("draw_line", 4, len(args))
+        for argument, argument_name in zip(args, ["x1", "x2", "x3", "x4"]):
+            self.check_type_is_num(arg, "draw_line", argument_name)
 
         self.canvas.begin_path()
         self.canvas.move_to(args[0],args[1])
@@ -378,25 +524,29 @@ class Core:
         self.canvas.stroke()
 
     # An alias to draw_line
+    @global_immut
     def line(self, *args):
         self.draw_line(*args)
 
+    @global_immut
     def line_width(self, *args):
         if len(args) != 1:
-            raise TypeError(f"line_width expected 1 argument, got {len(args)}")
-        self.check_type_is_num(args[0], func_name="line_width")
+            raise ArgumentNumError("line_width", 1, len(args))
+        self.check_type_is_num(args[0], "line_width", "width")
         self.canvas.line_width = args[0]
 
     # An alias to line_width
+    @global_immut
     def stroke_width(self, *args):
         self.line_width(*args)
 
     # Clears canvas
+    @global_immut
     def clear(self, *args):
         self.canvas.clear()
-
     
     # Draws background on canvas
+    @global_immut
     def background(self, *args):
         fill = self.parse_color("background", *args)
         old_fill = self.canvas.fill_style
@@ -427,19 +577,19 @@ class Core:
 
     def check_num_is_ranged(self, n, lb, ub, func_name="Function", arg_name=""):
         self.check_type_is_num(n, func_name, arg_name)
-        if lb > n or ub < n:
+        if (lb is not None and lb > n) or (ub is not None and ub < n):
             raise ArgumentConditionError(func_name, arg_name, "Number in range [{}, {}]".format(lb, ub), n)
 
     # Tests if input is an int, and within a specified range
     def check_int_is_ranged(self, n, lb, ub, func_name="Function", arg_name=""):
         self.check_type_is_int(n, func_name, arg_name)
-        if lb > n or ub < n:
+        if (lb is not None and lb > n) or (ub is not None and ub < n):
             raise ArgumentConditionError(func_name, arg_name, "Integer in range [{}, {}]".format(lb, ub), n)
 
     # Tests if input is a float, and within a specified range
     def check_float_is_ranged(self, n, lb, ub, func_name="Function", arg_name=""):
         self.check_type_is_float(n, func_name, arg_name)
-        if lb > n or ub < n:
+        if (lb is not None and lb > n) or (ub is not None and ub < n):
             raise ArgumentConditionError(func_name, arg_name, "Float in range [{}, {}]".format(lb, ub), n)
 
     @staticmethod
@@ -457,9 +607,7 @@ class Core:
             if type(args[0]) is int:
                 return "rgb({}, {}, {})".format(*np.clip([args[0]] * 3, 0, 255))
             elif not type(args[0]) is str:
-                raise TypeError(
-                    "Enter colour value in a valid format, e.g. #FF0000, rgb(255, 0, 0), or hsl(0, 100%, 50%)"
-                )
+                raise ArgumentTypeError(func_name, "color", [int, str], type(args[0]), args[0])
             return self.parse_color_string(func_name, args[0])
         elif argc == 3 or argc == 4:
             color_args = args[:3]
@@ -496,23 +644,78 @@ class Core:
                 if regex.fullmatch(no_ws) is not None:
                     return no_ws
         # Not in any permitted format
-        raise TypeError(
-            "{} expected a string matching an HTML-permissible format or a color name, got {}".format(
-                func_name, s))
+        raise ArgumentConditionError(func_name, None, "String matching an HTML-permissible format or a color name", s)
 
+    def check_arc_args(self, func_name, *args):
+        argc = len(args)
+        if argc not in [4, 5, 6, 7]:
+            raise ArgumentNumError(func_name, [4,5,6,7], argc)
+        self.check_coords(func_name, *args[:4])
+        defaults = [0, 2*pi, "default"]
+        start, stop, mode = [*args[4:argc], *defaults[argc-4:]]
+        self.check_type_is_num(start, func_name, "start")
+        self.check_type_is_num(stop, func_name, "stop")
+        if mode not in ["default", "open", "chord", "pie"]:
+            raise ArgumentConditionError(func_name, "mode", 'One of "default", "open", "chord", or "pie"', mode)
+
+    def check_triangle_args(self, func_name, *args):
+        argc = len(args)
+        if argc != 6:
+            raise ArgumentNumError(func_name, 6, argc)
+        for argument, arg_name in zip(args,["x1","y1","x2","y2","x3","y3"]):
+            self.check_type_is_num(argument, func_name, arg_name)
+        
     # Check a set of 4 args are valid coordinates
     # x, y, w, h
     def check_coords(self, func_name, *args, width_only=False):
         argc = len(args)
         if argc != 4 and not width_only:
-            raise ArgumentNumError("{} (~width_only)".format(func_name), 4, argc)
+            raise ArgumentNumError(func_name, 4, argc)
         elif argc != 3 and width_only:
-            raise ArgumentNumError("{} (width_only)".format(func_name), 3, argc)
-
-        for arg in args:
-            self.check_type_is_num(arg, func_name)
+            raise ArgumentNumError(func_name, 3, argc)
+        self.check_type_is_num(args[0], func_name, "x")
+        self.check_type_is_num(args[1], func_name, "y")
+        if argc == 3:
+            self.check_num_is_ranged(args[2], 0, None, func_name, "size")
+        else:
+            self.check_num_is_ranged(args[2], 0, None, func_name, "w")
+            self.check_num_is_ranged(args[3], 0, None, func_name, "h")
 
     # Convert a tuple of circle args into arc args 
     def arc_args(self, *args):
-        return (args[0], args[1], args[2] / 2, 0, 2 * pi)
+        argc = len(args)
+        x, y, w, h = args[:4]
+        defaults = [0, 2*pi, "default"]
+        start, stop, mode = [*args[4:argc], *defaults[argc-4:]]
+        while start < 0:
+            start += 2*pi
+        while start > 2*pi:
+            start -= 2*pi
+        while stop < 0:
+            stop += 2*pi
+        while stop > 2*pi:
+            stop += 2*pi
+        d = max(w, h)/2
         
+        return x, y, d/2, w/d, h/d, start, stop, mode
+
+    @validate_args([])
+    @global_immut
+    # Global namespace alias of random.random()
+    def random(self, *args):
+        argc = len(args)
+        if argc != 0:
+            raise ArgumentNumError("random", 0, argc)
+        return random.random()
+
+    @validate_args([int])
+    @global_immut
+    # Global namespace alias of random.randint()
+    def randint(self, *args):
+        argc = len(args)
+        
+        if argc != 1:
+            raise ArgumentNumError("randint", 1, argc)
+
+        self.check_type_is_int(args[0])
+        return random.randint(0, args[0])

@@ -1,7 +1,5 @@
 site_name: Spark
 
-site_url: https://schulichignite.com/spark
-
 nav:
     - Getting Started: index.md
     - Shapes & Text: shapes_text.md
@@ -16,6 +14,15 @@ theme:
     palette:
         primary: black
         accent: amber
+
+markdown_extensions:
+    - pymdownx.keys
+    - pymdownx.superfences
+    - pymdownx.highlight:
+        linenums: true
+        linenums_style: pymdownx.inline
+    - attr_list
+    
 
 site_description: Spark is a library designed to help drawing in python easy
 

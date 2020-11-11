@@ -15,7 +15,7 @@ To get the current mouse position you can use the following variables:
 
 *Drawing a circle at the mouse position constantly (remember it will draw over itself over and over again and leave a trail):*
 
-```python
+```python hl_lines="7"
 %%ignite
 
 def setup():
@@ -41,7 +41,7 @@ To find out if the mouse has been pressed you can use the variable:
 
 *Rectangle will be red if the mouse has been pressed, otherwise it will be blue*
 
-```python
+```python hl_lines="7"
 %%ignite
 
 def setup():
@@ -79,7 +79,7 @@ Keep in mind, whatever the user types in will **always** be a string. See the se
 
 *Ask the user for their name, then display it to the screen:*
 
-```python
+```python hl_lines="5"
 %%ignite
 
 def setup(): # Only drawn once, so just using setup()
@@ -93,17 +93,17 @@ which results in:
 ![Write Name](img/write_name.png)
 
 
-*Ask the user for a radius. We need to convert the string to an integer, we can do this using int(). Draw a circle of that radius at (100, 100):*
+*Ask the user for a diameter. We need to convert the string to an integer, we can do this using int(). Draw a circle of that diameter at (100, 100):*
 
-```python
+```python hl_lines="5"
 %%ignite
 
 def setup(): # Only drawn once, so just using setup()
     size(200, 200)
-    radius = int(input("What radius should the circle be?: ")) # cast the string to an integer
-    fill_circle(100, 100 radius)
+    diameter = int(input("What diameter should the circle be?: ")) # cast the string to an integer
+    fill_circle(100, 100 diameter)
 ```
 
 which results in:
 
-![Ask circle radius](img/circle_radius.png)
+![Ask circle diameter](img/circle_radius.png)

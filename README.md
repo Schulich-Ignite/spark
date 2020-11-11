@@ -1,15 +1,23 @@
 # spark
 Jupyter Lab ipython extension used for teaching the [Schulich Ignite sessions](https://schulichignite.com/).
 
+## Table of contents
+- [Documentation](#documentation)
+    - [Files](#files)
+    - [Building](#building)
+- [Testing locally](#testing-locally)
+
 ### Documentation
-The documentation is built using mkdocs. To build locally you will need to pip install:
+The [user documentation](https://schulichignite.com/spark/) is built using mkdocs. To build locally you will need to pip install:
 
 - mkdocs
 - mkdocs-material
 
+Developer documentation can be found in [CONTRIBUTING.md](https://github.com/Schulich-Ignite/spark/blob/main/CONTRIBUTING.md).
+
 #### Files
 
-All the files are built in pure markdown and can be found in ```/src```, the site configuration (including nav links) can be found in ```mkdocs.yml```.
+All the files are built in pure markdown and can be found in ```/docs```, the site configuration (including nav links) can be found in ```mkdocs.yml```.
 
 #### Building
 
