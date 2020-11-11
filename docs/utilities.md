@@ -55,3 +55,66 @@ def setup():
 Results in:
 
 ![random demo](img/randint.png)
+
+### Pick a random choice from a list
+
+To pick a random choice from a list use:
+
+```python
+choice(l)
+```
+
+**Parameters**
+
+- l: (list) The list to pick a value from
+
+**Notes**
+- This function also lets you pick a single letter from a string
+
+**Example(s):**
+
+*Displaying a random choice from the a shopping list*
+
+```python hl_lines="6"
+%%ignite
+
+def setup():
+    size(200, 200)
+    shopping_list = ["eggs", "ham", "cheese", "onions"]
+    random_choice = choice(shopping_list)
+    text_size(32)
+    text(random_choice, 100, 20)
+```
+
+Results in:
+
+![choice demo](img/choice.png)
+
+### Working with dates and times
+
+**Note this is somewhat complicated to work with**
+
+To pick a random choice from a list use:
+
+```python
+datetime()
+```
+
+
+**Example(s):**
+
+*...*
+
+```python hl_lines="6"
+%%ignite
+
+def setup():
+    size(200, 200)
+    shopping_list = ["eggs", "ham", "cheese", "onions"]
+    ...
+```
+
+Results in:
+
+![datetime demo](img/datetime.png)
+
