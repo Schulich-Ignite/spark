@@ -442,3 +442,9 @@ class Core:
 
     @extern
     def randint(self, *args): pass
+
+    @extern
+    def choice(self, *args): pass
+
+    @extern
+    def datetime(self, *args): pass

@@ -5,6 +5,7 @@ from ..Errors import *
 from numbers import Real
 from math import pi
 import random
+from datetime import datetime
 
 
 @validate_args([str, str])
@@ -83,3 +84,13 @@ def helper_random(self, *args):
 @ignite_global
 def helper_randint(self, *args):
     return random.randint(0, args[0])
+
+@validate_args([str], [list], [tuple])
+@ignite_global
+def helper_choice(self, *args):
+    return random.choice(args[0])
+
+@validate_args([])
+@ignite_global
+def helper_datetime(self, *args):
+    return datetime
