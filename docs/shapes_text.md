@@ -13,7 +13,7 @@ To create a rectangle there are 3 options:
 | [stroke_rect(x, y, w, l)](#stroke_rect) | Draw the rectangle of an ellipse (it's stroke)        |
 
 <figure>
-  <img src="https://schulichignite.com/spark/img/rect_comparison.png"/>
+  <img src="https://spark.schulichignite.com/img/rect_comparison.png"/>
   <figcaption>Comparison of 3 functions, note the red color was added for visibility, by default fill is black</figcaption>
 </figure>
 
@@ -107,6 +107,108 @@ Results in:
 
 ![stroke_rect() example](img/stroke_rect.png)
 
+### Squares
+
+To create a square there are 3 options:
+
+| Function                                 | Description                                        |
+|------------------------------------------|----------------------------------------------------|
+| [square(x, y, s)](#square)               | Draw a square filled with color, and with a stroke |
+| [fill_square(x, y, s)](#fill_square)     | Draw an square filled with a color                 |
+| [stroke_square(x, y, s)](#stroke_square) | Draw the outline of a square (it's stroke)         |
+
+<figure>
+  <img src="https://spark.schulichignite.com/img/squares_comparison.png"/>
+  <figcaption>Comparison of 3 functions, note the red color was added for visibility, by default fill is black</figcaption>
+</figure>
+
+#### square()
+```python
+square(x, y, s)
+```
+
+**Parameters**
+
+- x: (int or float) The value of the x position of the square
+- y: (int or float) The value of the y position of the square
+- s: (int or float) The width and height of the square
+
+**Example(s):**
+
+*Creating a filled and stroked square at (100, 100) with a width and height of 75*
+
+```python hl_lines="7"
+%%ignite
+
+def setup():
+    size(200, 200)
+
+def draw():
+    square(100, 100, 75)
+```
+
+Results in:
+
+![square() example](img/square.png)
+
+#### fill_square()
+```python
+fill_square(x, y, s)
+```
+
+**Parameters**
+
+- x: (int or float) The value of the x position of the square
+- y: (int or float) The value of the y position of the square
+- s: (int or float) The width and height of the square
+
+**Example(s):**
+
+*Creating a filled square at (100, 100) with a width and height of 75*
+
+```python hl_lines="7"
+%%ignite
+
+def setup():
+    size(200, 200)
+
+def draw():
+    fill_square(100, 100, 75)
+```
+
+Results in:
+
+![fill_square() example](img/fill_square.png)
+
+#### stroke_square()
+```python
+stroke_square(x, y, s)
+```
+
+**Parameters**
+
+- x: (int or float) The value of the x position of the square
+- y: (int or float) The value of the y position of the square
+- s: (int or float) The width and height of the square
+
+**Example(s):**
+
+*Creating a stroked square at (100, 100) with a width and height of 75*
+
+```python hl_lines="7"
+%%ignite
+
+def setup():
+    size(200, 200)
+
+def draw():
+    stroke_square(100, 100, 75)
+```
+
+Results in:
+
+![stroke_square() example](img/stroke_square.png)
+
 ### Circles
 
 To create a circle there are 3 options:
@@ -118,7 +220,7 @@ To create a circle there are 3 options:
 | [stroke_circle(x, y, d)](#stroke_circle) | Draw the circle of an ellipse (it's stroke)        |
 
 <figure>
-  <img src="https://schulichignite.com/spark/img/circle_comparison.png"/>
+  <img src="https://spark.schulichignite.com/img/circle_comparison.png"/>
   <figcaption>Comparison of 3 functions, note the red color was added for visibility, by default fill is black</figcaption>
 </figure>
 
@@ -224,7 +326,7 @@ To create an ellipse there are 3 options:
 | [stroke_ellipse(x, y, l, w)](#stroke_ellipse) | Draw the outline of an ellipse (it's stroke)         |
 
 <figure>
-  <img src="https://schulichignite.com/spark/img/ellipse_comparison.png"/>
+  <img src="https://spark.schulichignite.com/img/ellipse_comparison.png"/>
   <figcaption>Comparison of 3 functions, note the red color was added for visibility, by default fill is black</figcaption>
 </figure>
 
@@ -332,7 +434,7 @@ To create a triangle there are 3 options:
 | [stroke_triangle(x1, y1, x2, y2, x3, y3)](#stroke_triangle) | Draw the outline of a trianlge (it's stroke)         |
 
 <figure>
-  <img src="https://schulichignite.com/spark/img/triangle_comparison.png"/>
+  <img src="https://spark.schulichignite.com/img/triangle_comparison.png"/>
   <figcaption>Comparison of 3 functions, note the red color was added for visibility, by default fill is black</figcaption>
 </figure>
 
