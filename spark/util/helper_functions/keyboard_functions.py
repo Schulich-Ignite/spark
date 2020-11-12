@@ -66,3 +66,11 @@ def helper_keys_held(self: Core, *keys, pattern=None):
         pattern = [True]*len(keys)
     match = [self._keys_held.get(key, False) == want for key, want in zip(keys, pattern)]
     return reduce(and_, match)
+
+
+@validate_args([str], [str, bool])
+@ignite_global
+def helper_key_held(self: Core, *args):
+    if len(args) == 1:
+        args.append(True)
+    return self.keys_held(args[0], pattern=[args[1]])

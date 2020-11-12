@@ -309,8 +309,10 @@ class Core:
     # From .util.helper_functions.keyboard_functions
 
     @extern
-    def keys_held(self, *args):
-        pass
+    def keys_held(self, *args): pass
+
+    @extern
+    def key_held(self, *args): pass
 
     # From .util.helper_functions.canvas_functions
 
