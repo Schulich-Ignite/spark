@@ -1,7 +1,5 @@
 site_name: Spark
 
-site_url: https://schulichignite.com/spark
-
 nav:
     - Getting Started: index.md
     - Shapes & Text: shapes_text.md

@@ -432,6 +432,9 @@ class Core:
     def parse_color(self, *args, func_name="parse_color"): pass
 
     @extern
+    def color(self, *args): pass
+
+    @extern
     def parse_color_string(self, func_name, s): pass
 
     @extern
