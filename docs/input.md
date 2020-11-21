@@ -113,11 +113,11 @@ which results in:
 
 Spark features multiple ways to check for user mouse presses:
 
-| Name                                  | Type                  | Description                                                            |
-|---------------------------------------|-----------------------|------------------------------------------------------------------------|
-| [mouse_is_pressed](#mouse_is_pressed) | Variable              | A boolean variable that is True when a mouse button is pressed         |
-| [mouse_down()](#mouse_down)           | User defined function | A definable function that activates when a mousebutton is pressed down |
-| [mouse_up()](#mouse_up)               | User defined function | A definable function that activates when a mousebutton is released     |
+| Name                                  | Type                  | Description                                                             |
+|---------------------------------------|-----------------------|-------------------------------------------------------------------------|
+| [mouse_is_pressed](#mouse_is_pressed) | Variable              | A boolean variable that is True when a mouse button is pressed          |
+| [mouse_down()](#mouse_down)           | User defined function | A definable function that activates when a mouse button is pressed down |
+| [mouse_up()](#mouse_up)               | User defined function | A definable function that activates when a mouse button is released     |
 
 **Notes**
 
