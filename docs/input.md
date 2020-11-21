@@ -157,6 +157,10 @@ def mouse_down():
 
 This is a user definable function that activates when **any** mouse button is pressed down.
 
+##### Notes
+
+- This function is handy when you want to do something in a ```#!python draw()``` loop **one time** on mouse press. ```#!python mouse_is_pressed``` will constantly fire in a ```#!python draw()``` loop, whereas ```#!python mouse_down()``` will fire once per event
+
 Example(s):
 
 *Print "Mouse Button Pressed Down" if a mouse button is pressed down*
@@ -187,6 +191,10 @@ def mouse_up():
 ```
 
 This is a user definable function that activates when **any** mouse button is released after being pressed down.
+
+##### Notes
+
+- This function is handy when you want to do something in a ```#!python draw()``` loop **one time** on mouse release. ```#!python mouse_is_pressed``` will constantly fire in a ```#!python draw()``` loop, whereas ```#!python mouse_up()``` will fire once per event
 
 Example(s):
 
