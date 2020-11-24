@@ -99,8 +99,8 @@ def helper_bounding_box(self, *args):
 def helper_collided(self, *args):
     x1, y1, width1, height1 = args[0]
     x2, y2, width2, height2 = args[1]
-
-    return self.axis_overlapped(x1, width1, x2, width2) and self.axis_overlapped(y1, height1, y2, height2)
+    overlap_on_equal = len(args) == 3 and args[2]
+    return self.axis_overlapped(x1, width1, x2, width2, overlap_on_equal) and self.axis_overlapped(y1, height1, y2, height2, overlap_on_equal)
 
 @validate_args([Real, Real, Real, Real], [Real, Real, Real, Real, bool])
 @ignite_global
