@@ -87,3 +87,27 @@ def helper_random(self, *args):
 @ignite_global
 def helper_randint(self, *args):
     return random.randint(0, args[0])
+
+
+@validate_args([Real, Real, Real, Real])
+@ignite_global
+def helper_bounding_box(self, *args):
+    return args
+
+@validate_args([list, list], [list, list, bool], [tuple, tuple], [tuple, tuple, bool])
+@ignite_global
+def helper_collided(self, *args):
+    x1, y1, width1, height1 = args[0]
+    x2, y2, width2, height2 = args[1]
+
+    return self.axis_overlapped(x1, width1, x2, width2) and self.axis_overlapped(y1, height1, y2, height2)
+
+@validate_args([Real, Real, Real, Real], [Real, Real, Real, Real, bool])
+@ignite_global
+def helper_axis_overlapped(self, *args):
+    point1, length1, point2, length2 = args[:4]
+
+    if len(args) == 5 and args[4]:
+        return point1 + length1 >= point2 and point2 + length2 >= point1
+    else:
+        return point1 + length1 > point2 and point2 + length2 > point1
