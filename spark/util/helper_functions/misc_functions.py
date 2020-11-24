@@ -72,9 +72,16 @@ def helper_arc_args(self, *args):
         stop += 2*pi
     while stop > 2*pi:
         stop += 2*pi
+    
     d = max(w, h)/2
+    if d == 0:
+        w_ratio = 0
+        h_ratio = 0
+    else:
+        w_ratio = w / d
+        h_ratio = h / d
 
-    return x, y, d/2, w/d, h/d, start, stop, mode
+    return x, y, d/2, w_ratio, h_ratio, start, stop, mode
 
 
 @validate_args([])
