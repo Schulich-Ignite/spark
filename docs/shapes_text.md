@@ -115,7 +115,7 @@ To create a square there are 3 options:
 |------------------------------------------|----------------------------------------------------|
 | [square(x, y, s)](#square)               | Draw a square filled with color, and with a stroke |
 | [fill_square(x, y, s)](#fill_square)     | Draw an square filled with a color                 |
-| [stroke_square(x, y, s)](#stroke_square) | Draw the outline of a square (it's stroke)         |
+| [stroke_square(x, y, s)](#stroke_square) | Draw the outline of a square (its stroke)         |
 
 <figure>
   <img src="https://spark.schulichignite.com/img/squares_comparison.png"/>
