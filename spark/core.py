@@ -309,8 +309,10 @@ class Core:
     # From .util.helper_functions.keyboard_functions
 
     @extern
-    def keys_held(self, *args):
-        pass
+    def keys_held(self, *args): pass
+
+    @extern
+    def key_held(self, *args): pass
 
     # From .util.helper_functions.canvas_functions
 
@@ -424,12 +426,19 @@ class Core:
     @extern
     def stroke_width(self, *args): pass
 
+    # From util.helper_functions.image_functions
+    @extern
+    def image(self, *args): pass
+
     ### Helper Functions ###
 
     # From util.helper_functions.misc_functions
 
     @extern
     def parse_color(self, *args, func_name="parse_color"): pass
+
+    @extern
+    def color(self, *args): pass
 
     @extern
     def parse_color_string(self, func_name, s): pass
@@ -442,3 +451,12 @@ class Core:
 
     @extern
     def randint(self, *args): pass
+
+    @extern
+    def bounding_box(self, *args): pass
+
+    @extern
+    def collided(self, *args): pass
+
+    @extern
+    def axis_overlapped(self, *args): pass
