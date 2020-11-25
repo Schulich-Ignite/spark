@@ -426,6 +426,10 @@ class Core:
     @extern
     def stroke_width(self, *args): pass
 
+    # From util.helper_functions.image_functions
+    @extern
+    def image(self, *args): pass
+
     ### Helper Functions ###
 
     # From util.helper_functions.misc_functions

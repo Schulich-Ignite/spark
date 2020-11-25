@@ -8,6 +8,7 @@ from .helper_functions.rect_functions import *
 from .helper_functions.square_functions import *
 from .helper_functions.text_functions import *
 from .helper_functions.triangle_functions import *
+from .helper_functions.image_functions import *
 
 from .helper_functions.keyboard_functions import *
 
