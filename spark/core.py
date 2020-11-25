@@ -447,3 +447,12 @@ class Core:
 
     @extern
     def randint(self, *args): pass
+
+    @extern
+    def bounding_box(self, *args): pass
+
+    @extern
+    def collided(self, *args): pass
+
+    @extern
+    def axis_overlapped(self, *args): pass
