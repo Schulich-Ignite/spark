@@ -92,13 +92,26 @@ def helper_randint(self, *args):
 @validate_args([Real, Real, Real, Real])
 @ignite_global
 def helper_bounding_box(self, *args):
-    return args
+    x, y, w, h = args
+    left = min(x, x + w)
+    abs_width = abs(w)
+    top = min(y, y + h)
+    abs_height = abs(h)
+
+    return (left, top, abs_width, abs_height)
 
 @validate_args([list, list], [list, list, bool], [tuple, tuple], [tuple, tuple, bool])
 @ignite_global
 def helper_collided(self, *args):
     x1, y1, width1, height1 = args[0]
     x2, y2, width2, height2 = args[1]
+
+    sizes = {'bounding_box1 width': width1, 'bounding_box1 height': height1, 'bounding_box2 width': width2, 'bounding_box2 height': height2}
+
+    for size_name, size_val in sizes.items():
+        if size_val < 0:
+            raise ArgumentError("collided expected {} to be greater or equal to 0, got {}".format(size_name, size_val)) 
+
     overlap_on_equal = len(args) == 3 and args[2]
     return self.axis_overlapped(x1, width1, x2, width2, overlap_on_equal) and self.axis_overlapped(y1, height1, y2, height2, overlap_on_equal)
 
