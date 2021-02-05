@@ -378,6 +378,9 @@ class Core:
     @extern
     def stroke_ellipse(self, *args): pass
 
+    @extern
+    def my_func(self, *args): pass
+
     # From util.helper_functions.arc_functions
 
     @extern
