@@ -76,7 +76,7 @@ def helper_arc_args(self, *args):
     
     d = max(w, h)/2
     if d == 0:
-        return
+        return x, y, d, 0, 0, start, stop, mode
     else:
         w_ratio = w / d
         h_ratio = h / d
