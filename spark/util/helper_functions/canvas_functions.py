@@ -35,3 +35,8 @@ def helper_background(self, *args):
     self.canvas.fill_style = fill
     self.canvas.fill_rect(0, 0, self.width, self.height)
     self.canvas.fill_style = old_fill
+
+@validate_args([Real])
+@ignite_global
+def helper_rotate(self, *args):
+    self.canvas.rotate(args[0])
