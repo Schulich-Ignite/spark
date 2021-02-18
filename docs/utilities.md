@@ -55,3 +55,41 @@ def setup():
 Results in:
 
 ![random demo](img/randint.png)
+
+
+
+### Rotation
+
+![rotation explanation](rotation_explanation.png)
+
+Transformations are always done to the **canvas**, not the individual shapes themselves. Rotation is done around the origin, point (0, 0) and affects all shapes drawn afterwards. You can use our built-in `pi` variable to express radians, or convert from degrees to radians by multiplying your number of degrees by `pi / 180`.
+
+Note that canvas transformations are not removed automatically. In other words, if you want to rotate just one shape in your `draw()` function, you should rotate the canvas by `r` radians, draw your shape, and then rotate by `-r` radians to undo the effect.
+
+To rotate the canvas clockwise around the origin, use:
+
+```python
+rotate(r)
+```
+
+**Parameters**
+
+- r: (float) The angle, in radians to rotate the canvas
+
+**Example(s):**
+
+*Rotating a rectangle by 30 degrees clockwise*
+
+```python hl_lines="6"
+%%ignite
+
+def setup():
+    size(300, 300)
+
+    rotate(pi / 6)  # Rotate pi/6 radians (30 degrees) clockwise
+    rect(100, 0, 80, 50)
+```
+
+Results in:
+
+![rotate demo](img/rotate.png)
