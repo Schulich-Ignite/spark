@@ -62,6 +62,7 @@ def helper_color(self, *args):
 def helper_arc_args(self, *args):
     argc = len(args)
     x, y, w, h = args[:4]
+    w, h = abs(w), abs(h)
     defaults = [0, 2*pi, "default"]
     start, stop, mode = [*args[4:argc], *defaults[argc-4:]]
     while start < 0:
@@ -72,9 +73,15 @@ def helper_arc_args(self, *args):
         stop += 2*pi
     while stop > 2*pi:
         stop += 2*pi
+    
     d = max(w, h)/2
+    if d == 0:
+        return x, y, d, 0, 0, start, stop, mode
+    else:
+        w_ratio = w / d
+        h_ratio = h / d
 
-    return x, y, d/2, w/d, h/d, start, stop, mode
+    return x, y, d/2, w_ratio, h_ratio, start, stop, mode
 
 
 @validate_args([])
