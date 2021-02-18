@@ -60,7 +60,7 @@ Results in:
 
 ### Rotation
 
-![rotation explanation](rotation_explanation.png)
+![rotation explanation](img/rotation_explanation.png)
 
 Transformations are always done to the **canvas**, not the individual shapes themselves. Rotation is done around the origin, point (0, 0) and affects all shapes drawn afterwards. You can use our built-in `pi` variable to express radians, or convert from degrees to radians by multiplying your number of degrees by `pi / 180`.
 
