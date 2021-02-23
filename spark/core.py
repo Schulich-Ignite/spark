@@ -31,7 +31,8 @@ _sparkplug_running = False
 class Core:
     # All constants that will be injected into global scope in the user"s cell
     global_constants = {
-        "pi": pi
+        "pi": pi,
+        "FRAME_RATE": FRAME_RATE
     }
 
     ignite_globals = _ignite_globals
