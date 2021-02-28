@@ -31,8 +31,7 @@ _sparkplug_running = False
 class Core:
     # All constants that will be injected into global scope in the user"s cell
     global_constants = {
-        "pi": pi,
-        "FRAME_RATE": FRAME_RATE
+        "pi": pi
     }
 
     ignite_globals = _ignite_globals
@@ -139,6 +138,18 @@ class Core:
     def height(self, val):
         self._globals_dict["height"] = val
         self.canvas.height = val
+
+    # this is working
+    @property
+    @ignite_global
+    def FRAME_RATE(self, mutable=False):
+        return FRAME_RATE
+
+    # this is not working
+    @FRAME_RATE.setter
+    def FRAME_RATE(self, val):
+        raise RuntimeError("FRAME_RATE cannot be reassigned")
+
 
     ### Library init ###
 
