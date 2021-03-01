@@ -4,6 +4,7 @@ import re
 from ..Errors import *
 from numbers import Real
 from math import pi
+from math import sqrt
 import random
 
 
@@ -131,3 +132,10 @@ def helper_axis_overlapped(self, *args):
         return point1 + length1 >= point2 and point2 + length2 >= point1
     else:
         return point1 + length1 > point2 and point2 + length2 > point1
+
+@validate_args([Real, Real, Real, Real])
+@ignite_global
+def helper_dist(self, *args):
+    x1, y1, x2, y2 = args[:4]
+    return sqrt((y2 - y1)**2 + (x2 - x1)**2)
+

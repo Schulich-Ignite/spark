@@ -475,3 +475,6 @@ class Core:
 
     @extern
     def axis_overlapped(self, *args): pass
+
+    @extern
+    def dist(self, *args): pass
