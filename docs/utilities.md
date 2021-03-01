@@ -94,6 +94,38 @@ Results in:
 
 ![rotate demo](img/rotate.png)
 
+### Distance between two points (x1, y1) and (x2, y2)
+
+![dist explanation](img/dist.png)
+
+To find the distance between two points (x1, y1) and (x2, y2), use the following command:
+
+```python
+dist(x1, y1, x2, y2)
+```
+
+**Parameters**
+
+- x1: (float) The x-coordinate of the first point
+- y1: (float) The y-coordinate of the first point
+- x2: (float) The x-coordinate of the second point
+- y2: (float) The y-coordinate of the second point
+
+**Example(s):**
+
+*Print the distance between (125, 125) and (375, 375)*
+
+```python hl_lines="6"
+%%ignite
+
+def setup():
+    print(dist(125, 125, 375, 375))
+```
+
+Results in:
+
+![dist demo](img/dist_2.png)
+
 ### Scale (one parameter)
 
 Scales the canvas units by x horizontally and vertically. 
