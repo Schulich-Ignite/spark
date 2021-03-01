@@ -333,6 +333,12 @@ class Core:
 
     @extern
     def rotate(self, *args): pass
+    
+    @extern
+    def translate(self, *args): pass
+    
+    @extern
+    def scale(self, *args): pass
 
     # From util.helper_functions.rect_functions
 

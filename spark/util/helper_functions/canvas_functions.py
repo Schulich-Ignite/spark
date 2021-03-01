@@ -40,3 +40,16 @@ def helper_background(self, *args):
 @ignite_global
 def helper_rotate(self, *args):
     self.canvas.rotate(args[0])
+    
+@validate_args([Real, Real])
+@ignite_global
+def helper_translate(self, *args):
+    self.canvas.translate(args[0], args[1])
+    
+@validate_args([Real], [Real, Real])
+@ignite_global
+def helper_scale(self, *args):
+    if len(args) == 1:
+        self.canvas.scale(args[0])
+    else:
+        self.canvas.scale(args[0], args[1])

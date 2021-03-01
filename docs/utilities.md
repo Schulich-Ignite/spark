@@ -93,3 +93,104 @@ def setup():
 Results in:
 
 ![rotate demo](img/rotate.png)
+
+### Scale (one parameter)
+
+Scales the canvas units by x horizontally and vertically. 
+
+Usage:
+
+```python
+scale(x)
+```
+**Parameters**
+
+- x: (float) The factor by which the canvas is scaled.
+
+**Example(s):**
+
+*Scale horizontal and vertical canvas units by a factor of 2*
+
+```python hl_lines="6"
+%%ignite
+def setup():
+    size(400, 400)
+    circle(100, 100, 100)
+    fill_style("red")
+    
+    # apply scale of 2, this will scale canvas units by factor of 2 horizontally and vertically
+    scale(2)
+    circle(100, 100, 100)
+```
+
+Results in:
+
+![scale demo](img/scale_1.png)
+
+### Scale (two parameters)
+
+Scales the canvas units by x horizontally and by y vertically. 
+
+Usage:
+
+```python
+scale(x,y)
+```
+**Parameters**
+
+- x: (float) The factor by which the canvas is scaled horizontally.
+- y: (float) The factor by which the canvas is scaled vertically.
+
+**Example(s):**
+
+*Scale horizontal and vertical canvas units by factors of 0.75 and 1.25 respectively*
+
+```python hl_lines="6"
+%%ignite
+def setup():
+    size(400, 400)
+    circle(100, 100, 100)
+    fill_style("red")
+    
+    # apply scale of (0.75, 1.25), this will scale canvas units by factor of 0.75 horizontally and 1.25 vertically
+    scale(0.75, 1.25)
+    circle(100, 100, 100)
+```
+
+Results in:
+
+![scale demo](img/scale_2.png)
+
+### Translate
+
+Moves the canvas and its origin on the grid. x indicates the horizontal distance to move, and y indicates vertical distance to move.
+
+Usage:
+
+```python
+translate(x,y)
+```
+**Parameters**
+
+- x: (float) The horizontal distance to translate the canvas.
+- y: (float) The vertical distance to translate the canvas.
+
+**Example(s):**
+
+*Translate the canvas 50 units right and 75 units down*
+
+```python hl_lines="6"
+%%ignite
+def setup():
+    size(400, 400)
+    circle(100, 100, 100)
+    fill_style("red")
+    
+    # move canvas 50 units right, and 75 units down
+    translate(50, 75)
+    circle(100, 100, 100)
+```
+
+Results in:
+
+![translate demo](img/translate.png)
