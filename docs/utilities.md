@@ -56,7 +56,71 @@ Results in:
 
 ![random demo](img/randint.png)
 
+### Distance between two points (x1, y1) and (x2, y2)
 
+![dist explanation](img/dist.png)
+
+To find the distance between two points (x1, y1) and (x2, y2), use the following command:
+
+```python
+dist(x1, y1, x2, y2)
+```
+
+**Parameters**
+
+- x1: (float) The x-coordinate of the first point
+- y1: (float) The y-coordinate of the first point
+- x2: (float) The x-coordinate of the second point
+- y2: (float) The y-coordinate of the second point
+
+**Example(s):**
+
+*Print the distance between (125, 125) and (375, 375)*
+
+```python hl_lines="4"
+%%ignite
+
+def setup():
+    print(dist(125, 125, 375, 375))
+```
+
+Results in:
+
+![dist demo](img/dist_2.png)
+
+### Translate
+
+Change the origin of the canvas.
+
+Usage:
+
+```python
+translate(x, y)
+```
+**Parameters**
+
+- x: (float) The horizontal distance to translate the canvas.
+- y: (float) The vertical distance to translate the canvas.
+
+**Example(s):**
+
+*Translate the canvas 50 units right and 75 units down*
+
+```python hl_lines="8"
+%%ignite
+
+def setup():
+    size(400, 400)
+    fill_style("red")
+    
+    # move canvas 50 units right, and 75 units down
+    translate(50, 75)
+    circle(0, 0, 100)
+```
+
+Results in:
+
+![translate demo](img/translate.png)
 
 ### Rotation
 
@@ -64,7 +128,7 @@ Results in:
 
 Transformations are always done to the **canvas**, not the individual shapes themselves. Rotation is done around the origin, point (0, 0) and affects all shapes drawn afterwards. You can use our built-in `pi` variable to express radians, or convert from degrees to radians by multiplying your number of degrees by `pi / 180`.
 
-Note that canvas transformations are not removed automatically. In other words, if you want to rotate just one shape in your `draw()` function, you should rotate the canvas by `r` radians, draw your shape, and then rotate by `-r` radians to undo the effect.
+Note that canvas transformations are not removed automatically. In other words, if you want to rotate just one shape in your `draw()` function, you should rotate the canvas by `r` radians, draw your shape, and then rotate by `-r` radians to undo the effect. Also note that you can rotate on a point other than the origin by first calling `translate` to change the origin to the new point.
 
 To rotate the canvas clockwise around the origin, use:
 
@@ -94,60 +158,35 @@ Results in:
 
 ![rotate demo](img/rotate.png)
 
-### Distance between two points (x1, y1) and (x2, y2)
+### Scale
 
-![dist explanation](img/dist.png)
+Scales the canvas. Note that scaling applies to the canvas, not to individual shapes. You can scale on a point other than the origin by first calling `translate` to change the origin to the new point.
 
-To find the distance between two points (x1, y1) and (x2, y2), use the following command:
+There are two ways to use scale:
 
-```python
-dist(x1, y1, x2, y2)
-```
+| Method                           | Description                                                                  | Syntax          |
+| -------------------------------- | -----------------------------------------------------------------------------|-----------------|
+|[1 float](#scale-with-one-float)  | Scale canvas width and height by some amount, i.e. 1.5                       | scale(1.5)      |
+|[2 floats](#scale-with-two-floats)| Scale canvas width by first number and height by second number, i.e. 2.5, 3.5| scale(2.5, 3.5) |
 
-**Parameters**
-
-- x1: (float) The x-coordinate of the first point
-- y1: (float) The y-coordinate of the first point
-- x2: (float) The x-coordinate of the second point
-- y2: (float) The y-coordinate of the second point
-
-**Example(s):**
-
-*Print the distance between (125, 125) and (375, 375)*
-
-```python hl_lines="6"
-%%ignite
-
-def setup():
-    print(dist(125, 125, 375, 375))
-```
-
-Results in:
-
-![dist demo](img/dist_2.png)
-
-### Scale (one parameter)
-
-Scales the canvas units by x horizontally and vertically. 
-
-Usage:
+#### Scale with one float
 
 ```python
-scale(x)
+scale(n)
 ```
 **Parameters**
 
-- x: (float) The factor by which the canvas is scaled.
+- n: (float) The amount to scale the height and width of the canvas.
 
 **Example(s):**
 
-*Scale horizontal and vertical canvas units by a factor of 2*
+*Double height and width of canvas using scale*
 
-```python hl_lines="6"
+```python hl_lines="8"
 %%ignite
+
 def setup():
     size(400, 400)
-    circle(100, 100, 100)
     fill_style("red")
     
     # apply scale of 2, this will scale canvas units by factor of 2 horizontally and vertically
@@ -159,29 +198,25 @@ Results in:
 
 ![scale demo](img/scale_1.png)
 
-### Scale (two parameters)
-
-Scales the canvas units by x horizontally and by y vertically. 
-
-Usage:
+#### Scale with two floats
 
 ```python
-scale(x,y)
+scale(x, y)
 ```
 **Parameters**
 
-- x: (float) The factor by which the canvas is scaled horizontally.
-- y: (float) The factor by which the canvas is scaled vertically.
+- x: (float) The amount to scale the width of the canvas.
+- y: (float) The amount to scale the height of the canvas.
 
 **Example(s):**
 
-*Scale horizontal and vertical canvas units by factors of 0.75 and 1.25 respectively*
+*Scale canvas width by 0.75 and canvas height by 1.25*
 
-```python hl_lines="6"
+```python hl_lines="8"
 %%ignite
+
 def setup():
     size(400, 400)
-    circle(100, 100, 100)
     fill_style("red")
     
     # apply scale of (0.75, 1.25), this will scale canvas units by factor of 0.75 horizontally and 1.25 vertically
@@ -192,37 +227,3 @@ def setup():
 Results in:
 
 ![scale demo](img/scale_2.png)
-
-### Translate
-
-Moves the canvas and its origin on the grid. x indicates the horizontal distance to move, and y indicates vertical distance to move.
-
-Usage:
-
-```python
-translate(x,y)
-```
-**Parameters**
-
-- x: (float) The horizontal distance to translate the canvas.
-- y: (float) The vertical distance to translate the canvas.
-
-**Example(s):**
-
-*Translate the canvas 50 units right and 75 units down*
-
-```python hl_lines="6"
-%%ignite
-def setup():
-    size(400, 400)
-    circle(100, 100, 100)
-    fill_style("red")
-    
-    # move canvas 50 units right, and 75 units down
-    translate(50, 75)
-    circle(100, 100, 100)
-```
-
-Results in:
-
-![translate demo](img/translate.png)

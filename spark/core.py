@@ -332,10 +332,10 @@ class Core:
     def background(self, *args): pass
 
     @extern
-    def rotate(self, *args): pass
-    
-    @extern
     def translate(self, *args): pass
+
+    @extern
+    def rotate(self, *args): pass
     
     @extern
     def scale(self, *args): pass
