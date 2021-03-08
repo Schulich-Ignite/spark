@@ -125,3 +125,39 @@ def setup():
 Results in:
 
 ![dist demo](img/dist_2.png)
+
+### Accessing the canvas frame rate
+
+The frame rate of the canvas can be accessed through the built-in variable
+
+```python
+FRAME_RATE
+```
+
+The value of FRAME_RATE is set to 30 by default, and should not be changed by the user. Changing this manually will not change the actual frame rate, and will likely result in errors.
+
+**Example:**
+
+```python
+%%ignite
+
+def setup():
+    print(FRAME_RATE)
+```
+
+Results in:
+
+![FRAME_RATE demo](img/frame_rate.png)
+
+The use-cases of this of this variable are fairly limited, but can be used for example to set a speed variable in terms of the frame rate. For example:
+
+```python
+x = 10
+speed = 300/FRAME_RATE
+
+def draw():
+    global x, speed
+    circle(x, 100, 50)
+    x += speed
+```
+will result in the circle moving across the screen at 300 pixels per second.
