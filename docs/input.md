@@ -108,6 +108,115 @@ which results in:
 
 ![Ask circle diameter](img/circle_radius.png){: loading=lazy }
 
+
+### Check for mouse presses
+
+Spark features multiple ways to check for user mouse presses:
+
+| Name                                  | Type                  | Description                                                             |
+|---------------------------------------|-----------------------|-------------------------------------------------------------------------|
+| [mouse_is_pressed](#mouse_is_pressed) | Variable              | A boolean variable that is True when a mouse button is pressed          |
+| [mouse_down()](#mouse_down)           | User defined function | A definable function that activates when a mouse button is pressed down |
+| [mouse_up()](#mouse_up)               | User defined function | A definable function that activates when a mouse button is released     |
+
+**Notes**
+
+- All of these variables fire on **any** mouse button press (left mouse click, right mouse click, or scroll wheel click)
+- Mouse events are only captured when the mouse is **inside** the canvas boundary
+
+
+#### mouse_is_pressed
+A boolean that is True when **any** mouse button is pressed
+
+**Example(s):**
+
+*Draw a square at the (mouse_x, mouse_y) position when the mouse is pressed*
+
+
+```python hl_lines="7"
+%%ignite
+def setup():
+    background(255)
+    size(500,500)
+
+def draw():
+    if mouse_is_pressed:
+        square(mouse_x, mouse_y, 45)
+```
+
+Results in:
+
+![mouse_is_pressed example](img/mouse_is_pressed.png){: loading=lazy }
+
+#### mouse_down()
+
+```python
+def mouse_down():
+    # Your code goes here
+```
+
+This is a user definable function that activates when **any** mouse button is pressed down.
+
+##### Notes
+
+- This function is handy when you want to do something in a ```#!python draw()``` loop **one time** on mouse press. ```#!python mouse_is_pressed``` will constantly fire in a ```#!python draw()``` loop, whereas ```#!python mouse_down()``` will fire once per event
+
+Example(s):
+
+*Print "Mouse Button Pressed Down" if a mouse button is pressed down*
+
+```python hl_lines="9 10"
+%%ignite
+
+def setup():
+    size(200, 200)
+
+def draw():
+    ... # Does nothing
+
+def mouse_down():
+    print("Mouse Button Pressed Down")
+```
+
+Results in:
+
+![mouse_down() example](img/mouse_down.png){: loading=lazy }
+
+
+#### mouse_up()
+
+```python
+def mouse_up():
+    # Your code goes here
+```
+
+This is a user definable function that activates when **any** mouse button is released after being pressed down.
+
+##### Notes
+
+- This function is handy when you want to do something in a ```#!python draw()``` loop **one time** on mouse release. ```#!python mouse_is_pressed``` will constantly fire in a ```#!python draw()``` loop, whereas ```#!python mouse_up()``` will fire once per event
+
+Example(s):
+
+*Print "Mouse Button Released" if a mouse button is released after being pressed down*
+
+```python hl_lines="9 10"
+%%ignite
+
+def setup():
+    size(200, 200)
+
+def draw():
+    ... # Does nothing
+
+def mouse_up():
+    print("Mouse Button Released")
+```
+
+Results in:
+
+![mouse_up() example](img/mouse_up.png){: loading=lazy }
+
 ### Check for key presses
 
 Spark features multiple ways to check for user key presses:
@@ -119,6 +228,10 @@ Spark features multiple ways to check for user key presses:
 | [key_pressed()](#key_pressed)   | User defined function | A definable function that activates when any key is pressed  | 
 | [key_released()](#key_released) | User defined function | A definable function that activates when any key is released |
 | [key_repeated()](#key_repeated) | User defined function | A definable function that activates when any key is held     |
+
+**Notes**
+
+- Key events **only** trigger when the mouse is **inside** the canvas
 
 #### key
 

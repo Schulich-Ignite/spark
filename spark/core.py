@@ -139,6 +139,12 @@ class Core:
         self._globals_dict["height"] = val
         self.canvas.height = val
 
+    @property
+    @ignite_global
+    def FRAME_RATE(self):
+        return FRAME_RATE
+
+
     ### Library init ###
 
     # Updates last activity time
