@@ -102,7 +102,7 @@ def setup():
     size(200, 200) # You can change 200, 200 to any integers
 ```
 
-You can also use the draw() function, which will execute the code constantly that is inside it. This makes it ideal for things like animation, and any code that will update itself over time. **Most of the time this will be the setup you want**:
+You can also use the draw() function, which will execute the code constantly that is inside it. The draw function executes 30 times per second. This makes it ideal for things like animation, and any code that will update itself over time. **Most of the time this will be the setup you want**:
 
 ```python
 %%ignite

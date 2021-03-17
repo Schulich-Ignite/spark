@@ -139,6 +139,12 @@ class Core:
         self._globals_dict["height"] = val
         self.canvas.height = val
 
+    @property
+    @ignite_global
+    def FRAME_RATE(self):
+        return FRAME_RATE
+
+
     ### Library init ###
 
     # Updates last activity time
@@ -332,7 +338,13 @@ class Core:
     def background(self, *args): pass
 
     @extern
+    def translate(self, *args): pass
+
+    @extern
     def rotate(self, *args): pass
+    
+    @extern
+    def scale(self, *args): pass
 
     # From util.helper_functions.rect_functions
 
@@ -463,3 +475,6 @@ class Core:
 
     @extern
     def axis_overlapped(self, *args): pass
+
+    @extern
+    def dist(self, *args): pass
