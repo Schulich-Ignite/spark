@@ -1,0 +1,1420 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Spark is a library designed to help drawing in python easy">
+      
+      
+      
+        <meta name="author" content="Schulich Ignite">
+      
+      
+      <link rel="icon" href="../img/ignite.ico">
+      <meta name="generator" content="mkdocs-1.1.2, mkdocs-material-7.0.6">
+    
+    
+      
+        <title>Shapes & Text - Spark</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.2c0c5eaf.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.7fa14f5b.min.css">
+        
+          
+          
+          <meta name="theme-color" content="#000000">
+        
+      
+    
+    
+    
+      
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,700%7CRoboto+Mono&display=fallback">
+        <style>:root{--md-text-font-family:"Roboto";--md-code-font-family:"Roboto Mono"}</style>
+      
+    
+    
+    
+    
+      
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="" data-md-color-primary="black" data-md-color-accent="amber">
+      
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#rectangles" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      <header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="Spark" class="md-header__button md-logo" aria-label="Spark" data-md-component="logo">
+      
+  <img src="../img/Ignite-logo.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Spark
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Shapes & Text
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    <div class="md-header__options">
+      
+    </div>
+    
+      <label class="md-header__button md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5z"/></svg>
+      </label>
+      
+<div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" data-md-state="active" required>
+      <label class="md-search__icon md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+      </label>
+      <button type="reset" class="md-search__icon md-icon" aria-label="Clear" tabindex="-1">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"/></svg>
+      </button>
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+  </nav>
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Spark" class="md-nav__button md-logo" aria-label="Spark" data-md-component="logo">
+      
+  <img src="../img/Ignite-logo.png" alt="logo">
+
+    </a>
+    Spark
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        Getting Started
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+    
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          Shapes & Text
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        Shapes & Text
+      </a>
+      
+        
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#rectangles" class="md-nav__link">
+    Rectangles
+  </a>
+  
+    <nav class="md-nav" aria-label="Rectangles">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#rect" class="md-nav__link">
+    rect()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fill_rect" class="md-nav__link">
+    fill_rect()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stroke_rect" class="md-nav__link">
+    stroke_rect()
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#squares" class="md-nav__link">
+    Squares
+  </a>
+  
+    <nav class="md-nav" aria-label="Squares">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#square" class="md-nav__link">
+    square()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fill_square" class="md-nav__link">
+    fill_square()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stroke_square" class="md-nav__link">
+    stroke_square()
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#circles" class="md-nav__link">
+    Circles
+  </a>
+  
+    <nav class="md-nav" aria-label="Circles">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#circle" class="md-nav__link">
+    circle()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fill_circle" class="md-nav__link">
+    fill_circle()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stroke_circle" class="md-nav__link">
+    stroke_circle()
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ellipses" class="md-nav__link">
+    Ellipses
+  </a>
+  
+    <nav class="md-nav" aria-label="Ellipses">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#ellipse" class="md-nav__link">
+    ellipse()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fill_ellipse" class="md-nav__link">
+    fill_ellipse()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stroke_ellipse" class="md-nav__link">
+    stroke_ellipse()
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#triangles" class="md-nav__link">
+    Triangles
+  </a>
+  
+    <nav class="md-nav" aria-label="Triangles">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#triangle" class="md-nav__link">
+    triangle()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fill_triangle" class="md-nav__link">
+    fill_triangle()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stroke_triangle" class="md-nav__link">
+    stroke_triangle()
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#text" class="md-nav__link">
+    Text
+  </a>
+  
+    <nav class="md-nav" aria-label="Text">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#change-text-size" class="md-nav__link">
+    Change text size
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../input/" class="md-nav__link">
+        Input
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../color/" class="md-nav__link">
+        Color
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../utilities/" class="md-nav__link">
+        Utilities
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#rectangles" class="md-nav__link">
+    Rectangles
+  </a>
+  
+    <nav class="md-nav" aria-label="Rectangles">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#rect" class="md-nav__link">
+    rect()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fill_rect" class="md-nav__link">
+    fill_rect()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stroke_rect" class="md-nav__link">
+    stroke_rect()
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#squares" class="md-nav__link">
+    Squares
+  </a>
+  
+    <nav class="md-nav" aria-label="Squares">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#square" class="md-nav__link">
+    square()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fill_square" class="md-nav__link">
+    fill_square()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stroke_square" class="md-nav__link">
+    stroke_square()
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#circles" class="md-nav__link">
+    Circles
+  </a>
+  
+    <nav class="md-nav" aria-label="Circles">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#circle" class="md-nav__link">
+    circle()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fill_circle" class="md-nav__link">
+    fill_circle()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stroke_circle" class="md-nav__link">
+    stroke_circle()
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ellipses" class="md-nav__link">
+    Ellipses
+  </a>
+  
+    <nav class="md-nav" aria-label="Ellipses">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#ellipse" class="md-nav__link">
+    ellipse()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fill_ellipse" class="md-nav__link">
+    fill_ellipse()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stroke_ellipse" class="md-nav__link">
+    stroke_ellipse()
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#triangles" class="md-nav__link">
+    Triangles
+  </a>
+  
+    <nav class="md-nav" aria-label="Triangles">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#triangle" class="md-nav__link">
+    triangle()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fill_triangle" class="md-nav__link">
+    fill_triangle()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stroke_triangle" class="md-nav__link">
+    stroke_triangle()
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#text" class="md-nav__link">
+    Text
+  </a>
+  
+    <nav class="md-nav" aria-label="Text">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#change-text-size" class="md-nav__link">
+    Change text size
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          <div class="md-content" data-md-component="content">
+            <article class="md-content__inner md-typeset">
+              
+                
+                
+                  <h1>Shapes & Text</h1>
+                
+                <p><em>Below is a list of all of the shapes, and text available for drawing within spark.</em></p>
+<p>All of the examples below assume you have the boilerplate from <a href="../#boilerplate">the notebook setup</a> in your code</p>
+<h3 id="rectangles">Rectangles</h3>
+<p>To create a rectangle there are 3 options:</p>
+<table>
+<thead>
+<tr>
+<th>Function</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="#rect">rect(x, y, w, l)</a></td>
+<td>Draw a rectangle filled with color, and with a stroke</td>
+</tr>
+<tr>
+<td><a href="#fill_rect">fill_rect(x, y, w, l)</a></td>
+<td>Draw an rectangle filled with a color</td>
+</tr>
+<tr>
+<td><a href="#stroke_rect">stroke_rect(x, y, w, l)</a></td>
+<td>Draw the rectangle of an ellipse (it's stroke)</td>
+</tr>
+</tbody>
+</table>
+<figure>
+  <img src="https://spark.schulichignite.com/img/rect_comparison.png"/>
+  <figcaption>Comparison of 3 functions, note the red color was added for visibility, by default fill is black</figcaption>
+</figure>
+
+<h4 id="rect">rect()</h4>
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><code><span class="n">rect</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">w</span><span class="p">,</span> <span class="n">l</span><span class="p">)</span>
+</code></pre></div>
+</td></tr></table>
+<p><strong>Parameters</strong></p>
+<ul>
+<li>x: (int or float) The value of the x position of the rectangle</li>
+<li>y: (int or float) The value of the y position of the rectangle</li>
+<li>w: (int or float) The width of the rectange</li>
+<li>l: (int or float) The length of the rectange</li>
+</ul>
+<p><strong>Example(s):</strong></p>
+<p><em>Creating a filled and stroked rectangle at (100, 100) with a width of 75, and length of 50</em></p>
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span>
+<span class="normal">2</span>
+<span class="normal">3</span>
+<span class="normal">4</span>
+<span class="normal">5</span>
+<span class="normal">6</span>
+<span class="normal">7</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><code><span class="o">%%</span><span class="n">ignite</span>
+
+<span class="k">def</span> <span class="nf">setup</span><span class="p">():</span>
+    <span class="n">size</span><span class="p">(</span><span class="mi">200</span><span class="p">,</span> <span class="mi">200</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">draw</span><span class="p">():</span>
+<span class="hll">    <span class="n">rect</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">75</span><span class="p">,</span> <span class="mi">50</span><span class="p">)</span>
+</span></code></pre></div>
+</td></tr></table>
+<p>Results in:</p>
+<p><img alt="rect() example" src="../img/rect.png" /></p>
+<h4 id="fill_rect">fill_rect()</h4>
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><code><span class="n">fill_rect</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">w</span><span class="p">,</span> <span class="n">l</span><span class="p">)</span>
+</code></pre></div>
+</td></tr></table>
+<p><strong>Parameters</strong></p>
+<ul>
+<li>x: (int or float) The value of the x position of the rectangle</li>
+<li>y: (int or float) The value of the y position of the rectangle</li>
+<li>w: (int or float) The width of the rectange</li>
+<li>l: (int or float) The length of the rectange</li>
+</ul>
+<p><strong>Example(s):</strong></p>
+<p><em>Creating a filled rectangle at (100, 100) with a width of 75, and length of 50</em></p>
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span>
+<span class="normal">2</span>
+<span class="normal">3</span>
+<span class="normal">4</span>
+<span class="normal">5</span>
+<span class="normal">6</span>
+<span class="normal">7</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><code><span class="o">%%</span><span class="n">ignite</span>
+
+<span class="k">def</span> <span class="nf">setup</span><span class="p">():</span>
+    <span class="n">size</span><span class="p">(</span><span class="mi">200</span><span class="p">,</span> <span class="mi">200</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">draw</span><span class="p">():</span>
+<span class="hll">    <span class="n">fill_rect</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">75</span><span class="p">,</span> <span class="mi">50</span><span class="p">)</span>
+</span></code></pre></div>
+</td></tr></table>
+<p>Results in:</p>
+<p><img alt="fill_rect() example" src="../img/fill_rect.png" /></p>
+<h4 id="stroke_rect">stroke_rect()</h4>
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><code><span class="n">stroke_rect</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">w</span><span class="p">,</span> <span class="n">l</span><span class="p">)</span>
+</code></pre></div>
+</td></tr></table>
+<p><strong>Parameters</strong></p>
+<ul>
+<li>x: (int or float) The value of the x position of the rectangle</li>
+<li>y: (int or float) The value of the y position of the rectangle</li>
+<li>w: (int or float) The width of the rectange</li>
+<li>l: (int or float) The length of the rectange</li>
+</ul>
+<p><strong>Example(s):</strong></p>
+<p><em>Creating a filled rectangle at (100, 100) with a width of 75, and length of 50</em></p>
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span>
+<span class="normal">2</span>
+<span class="normal">3</span>
+<span class="normal">4</span>
+<span class="normal">5</span>
+<span class="normal">6</span>
+<span class="normal">7</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><code><span class="o">%%</span><span class="n">ignite</span>
+
+<span class="k">def</span> <span class="nf">setup</span><span class="p">():</span>
+    <span class="n">size</span><span class="p">(</span><span class="mi">200</span><span class="p">,</span> <span class="mi">200</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">draw</span><span class="p">():</span>
+<span class="hll">    <span class="n">stroke_rect</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">75</span><span class="p">,</span> <span class="mi">50</span><span class="p">)</span>
+</span></code></pre></div>
+</td></tr></table>
+<p>Results in:</p>
+<p><img alt="stroke_rect() example" src="../img/stroke_rect.png" /></p>
+<h3 id="squares">Squares</h3>
+<p>To create a square there are 3 options:</p>
+<table>
+<thead>
+<tr>
+<th>Function</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="#square">square(x, y, s)</a></td>
+<td>Draw a square filled with color, and with a stroke</td>
+</tr>
+<tr>
+<td><a href="#fill_square">fill_square(x, y, s)</a></td>
+<td>Draw an square filled with a color</td>
+</tr>
+<tr>
+<td><a href="#stroke_square">stroke_square(x, y, s)</a></td>
+<td>Draw the outline of a square (its stroke)</td>
+</tr>
+</tbody>
+</table>
+<figure>
+  <img src="https://spark.schulichignite.com/img/squares_comparison.png"/>
+  <figcaption>Comparison of 3 functions, note the red color was added for visibility, by default fill is black</figcaption>
+</figure>
+
+<h4 id="square">square()</h4>
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><code><span class="n">square</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">s</span><span class="p">)</span>
+</code></pre></div>
+</td></tr></table>
+<p><strong>Parameters</strong></p>
+<ul>
+<li>x: (int or float) The value of the x position of the square</li>
+<li>y: (int or float) The value of the y position of the square</li>
+<li>s: (int or float) The width and height of the square</li>
+</ul>
+<p><strong>Example(s):</strong></p>
+<p><em>Creating a filled and stroked square at (100, 100) with a width and height of 75</em></p>
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span>
+<span class="normal">2</span>
+<span class="normal">3</span>
+<span class="normal">4</span>
+<span class="normal">5</span>
+<span class="normal">6</span>
+<span class="normal">7</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><code><span class="o">%%</span><span class="n">ignite</span>
+
+<span class="k">def</span> <span class="nf">setup</span><span class="p">():</span>
+    <span class="n">size</span><span class="p">(</span><span class="mi">200</span><span class="p">,</span> <span class="mi">200</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">draw</span><span class="p">():</span>
+<span class="hll">    <span class="n">square</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">75</span><span class="p">)</span>
+</span></code></pre></div>
+</td></tr></table>
+<p>Results in:</p>
+<p><img alt="square() example" src="../img/square.png" /></p>
+<h4 id="fill_square">fill_square()</h4>
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><code><span class="n">fill_square</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">s</span><span class="p">)</span>
+</code></pre></div>
+</td></tr></table>
+<p><strong>Parameters</strong></p>
+<ul>
+<li>x: (int or float) The value of the x position of the square</li>
+<li>y: (int or float) The value of the y position of the square</li>
+<li>s: (int or float) The width and height of the square</li>
+</ul>
+<p><strong>Example(s):</strong></p>
+<p><em>Creating a filled square at (100, 100) with a width and height of 75</em></p>
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span>
+<span class="normal">2</span>
+<span class="normal">3</span>
+<span class="normal">4</span>
+<span class="normal">5</span>
+<span class="normal">6</span>
+<span class="normal">7</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><code><span class="o">%%</span><span class="n">ignite</span>
+
+<span class="k">def</span> <span class="nf">setup</span><span class="p">():</span>
+    <span class="n">size</span><span class="p">(</span><span class="mi">200</span><span class="p">,</span> <span class="mi">200</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">draw</span><span class="p">():</span>
+<span class="hll">    <span class="n">fill_square</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">75</span><span class="p">)</span>
+</span></code></pre></div>
+</td></tr></table>
+<p>Results in:</p>
+<p><img alt="fill_square() example" src="../img/fill_square.png" /></p>
+<h4 id="stroke_square">stroke_square()</h4>
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><code><span class="n">stroke_square</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">s</span><span class="p">)</span>
+</code></pre></div>
+</td></tr></table>
+<p><strong>Parameters</strong></p>
+<ul>
+<li>x: (int or float) The value of the x position of the square</li>
+<li>y: (int or float) The value of the y position of the square</li>
+<li>s: (int or float) The width and height of the square</li>
+</ul>
+<p><strong>Example(s):</strong></p>
+<p><em>Creating a stroked square at (100, 100) with a width and height of 75</em></p>
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span>
+<span class="normal">2</span>
+<span class="normal">3</span>
+<span class="normal">4</span>
+<span class="normal">5</span>
+<span class="normal">6</span>
+<span class="normal">7</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><code><span class="o">%%</span><span class="n">ignite</span>
+
+<span class="k">def</span> <span class="nf">setup</span><span class="p">():</span>
+    <span class="n">size</span><span class="p">(</span><span class="mi">200</span><span class="p">,</span> <span class="mi">200</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">draw</span><span class="p">():</span>
+<span class="hll">    <span class="n">stroke_square</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">75</span><span class="p">)</span>
+</span></code></pre></div>
+</td></tr></table>
+<p>Results in:</p>
+<p><img alt="stroke_square() example" src="../img/stroke_square.png" /></p>
+<h3 id="circles">Circles</h3>
+<p>To create a circle there are 3 options:</p>
+<table>
+<thead>
+<tr>
+<th>Function</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="#circle">circle(x, y, d)</a></td>
+<td>Draw a circle filled with color, and with a stroke</td>
+</tr>
+<tr>
+<td><a href="#fill_circle">fill_circle(x, y, d)</a></td>
+<td>Draw an circle filled with a color</td>
+</tr>
+<tr>
+<td><a href="#stroke_circle">stroke_circle(x, y, d)</a></td>
+<td>Draw the circle of an ellipse (it's stroke)</td>
+</tr>
+</tbody>
+</table>
+<figure>
+  <img src="https://spark.schulichignite.com/img/circle_comparison.png"/>
+  <figcaption>Comparison of 3 functions, note the red color was added for visibility, by default fill is black</figcaption>
+</figure>
+
+<h4 id="circle">circle()</h4>
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><code><span class="n">circle</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">d</span><span class="p">)</span>
+</code></pre></div>
+</td></tr></table>
+<p><strong>Parameters</strong></p>
+<ul>
+<li>x: (int or float) The value of the x position of the rectangle</li>
+<li>y: (int or float) The value of the y position of the rectangle</li>
+<li>d: (int or float) The diameter of the circle</li>
+</ul>
+<p>Example(s):</p>
+<p><em>Creating a filled and stroked circle at (100, 100) with a diameter of 75</em></p>
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span>
+<span class="normal">2</span>
+<span class="normal">3</span>
+<span class="normal">4</span>
+<span class="normal">5</span>
+<span class="normal">6</span>
+<span class="normal">7</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><code><span class="o">%%</span><span class="n">ignite</span>
+
+<span class="k">def</span> <span class="nf">setup</span><span class="p">():</span>
+    <span class="n">size</span><span class="p">(</span><span class="mi">200</span><span class="p">,</span> <span class="mi">200</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">draw</span><span class="p">():</span>
+<span class="hll">    <span class="n">circle</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">75</span><span class="p">)</span>
+</span></code></pre></div>
+</td></tr></table>
+<p>Results in:</p>
+<p><img alt="circle() example" src="../img/circle.png" /></p>
+<h4 id="fill_circle">fill_circle()</h4>
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><code><span class="n">fill_circle</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">d</span><span class="p">)</span>
+</code></pre></div>
+</td></tr></table>
+<p><strong>Parameters</strong></p>
+<ul>
+<li>x: (int or float) The value of the x position of the rectangle</li>
+<li>y: (int or float) The value of the y position of the rectangle</li>
+<li>d: (int or float) The diameter of the circle</li>
+</ul>
+<p>Example(s):</p>
+<p><em>Creating a filled circle at (100, 100) with a diameter of 75</em></p>
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span>
+<span class="normal">2</span>
+<span class="normal">3</span>
+<span class="normal">4</span>
+<span class="normal">5</span>
+<span class="normal">6</span>
+<span class="normal">7</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><code><span class="o">%%</span><span class="n">ignite</span>
+
+<span class="k">def</span> <span class="nf">setup</span><span class="p">():</span>
+    <span class="n">size</span><span class="p">(</span><span class="mi">200</span><span class="p">,</span> <span class="mi">200</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">draw</span><span class="p">():</span>
+<span class="hll">    <span class="n">fill_circle</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">75</span><span class="p">)</span>
+</span></code></pre></div>
+</td></tr></table>
+<p>Results in:</p>
+<p><img alt="fill_circle() example" src="../img/fill_circle.png" /></p>
+<h4 id="stroke_circle">stroke_circle()</h4>
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><code><span class="n">stroke_circle</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">d</span><span class="p">)</span>
+</code></pre></div>
+</td></tr></table>
+<p><strong>Parameters</strong></p>
+<ul>
+<li>x: (int or float) The value of the x position of the rectangle</li>
+<li>y: (int or float) The value of the y position of the rectangle</li>
+<li>d: (int or float) The diameter of the circle</li>
+</ul>
+<p>Example(s):</p>
+<p><em>Creating a sroked circle at (100, 100) with a diameter of 75</em></p>
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span>
+<span class="normal">2</span>
+<span class="normal">3</span>
+<span class="normal">4</span>
+<span class="normal">5</span>
+<span class="normal">6</span>
+<span class="normal">7</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><code><span class="o">%%</span><span class="n">ignite</span>
+
+<span class="k">def</span> <span class="nf">setup</span><span class="p">():</span>
+    <span class="n">size</span><span class="p">(</span><span class="mi">200</span><span class="p">,</span> <span class="mi">200</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">draw</span><span class="p">():</span>
+<span class="hll">    <span class="n">stroke_circle</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">75</span><span class="p">)</span>
+</span></code></pre></div>
+</td></tr></table>
+<p>Results in:</p>
+<p><img alt="stroke_circle() example" src="../img/stroke_circle.png" /></p>
+<h3 id="ellipses">Ellipses</h3>
+<p>To create an ellipse there are 3 options:</p>
+<table>
+<thead>
+<tr>
+<th>Function</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="#ellipse">ellipse(x, y, l, w)</a></td>
+<td>Draw an ellipse filled with color, and with a stroke</td>
+</tr>
+<tr>
+<td><a href="#fill_ellipse">fill_ellipse(x, y, l, w)</a></td>
+<td>Draw an ellipse filled with a color</td>
+</tr>
+<tr>
+<td><a href="#stroke_ellipse">stroke_ellipse(x, y, l, w)</a></td>
+<td>Draw the outline of an ellipse (it's stroke)</td>
+</tr>
+</tbody>
+</table>
+<figure>
+  <img src="https://spark.schulichignite.com/img/ellipse_comparison.png"/>
+  <figcaption>Comparison of 3 functions, note the red color was added for visibility, by default fill is black</figcaption>
+</figure>
+
+<h4 id="ellipse">ellipse()</h4>
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><code><span class="n">ellipse</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">l</span><span class="p">,</span> <span class="n">w</span><span class="p">)</span>
+</code></pre></div>
+</td></tr></table>
+<p><strong>Parameters</strong></p>
+<ul>
+<li>x: (int or float) The value of the x position of the rectangle</li>
+<li>y: (int or float) The value of the y position of the rectangle</li>
+<li>l: (int or float) The length of the ellipse</li>
+<li>w: (int or float) The width of the ellipse</li>
+</ul>
+<p>Example(s):</p>
+<p><em>Creating a filled and stroked ellipse at (100, 100) with a length of 100 and height of 75</em></p>
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span>
+<span class="normal">2</span>
+<span class="normal">3</span>
+<span class="normal">4</span>
+<span class="normal">5</span>
+<span class="normal">6</span>
+<span class="normal">7</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><code><span class="o">%%</span><span class="n">ignite</span>
+
+<span class="k">def</span> <span class="nf">setup</span><span class="p">():</span>
+    <span class="n">size</span><span class="p">(</span><span class="mi">200</span><span class="p">,</span> <span class="mi">200</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">draw</span><span class="p">():</span>
+<span class="hll">    <span class="n">ellipse</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">75</span><span class="p">)</span>
+</span></code></pre></div>
+</td></tr></table>
+<p>Results in:</p>
+<p><img alt="ellipse() example" src="../img/ellipse.png" /></p>
+<h4 id="fill_ellipse">fill_ellipse()</h4>
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><code><span class="n">fill_ellipse</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">l</span><span class="p">,</span> <span class="n">w</span><span class="p">)</span>
+</code></pre></div>
+</td></tr></table>
+<p><strong>Parameters</strong></p>
+<ul>
+<li>x: (int or float) The value of the x position of the rectangle</li>
+<li>y: (int or float) The value of the y position of the rectangle</li>
+<li>l: (int or float) The length of the ellipse</li>
+<li>w: (int or float) The width of the ellipse</li>
+</ul>
+<p>Example(s):</p>
+<p><em>Creating a filled ellipse at (100, 100) with a length of 100 and height of 75</em></p>
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span>
+<span class="normal">2</span>
+<span class="normal">3</span>
+<span class="normal">4</span>
+<span class="normal">5</span>
+<span class="normal">6</span>
+<span class="normal">7</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><code><span class="o">%%</span><span class="n">ignite</span>
+
+<span class="k">def</span> <span class="nf">setup</span><span class="p">():</span>
+    <span class="n">size</span><span class="p">(</span><span class="mi">200</span><span class="p">,</span> <span class="mi">200</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">draw</span><span class="p">():</span>
+<span class="hll">    <span class="n">fill_ellipse</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">75</span><span class="p">)</span>
+</span></code></pre></div>
+</td></tr></table>
+<p>Results in:</p>
+<p><img alt="fill_ellipse() example" src="../img/fill_ellipse.png" /></p>
+<h4 id="stroke_ellipse">stroke_ellipse()</h4>
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><code><span class="n">stroke_ellipse</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">l</span><span class="p">,</span> <span class="n">w</span><span class="p">)</span>
+</code></pre></div>
+</td></tr></table>
+<p><strong>Parameters</strong></p>
+<ul>
+<li>x: (int or float) The value of the x position of the rectangle</li>
+<li>y: (int or float) The value of the y position of the rectangle</li>
+<li>l: (int or float) The length of the ellipse</li>
+<li>w: (int or float) The width of the ellipse</li>
+</ul>
+<p>Example(s):</p>
+<p><em>Creating a filled ellipse at (100, 100) with a length of 100 and height of 75</em></p>
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span>
+<span class="normal">2</span>
+<span class="normal">3</span>
+<span class="normal">4</span>
+<span class="normal">5</span>
+<span class="normal">6</span>
+<span class="normal">7</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><code><span class="o">%%</span><span class="n">ignite</span>
+
+<span class="k">def</span> <span class="nf">setup</span><span class="p">():</span>
+    <span class="n">size</span><span class="p">(</span><span class="mi">200</span><span class="p">,</span> <span class="mi">200</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">draw</span><span class="p">():</span>
+<span class="hll">    <span class="n">stroke_ellipse</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">75</span><span class="p">)</span>
+</span></code></pre></div>
+</td></tr></table>
+<p>Results in:</p>
+<p><img alt="stroke_ellipse() example" src="../img/stroke_ellipse.png" /></p>
+<h3 id="triangles">Triangles</h3>
+<p>To create a triangle there are 3 options:</p>
+<table>
+<thead>
+<tr>
+<th>Function</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="#triangle">traingle(x1, y1, x2, y2, x3, y3)</a></td>
+<td>Draw a triangle filled with color, and with a stroke</td>
+</tr>
+<tr>
+<td><a href="#fill_triangle">fill_triangle(x1, y1, x2, y2, x3, y3)</a></td>
+<td>Draw a triangle filled with a color</td>
+</tr>
+<tr>
+<td><a href="#stroke_triangle">stroke_triangle(x1, y1, x2, y2, x3, y3)</a></td>
+<td>Draw the outline of a trianlge (it's stroke)</td>
+</tr>
+</tbody>
+</table>
+<figure>
+  <img src="https://spark.schulichignite.com/img/triangle_comparison.png"/>
+  <figcaption>Comparison of 3 functions, note the red color was added for visibility, by default fill is black</figcaption>
+</figure>
+
+<h4 id="triangle">triangle()</h4>
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><code><span class="n">triangle</span><span class="p">(</span><span class="n">x1</span><span class="p">,</span> <span class="n">y1</span><span class="p">,</span> <span class="n">x2</span><span class="p">,</span> <span class="n">y2</span><span class="p">,</span> <span class="n">x3</span><span class="p">,</span> <span class="n">y3</span><span class="p">)</span>
+</code></pre></div>
+</td></tr></table>
+<p><strong>Parameters</strong></p>
+<ul>
+<li>x1: (int or float) The value of the x position first of the three points</li>
+<li>y1: (int or float) The value of the y position first of the three points</li>
+<li>x2: (int or float) The value of the x position second of the three points</li>
+<li>y2: (int or float) The value of the y position second of the three points</li>
+<li>x3: (int or float) The value of the x position last of the three points</li>
+<li>y3: (int or float) The value of the y position last of the three points</li>
+</ul>
+<p>Example(s):</p>
+<p><em>Creating a triangle with points at (110, 75), (75, 150), (150, 150)</em></p>
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span>
+<span class="normal">2</span>
+<span class="normal">3</span>
+<span class="normal">4</span>
+<span class="normal">5</span>
+<span class="normal">6</span>
+<span class="normal">7</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><code><span class="o">%%</span><span class="n">ignite</span>
+
+<span class="k">def</span> <span class="nf">setup</span><span class="p">():</span>
+    <span class="n">size</span><span class="p">(</span><span class="mi">200</span><span class="p">,</span> <span class="mi">200</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">draw</span><span class="p">():</span>
+<span class="hll">    <span class="n">triangle</span><span class="p">(</span><span class="mi">110</span><span class="p">,</span> <span class="mi">75</span><span class="p">,</span> <span class="mi">75</span><span class="p">,</span> <span class="mi">150</span><span class="p">,</span> <span class="mi">150</span><span class="p">,</span> <span class="mi">150</span><span class="p">)</span>
+</span></code></pre></div>
+</td></tr></table>
+<p>Results in:</p>
+<p><img alt="triangle() example" src="../img/triangle.png" /></p>
+<h4 id="fill_triangle">fill_triangle()</h4>
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><code><span class="n">fill_triangle</span><span class="p">(</span><span class="n">x1</span><span class="p">,</span> <span class="n">y1</span><span class="p">,</span> <span class="n">x2</span><span class="p">,</span> <span class="n">y2</span><span class="p">,</span> <span class="n">x3</span><span class="p">,</span> <span class="n">y3</span><span class="p">)</span>
+</code></pre></div>
+</td></tr></table>
+<p><strong>Parameters</strong></p>
+<ul>
+<li>x1: (int or float) The value of the x position first of the three points</li>
+<li>y1: (int or float) The value of the y position first of the three points</li>
+<li>x2: (int or float) The value of the x position second of the three points</li>
+<li>y2: (int or float) The value of the y position second of the three points</li>
+<li>x3: (int or float) The value of the x position last of the three points</li>
+<li>y3: (int or float) The value of the y position last of the three points</li>
+</ul>
+<p>Example(s):</p>
+<p><em>Creating a filled triangle with points at (110, 75), (75, 150), (150, 150)</em></p>
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span>
+<span class="normal">2</span>
+<span class="normal">3</span>
+<span class="normal">4</span>
+<span class="normal">5</span>
+<span class="normal">6</span>
+<span class="normal">7</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><code><span class="o">%%</span><span class="n">ignite</span>
+
+<span class="k">def</span> <span class="nf">setup</span><span class="p">():</span>
+    <span class="n">size</span><span class="p">(</span><span class="mi">200</span><span class="p">,</span> <span class="mi">200</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">draw</span><span class="p">():</span>
+<span class="hll">    <span class="n">fill_triangle</span><span class="p">(</span><span class="mi">110</span><span class="p">,</span> <span class="mi">75</span><span class="p">,</span> <span class="mi">75</span><span class="p">,</span> <span class="mi">150</span><span class="p">,</span> <span class="mi">150</span><span class="p">,</span> <span class="mi">150</span><span class="p">)</span>
+</span></code></pre></div>
+</td></tr></table>
+<p>Results in:</p>
+<p><img alt="fill_triangle() example" src="../img/fill_triangle.png" /></p>
+<h4 id="stroke_triangle">stroke_triangle()</h4>
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><code><span class="n">stroke_triangle</span><span class="p">(</span><span class="n">x1</span><span class="p">,</span> <span class="n">y1</span><span class="p">,</span> <span class="n">x2</span><span class="p">,</span> <span class="n">y2</span><span class="p">,</span> <span class="n">x3</span><span class="p">,</span> <span class="n">y3</span><span class="p">)</span>
+</code></pre></div>
+</td></tr></table>
+<p><strong>Parameters</strong></p>
+<ul>
+<li>x1: (int or float) The value of the x position first of the three points</li>
+<li>y1: (int or float) The value of the y position first of the three points</li>
+<li>x2: (int or float) The value of the x position second of the three points</li>
+<li>y2: (int or float) The value of the y position second of the three points</li>
+<li>x3: (int or float) The value of the x position last of the three points</li>
+<li>y3: (int or float) The value of the y position last of the three points</li>
+</ul>
+<p>Example(s):</p>
+<p><em>Creating a stroked triangle with points at (110, 75), (75, 150), (150, 150)</em></p>
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span>
+<span class="normal">2</span>
+<span class="normal">3</span>
+<span class="normal">4</span>
+<span class="normal">5</span>
+<span class="normal">6</span>
+<span class="normal">7</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><code><span class="o">%%</span><span class="n">ignite</span>
+
+<span class="k">def</span> <span class="nf">setup</span><span class="p">():</span>
+    <span class="n">size</span><span class="p">(</span><span class="mi">200</span><span class="p">,</span> <span class="mi">200</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">draw</span><span class="p">():</span>
+<span class="hll">    <span class="n">stroke_triangle</span><span class="p">(</span><span class="mi">110</span><span class="p">,</span> <span class="mi">75</span><span class="p">,</span> <span class="mi">75</span><span class="p">,</span> <span class="mi">150</span><span class="p">,</span> <span class="mi">150</span><span class="p">,</span> <span class="mi">150</span><span class="p">)</span>
+</span></code></pre></div>
+</td></tr></table>
+<p>Results in:</p>
+<p><img alt="stroke_triangle() example" src="../img/stroke_triangle.png" /></p>
+<h3 id="text">Text</h3>
+<p>To create text in your drawing use:</p>
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><code><span class="n">text</span><span class="p">(</span><span class="n">message</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+</code></pre></div>
+</td></tr></table>
+<p><strong>Parameters</strong></p>
+<ul>
+<li>message: (str) The text you want to draw</li>
+<li>x: (int or float) The value of the x position of the text</li>
+<li>y: (int or float) The value of the y position of the text</li>
+</ul>
+<p>Example(s):</p>
+<p><em>Creating some text at (100, 100)</em></p>
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span>
+<span class="normal">2</span>
+<span class="normal">3</span>
+<span class="normal">4</span>
+<span class="normal">5</span>
+<span class="normal">6</span>
+<span class="normal">7</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><code><span class="o">%%</span><span class="n">ignite</span>
+
+<span class="k">def</span> <span class="nf">setup</span><span class="p">():</span>
+    <span class="n">size</span><span class="p">(</span><span class="mi">200</span><span class="p">,</span> <span class="mi">200</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">draw</span><span class="p">():</span>
+<span class="hll">    <span class="n">text</span><span class="p">(</span><span class="s2">&quot;Hello World!&quot;</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
+</span></code></pre></div>
+</td></tr></table>
+<p>Results in:</p>
+<p><img alt="text() example" src="../img/text.png" /></p>
+<h4 id="change-text-size">Change text size</h4>
+<p>To change the size of your text use:</p>
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><code><span class="n">text_size</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+</code></pre></div>
+</td></tr></table>
+<p><strong>Parameters</strong></p>
+<ul>
+<li>s: (int or float) The size you want to make your text</li>
+</ul>
+<p>Example(s):</p>
+<p><em>Creating some text at (100, 100), that is 16pt font</em></p>
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span>
+<span class="normal">2</span>
+<span class="normal">3</span>
+<span class="normal">4</span>
+<span class="normal">5</span>
+<span class="normal">6</span>
+<span class="normal">7</span>
+<span class="normal">8</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><code><span class="o">%%</span><span class="n">ignite</span>
+
+<span class="k">def</span> <span class="nf">setup</span><span class="p">():</span>
+    <span class="n">size</span><span class="p">(</span><span class="mi">200</span><span class="p">,</span> <span class="mi">200</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">draw</span><span class="p">():</span>
+<span class="hll">    <span class="n">text_size</span><span class="p">(</span><span class="mi">16</span><span class="p">)</span>
+</span>    <span class="n">text</span><span class="p">(</span><span class="s2">&quot;Hello World!&quot;</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
+</code></pre></div>
+</td></tr></table>
+<p>Results in:</p>
+<p><img alt="text_size() example" src="../img/text_size.png" /></p>
+                
+              
+              
+                
+
+
+              
+            </article>
+          </div>
+        </div>
+      </main>
+      
+        
+<footer class="md-footer">
+  
+    <nav class="md-footer__inner md-grid" aria-label="Footer">
+      
+        <a href=".." class="md-footer__link md-footer__link--prev" rel="prev">
+          <div class="md-footer__button md-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+          </div>
+          <div class="md-footer__title">
+            <div class="md-ellipsis">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              Getting Started
+            </div>
+          </div>
+        </a>
+      
+      
+        <a href="../input/" class="md-footer__link md-footer__link--next" rel="next">
+          <div class="md-footer__title">
+            <div class="md-ellipsis">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              Input
+            </div>
+          </div>
+          <div class="md-footer__button md-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11H4z"/></svg>
+          </div>
+        </a>
+      
+    </nav>
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-footer-copyright">
+        
+        Made with
+        <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+          Material for MkDocs
+        </a>
+        
+      </div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    <script id="__config" type="application/json">{"base": "..", "features": [], "translations": {"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing"}, "search": "../assets/javascripts/workers/search.fb4a9340.min.js", "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.a1c7c35e.min.js"></script>
+      
+    
+  </body>
+</html>

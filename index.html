@@ -1,0 +1,801 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Spark is a library designed to help drawing in python easy">
+      
+      
+      
+        <meta name="author" content="Schulich Ignite">
+      
+      
+      <link rel="icon" href="img/ignite.ico">
+      <meta name="generator" content="mkdocs-1.1.2, mkdocs-material-7.0.6">
+    
+    
+      
+        <title>Spark</title>
+      
+    
+    
+      <link rel="stylesheet" href="assets/stylesheets/main.2c0c5eaf.min.css">
+      
+        
+        <link rel="stylesheet" href="assets/stylesheets/palette.7fa14f5b.min.css">
+        
+          
+          
+          <meta name="theme-color" content="#000000">
+        
+      
+    
+    
+    
+      
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,700%7CRoboto+Mono&display=fallback">
+        <style>:root{--md-text-font-family:"Roboto";--md-code-font-family:"Roboto Mono"}</style>
+      
+    
+    
+    
+    
+      
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="" data-md-color-primary="black" data-md-color-accent="amber">
+      
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#the-basics" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      <header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="." title="Spark" class="md-header__button md-logo" aria-label="Spark" data-md-component="logo">
+      
+  <img src="img/Ignite-logo.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Spark
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Getting Started
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    <div class="md-header__options">
+      
+    </div>
+    
+      <label class="md-header__button md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5z"/></svg>
+      </label>
+      
+<div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" data-md-state="active" required>
+      <label class="md-search__icon md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+      </label>
+      <button type="reset" class="md-search__icon md-icon" aria-label="Clear" tabindex="-1">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"/></svg>
+      </button>
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+  </nav>
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="." title="Spark" class="md-nav__button md-logo" aria-label="Spark" data-md-component="logo">
+      
+  <img src="img/Ignite-logo.png" alt="logo">
+
+    </a>
+    Spark
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+  
+  
+    
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          Getting Started
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="." class="md-nav__link md-nav__link--active">
+        Getting Started
+      </a>
+      
+        
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#the-basics" class="md-nav__link">
+    The basics
+  </a>
+  
+    <nav class="md-nav" aria-label="The basics">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#logging-in-and-slides" class="md-nav__link">
+    Logging in and Slides
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#interface" class="md-nav__link">
+    Interface
+  </a>
+  
+    <nav class="md-nav" aria-label="Interface">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#toolbars" class="md-nav__link">
+    Toolbars
+  </a>
+  
+    <nav class="md-nav" aria-label="Toolbars">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#toolbar-1" class="md-nav__link">
+    Toolbar 1
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#toolbar-2" class="md-nav__link">
+    Toolbar 2
+  </a>
+  
+    <nav class="md-nav" aria-label="Toolbar 2">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#play-buttons" class="md-nav__link">
+    Play buttons
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cells" class="md-nav__link">
+    Cells
+  </a>
+  
+    <nav class="md-nav" aria-label="Cells">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#cell-numbers" class="md-nav__link">
+    Cell numbers
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#collapsing-cells" class="md-nav__link">
+    Collapsing cells
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#running-cells" class="md-nav__link">
+    Running cells
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#setting-up-a-notebook" class="md-nav__link">
+    Setting up a notebook
+  </a>
+  
+    <nav class="md-nav" aria-label="Setting up a notebook">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#boilerplate" class="md-nav__link">
+    Boilerplate
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#setting-up-a-cell" class="md-nav__link">
+    Setting up a cell
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#saving-notebooks" class="md-nav__link">
+    Saving notebooks
+  </a>
+  
+    <nav class="md-nav" aria-label="Saving notebooks">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#save-a-notebook-with-a-name" class="md-nav__link">
+    Save a notebook with a name
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#save-an-existing-notebook" class="md-nav__link">
+    Save an existing notebook
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#other-documentation" class="md-nav__link">
+    Other documentation
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="shapes_text/" class="md-nav__link">
+        Shapes & Text
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="input/" class="md-nav__link">
+        Input
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="color/" class="md-nav__link">
+        Color
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="utilities/" class="md-nav__link">
+        Utilities
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#the-basics" class="md-nav__link">
+    The basics
+  </a>
+  
+    <nav class="md-nav" aria-label="The basics">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#logging-in-and-slides" class="md-nav__link">
+    Logging in and Slides
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#interface" class="md-nav__link">
+    Interface
+  </a>
+  
+    <nav class="md-nav" aria-label="Interface">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#toolbars" class="md-nav__link">
+    Toolbars
+  </a>
+  
+    <nav class="md-nav" aria-label="Toolbars">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#toolbar-1" class="md-nav__link">
+    Toolbar 1
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#toolbar-2" class="md-nav__link">
+    Toolbar 2
+  </a>
+  
+    <nav class="md-nav" aria-label="Toolbar 2">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#play-buttons" class="md-nav__link">
+    Play buttons
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cells" class="md-nav__link">
+    Cells
+  </a>
+  
+    <nav class="md-nav" aria-label="Cells">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#cell-numbers" class="md-nav__link">
+    Cell numbers
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#collapsing-cells" class="md-nav__link">
+    Collapsing cells
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#running-cells" class="md-nav__link">
+    Running cells
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#setting-up-a-notebook" class="md-nav__link">
+    Setting up a notebook
+  </a>
+  
+    <nav class="md-nav" aria-label="Setting up a notebook">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#boilerplate" class="md-nav__link">
+    Boilerplate
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#setting-up-a-cell" class="md-nav__link">
+    Setting up a cell
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#saving-notebooks" class="md-nav__link">
+    Saving notebooks
+  </a>
+  
+    <nav class="md-nav" aria-label="Saving notebooks">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#save-a-notebook-with-a-name" class="md-nav__link">
+    Save a notebook with a name
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#save-an-existing-notebook" class="md-nav__link">
+    Save an existing notebook
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#other-documentation" class="md-nav__link">
+    Other documentation
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          <div class="md-content" data-md-component="content">
+            <article class="md-content__inner md-typeset">
+              
+                
+                
+                  <h1>Getting Started</h1>
+                
+                <p>Welcome to the documentation for spark. Spark is a library developed by <a href="https://schulichignite.com">Schulich Ignite</a> to help students draw in python.</p>
+<h2 id="the-basics">The basics</h2>
+<p>Below is everything you need to get started with spark. If you are looking for something specific there is a search bar in the top right and a list of available documentation on the left, and at the bottom of this page. </p>
+<p>Also note that you can copy any code listed on this site by clicking on the clipboard icon in the top right of the code block.</p>
+<h4 id="logging-in-and-slides">Logging in and Slides</h4>
+<p>To use spark simply login to the Schulich Ignite server <a href="https://ignite.aranite.com/">here</a>, you will need a gmail account (an email with @gmail.com).</p>
+<p>Slides for each class are available on <a href="https://schulichignite.com/#sessions-slides">the main website</a>.</p>
+<h3 id="interface">Interface</h3>
+<p>Please keep in mind the Schulich Ignite server is based on <a href="https://jupyter.org/">Jupyter Notebooks</a>, and may look different to other versions of python you have seen.</p>
+<h4 id="toolbars">Toolbars</h4>
+<p>There are two toolbars</p>
+<p><img alt="Toolbars" src="img/toolbars.png" /></p>
+<h5 id="toolbar-1">Toolbar 1</h5>
+<p>Primarily for creating new notebooks, changing settings, and exporting notebooks</p>
+<h5 id="toolbar-2">Toolbar 2</h5>
+<p>Used to run cells, and other tasks within the current notebook</p>
+<h6 id="play-buttons">Play buttons</h6>
+<p>Also note that there are two "play" options:</p>
+<p><img alt="Toolbars" src="img/toolbar_2_play_buttons.png" /></p>
+<p>The first is to run the current cell (can also be done with shift + enter).</p>
+<p>The second runs <strong>all</strong> cells in the notebook</p>
+<h4 id="cells">Cells</h4>
+<p>Cells are the little grey rectangles that appear under the second toolbar. You will write your code inside of them. Each cell can be run independently, and notebooks can have an unlimited (mostly) number of cells.</p>
+<p><img alt="Cells" src="img/cells.png" /></p>
+<h5 id="cell-numbers">Cell numbers</h5>
+<p>Also keep in mind the number to the left of the text input (grey rectangle) is the cell number, that tells you which cells were last used.</p>
+<h5 id="collapsing-cells">Collapsing cells</h5>
+<p>You can also collapse a cell, or it's output by hitting the blue rectangle on the left of the cell. For example this is what it looks like before:</p>
+<p><img alt="before collapse" src="img/before_collapse.png" /></p>
+<p>And what it looks like after hitting the rectangle:</p>
+<p><img alt="after collapse" src="img/after_collapse.png" /></p>
+<h5 id="running-cells">Running cells</h5>
+<p>To run cells you can either click the <a href="#play-buttons">play button on toolbar 2</a>, or hit shift + enter on your keyboard</p>
+<h4 id="setting-up-a-notebook">Setting up a notebook</h4>
+<p>Once you are logged in you can create a notebook by going to <em>File --&gt; New --&gt; Notebook</em>:</p>
+<p><img alt="Create Notebook" src="img/create_notebook.png" /></p>
+<p>You will then need to just hit <em>Select</em> on the pre-selected kernal that shows up:</p>
+<p><img alt="Kernel Select" src="img/kernel.png" /></p>
+<h5 id="boilerplate">Boilerplate</h5>
+<p>At the start of each notebook you will need to include the following lines in the first cell, and run it before writing any other code:</p>
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span>
+<span class="normal">2</span>
+<span class="normal">3</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><code><span class="err">!</span><span class="n">pip</span> <span class="n">install</span> <span class="o">--</span><span class="n">upgrade</span> <span class="n">schulich</span><span class="o">-</span><span class="n">ignite</span>
+<span class="kn">import</span> <span class="nn">spark</span>
+<span class="o">%</span><span class="n">reload_ext</span> <span class="n">spark</span>
+</code></pre></div>
+</td></tr></table>
+<p>Your notebook should look like this:</p>
+<p><img alt="notebook boilerplate" src="img/notebook_boilerplate.png" /></p>
+<p>Roughly speaking all this code does, is download the latest version of spark and then bring it into the notebook so we can use it.</p>
+<h3 id="setting-up-a-cell">Setting up a cell</h3>
+<p>At the start of each cell (except the first) you need to have at least the following two lines if your code only needs to draw things once:</p>
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span>
+<span class="normal">2</span>
+<span class="normal">3</span>
+<span class="normal">4</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><code><span class="o">%%</span><span class="n">ignite</span>
+
+<span class="k">def</span> <span class="nf">setup</span><span class="p">():</span>
+    <span class="n">size</span><span class="p">(</span><span class="mi">200</span><span class="p">,</span> <span class="mi">200</span><span class="p">)</span> <span class="c1"># You can change 200, 200 to any integers</span>
+</code></pre></div>
+</td></tr></table>
+<p>You can also use the draw() function, which will execute the code constantly that is inside it. The draw function executes 30 times per second. This makes it ideal for things like animation, and any code that will update itself over time. <strong>Most of the time this will be the setup you want</strong>:</p>
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span>
+<span class="normal">2</span>
+<span class="normal">3</span>
+<span class="normal">4</span>
+<span class="normal">5</span>
+<span class="normal">6</span>
+<span class="normal">7</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><code><span class="o">%%</span><span class="n">ignite</span>
+
+<span class="k">def</span> <span class="nf">setup</span><span class="p">():</span>
+    <span class="n">size</span><span class="p">(</span><span class="mi">200</span><span class="p">,</span> <span class="mi">200</span><span class="p">)</span> <span class="c1"># You can change 200, 200 to any integers</span>
+
+<span class="k">def</span> <span class="nf">draw</span><span class="p">():</span>
+    <span class="c1"># loops everything in here forever and draws stuff</span>
+</code></pre></div>
+</td></tr></table>
+<h2 id="saving-notebooks">Saving notebooks</h2>
+<p>There are two options to save. You can save a notebook with a new name, or save an existing notebook:</p>
+<h3 id="save-a-notebook-with-a-name">Save a notebook with a name</h3>
+<p>To save your notebook with a new name go to *file --&gt; save as or use <span class="keys"><kbd class="key-control">Ctrl</kbd></span> or <span class="keys"><kbd class="key-command">Cmd</kbd></span> + <span class="keys"><kbd class="key-shift">Shift</kbd><span>+</span><kbd class="key-s">S</kbd></span>:
+<img alt="save as" src="img/save_as.png" /></p>
+<p>A few things to keep in mind when saving file:</p>
+<ol>
+<li>You <strong>CANNOT</strong> have <strong>ANY</strong> spaces, use _ to seperate if need be i.e. <code>my_test_notebook.ipynb</code></li>
+<li>Make sure you have <code>.ipynb</code> at the end, if you don't the file won't load</li>
+</ol>
+<p><img alt="filename" src="img/filename.png" /></p>
+<h3 id="save-an-existing-notebook">Save an existing notebook</h3>
+<p>To save your notebook with the same name go to <em>file --&gt; save</em> or use <span class="keys"><kbd class="key-control">Ctrl</kbd></span> or <span class="keys"><kbd class="key-command">Cmd</kbd></span> + <span class="keys"><kbd class="key-s">S</kbd></span>:
+<img alt="save" src="img/save.png" /></p>
+<h2 id="other-documentation">Other documentation</h2>
+<p><a href="color/">Colors</a> - Any functions related to coloring shapes, text, or background</p>
+<p><a href="input/">Input</a> - Any functions related to taking user input, such as mouse position or keyboard input</p>
+<p><a href="shapes_text/">Shapes &amp; Text</a> - Any functions related to creating shapes and/or text</p>
+<p><a href="utilities/">Utilities</a> - Any other useful functions that do not fit the above categories</p>
+                
+              
+              
+                
+
+
+              
+            </article>
+          </div>
+        </div>
+      </main>
+      
+        
+<footer class="md-footer">
+  
+    <nav class="md-footer__inner md-grid" aria-label="Footer">
+      
+      
+        <a href="shapes_text/" class="md-footer__link md-footer__link--next" rel="next">
+          <div class="md-footer__title">
+            <div class="md-ellipsis">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              Shapes & Text
+            </div>
+          </div>
+          <div class="md-footer__button md-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11H4z"/></svg>
+          </div>
+        </a>
+      
+    </nav>
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-footer-copyright">
+        
+        Made with
+        <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+          Material for MkDocs
+        </a>
+        
+      </div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    <script id="__config" type="application/json">{"base": ".", "features": [], "translations": {"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing"}, "search": "assets/javascripts/workers/search.fb4a9340.min.js", "version": null}</script>
+    
+    
+      <script src="assets/javascripts/bundle.a1c7c35e.min.js"></script>
+      
+    
+  </body>
+</html>
