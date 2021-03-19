@@ -41,12 +41,19 @@ class Core:
         self._globals_dict = globals_dict
         self._methods = {}
 
+        # Supports the print function.
+        self.current_step = 'presetup'
+        self.print_outputs = { 'setup': '', 'draw': '' }
+        self.draw_output_tracker = ''
+        self.draw_output_frame = 0
+
+        self.frame_count = 0
+
         self.stop_button = Button(description="Stop")
         self.stop_button.on_click(self.on_stop_button_clicked)
         self._globals_dict["canvas"] = Canvas()
         self.kb_mon = Event(source=self.canvas, watched_events=['keydown', 'keyup'], wait=1000 // FRAME_RATE,
                             prevent_default_actions=True)
-        self.output_text = ""
         self.color_strings = {
             "default": "#888888"
         }
@@ -82,6 +89,16 @@ class Core:
     @ignite_global
     def canvas(self) -> Canvas:
         return self._globals_dict["canvas"]
+
+    @property
+    @ignite_global
+    def frame_count(self):
+        return self._globals_dict["frame_count"]
+
+    @frame_count.setter
+    def frame_count(self, val):
+        self._globals_dict["frame_count"] = val
+
 
     @property
     @ignite_global
@@ -164,7 +181,10 @@ class Core:
 
         display(self.canvas)
 
-        self.output_text_code = display(Code(self.output_text), display_id=True)
+        self.print_output_display = {
+            'handle': display(Code(''), display_id=True),
+            'value': ''
+        }
 
         self.canvas.on_mouse_down(self.on_mouse_down)
         self.canvas.on_mouse_up(self.on_mouse_up)
@@ -209,11 +229,15 @@ class Core:
         setup = self._methods.get("setup", None)
 
         if setup:
+            self.current_step = 'setup'
             try:
                 setup()
             except Exception as e:
+                self.update_print_output_display()
                 self.stop("Error in setup() function: " + str(e))
                 return
+
+            self.update_print_output_display()
 
         while _sparkplug_running:
             if _sparkplug_active_thread_id != current_thread_id \
@@ -225,12 +249,16 @@ class Core:
                 self.stop("Done drawing.")
                 return
 
+            self.current_step = 'draw'
             with hold_canvas(self.canvas):
                 try:
                     draw()
+                    self.frame_count += 1
                 except Exception as e:
+                    self.update_print_output_display()
                     self.stop("Error in draw() function: " + str(e))
                     return
+            self.update_print_output_display()
 
             time.sleep(1 / FRAME_RATE)
 
@@ -242,11 +270,25 @@ class Core:
     # Can't use @validate_args decorator for functions actually accepting variable arguments
     @ignite_global
     def print(self, *args, sep=' ', end='\n', flush=True):
-        global _sparkplug_running
-        self.output_text += sep.join([str(arg) for arg in args]) + end
+        if self.current_step == 'presetup':
+            print(*args)    # Use built-in print outside of setup and draw methods.
+            return
 
-        if _sparkplug_running and flush:
-            self.output_text_code.update(Code(self.output_text))
+        if self.current_step == 'draw':
+            # If printing from the draw method, clear values from the previous frame.
+            if self.draw_output_frame != self.frame_count:
+                self.draw_output_frame = self.frame_count
+                self.print_outputs['draw'] = ''
+
+        msg = sep.join([str(arg) for arg in args]) + end
+        self.print_outputs[self.current_step] += msg
+
+    def update_print_output_display(self):
+        vals = [self.print_outputs['setup'], self.print_outputs['draw']]
+        new_text = ''.join(filter(None, vals)) # Filter out empty values.
+        if self.print_output_display['value'] != new_text:
+            self.print_output_display['value'] = new_text
+            self.print_output_display['handle'].update(Code(new_text))
 
     # Update mouse_x, mouse_y, and call mouse_down handler
     def on_mouse_down(self, x, y):
