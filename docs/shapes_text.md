@@ -606,3 +606,33 @@ def draw():
 Results in:
 
 ![text_size() example](img/text_size.png)
+
+
+To draw a line use:
+
+```python
+draw_line(x1, y1, x2, y2)
+```
+
+**Parameters**
+
+- x1: (int) The x-coordinate from the origin indicating the **starting** location of the line.
+- y1: (int) The y-coordinate from the origin indicating the **starting** location of the line.
+- x2: (int) The x-coordinate from the origin indicating the **ending** location of the line.
+- y2: (int) The y-coordinate from the origin indicating the **ending** location of the line.
+
+Example(s):
+
+```python
+%%ignite
+
+def setup():
+  size(200, 200)
+  
+ def draw():
+  draw_line(50, 50, 150, 150)
+```
+
+Results in:
+
+[NEEDS PICTURE]
